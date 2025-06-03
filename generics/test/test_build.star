@@ -14,10 +14,9 @@ load(
     "NetTie",
     "Resistor",
     "SolderJumper",
-    "TagConnect",
     "TestPoint",
 )
-load("../stdlib/interfaces.star", "Ground")
+load("../../interfaces.star", "Ground")
 
 # Create test nets
 VCC_3V3 = Net("VCC_3V3")
@@ -167,24 +166,4 @@ SolderJumper(name="SJ2", style="Bridged", variant="Pad", pitch="P1.3mm", P1=VCC_
 
 SolderJumper(
     name="SJ3", pin_count=3, style="Bridged123", variant="Pad", pitch="P1.3mm", P1=SIGNAL_A, P2=SIGNAL_B, P3=SIGNAL_C
-)
-
-# Test TagConnect
-TagConnect(
-    name="TC1", tag_type="TC2030-IDC-NL-2x03", P1=VCC_3V3, P2=SIGNAL_A, P3=GND, P4=SIGNAL_B, P5=SIGNAL_C, P6=SIGNAL_D
-)
-
-TagConnect(
-    name="TC2",
-    tag_type="TC2050-IDC-NL-2x05",
-    P1=VCC_3V3,
-    P2=SIGNAL_A,
-    P3=GND,
-    P4=SIGNAL_B,
-    P5=SIGNAL_C,
-    P6=SIGNAL_D,
-    P7=BASE,
-    P8=COLLECTOR,
-    P9=EMITTER,
-    P10=GATE,
 )

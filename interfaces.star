@@ -1,31 +1,31 @@
 # GlobalGround = Net("GND")
 
 Ground = interface(
-    net=Net("GND", type="ground"),
+    NET=Net("GND", type="ground"),
 )
 
 Power = interface(
-    net=Net("VCC", type="power"),
+    NET=Net("VCC", type="power"),
 )
 
 OscPair = interface(
-    xin=Net,
-    xout=Net,
+    XIN=Net,
+    XOUT=Net,
 )
 
 Uart = interface(
-    tx=Net,
-    rx=Net,
+    TX=Net,
+    RX=Net,
 )
 
 CanTtl = interface(
-    tx=Net,
-    rx=Net,
+    TX=Net,
+    RX=Net,
 )
 
 Can = interface(
-    can_h=Net,
-    can_l=Net,
+    CAN_H=Net,
+    CAN_L=Net,
 )
 
 
@@ -38,29 +38,29 @@ def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
 
 
 Spi = interface(
-    cs=Net,
-    miso=Net,
-    mosi=Net,
-    clk=Net,
+    CS=Net,
+    MISO=Net,
+    MOSI=Net,
+    CLK=Net,
 )
 
 Qspi = interface(
-    cs=Net,
-    clk=Net,
-    io0=Net,
-    io1=Net,
-    io2=Net,
-    io3=Net,
+    CS=Net,
+    CLK=Net,
+    IO0=Net,
+    IO1=Net,
+    IO2=Net,
+    IO3=Net,
 )
 
 DiffPair = interface(
-    p=Net,
-    n=Net,
+    P=Net,
+    N=Net,
 )
 
 Swd = interface(
-    swdio=Net,
-    swclk=Net,
+    SWDIO=Net,
+    SWCLK=Net,
 )
 
 Swd10Pin = interface(
@@ -69,37 +69,37 @@ Swd10Pin = interface(
 )
 
 I2c = interface(
-    sda=Net,
-    scl=Net,
+    SDA=Net,
+    SCL=Net,
 )
 
 Usb2 = interface(
-    dp=Net,
-    dm=Net,
+    DP=Net("D_P"),
+    DM=Net("D_N"),
 )
 
 Usb3 = interface(
-    dp=Net,
-    dm=Net,
-    ss_tx_n=Net,
-    ss_tx_p=Net,
-    ss_rx_n=Net,
-    ss_rx_p=Net,
+    DP=Net,
+    DM=Net,
+    SS_TX_N=Net,
+    SS_TX_P=Net,
+    SS_RX_N=Net,
+    SS_RX_P=Net,
 )
 
 Gpio = interface(
-    net=Net,
+    NET=Net,
 )
 
 Pwm = interface(
-    net=Net,
+    NET=Net,
 )
 
 PwmPair = interface(
-    a=Net,
-    b=Net,
+    A=Net,
+    B=Net,
 )
 
 Analog = interface(
-    net=Net,
+    NET=Net,
 )

@@ -1,4 +1,4 @@
-load("stdlib/properties.star", "Properties")
+load("../properties.star", "Properties")
 
 # -----------------------------------------------------------------------------
 # Component types
