@@ -50,7 +50,7 @@ Resistor(
     package="0603",
     voltage="50V",
     P1=SIGNAL_A,
-    P2=GND,
+    P2=GND.NET,
 )
 
 # Test Capacitor - with different dielectrics
@@ -61,7 +61,7 @@ Capacitor(
     dielectric="X7R",
     voltage="16V",
     P1=VCC_3V3,
-    P2=GND,
+    P2=GND.NET,
 )
 
 Capacitor(
@@ -71,7 +71,7 @@ Capacitor(
     dielectric="X5R",
     voltage="25V",
     P1=VCC_5V,
-    P2=GND,
+    P2=GND.NET,
 )
 
 # Test LED - different colors and packages
@@ -82,7 +82,7 @@ Led(
     forward_voltage="2.0V",
     forward_current="20mA",
     A=SIGNAL_A,
-    K=GND,
+    K=GND.NET,
 )
 
 Led(
@@ -90,7 +90,7 @@ Led(
     color="green",
     package="0805",
     A=SIGNAL_B,
-    K=GND,
+    K=GND.NET,
 )
 
 Led(
@@ -98,7 +98,7 @@ Led(
     color="blue",
     package="1206",
     A=SIGNAL_C,
-    K=GND,
+    K=GND.NET,
 )
 
 # Test Inductor
@@ -111,7 +111,7 @@ FerriteBead(name="FB1", resistance="100Ohm", frequency="100MHz", package="0603",
 
 # Test Crystal
 Crystal(
-    name="XTAL1", frequency="8MHz", load_capacitance="18pF", package="5032_4Pin", XIN=XTAL_IN, XOUT=XTAL_OUT, GND=GND
+    name="XTAL1", frequency="8MHz", load_capacitance="18pF", package="5032_4Pin", XIN=XTAL_IN, XOUT=XTAL_OUT, GND=GND.NET
 )
 
 Crystal(
@@ -121,7 +121,7 @@ Crystal(
     package="3225_4Pin",
     XIN=SIGNAL_C,
     XOUT=SIGNAL_D,
-    GND=GND,
+    GND=GND.NET,
 )
 
 # Test BJT - both NPN and PNP
@@ -149,7 +149,7 @@ TestPoint(name="TP1", variant="Pad_D1.5mm", P1=VCC_3V3)
 
 TestPoint(name="TP2", variant="Pad_D2.0mm", P1=SIGNAL_A)
 
-TestPoint(name="TP3", variant="Pad_D1.0mm", P1=GND)
+TestPoint(name="TP3", variant="Pad_D1.0mm", P1=GND.NET)
 
 # Test MountingHole
 MountingHole(name="MH1", diameter="M3", standard="DIN965", plating="TopBottom")

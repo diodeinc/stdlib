@@ -1,5 +1,4 @@
 load("../config.star", "config_unit")
-load("../interfaces.star", "Ground")
 load("../properties.star", "Properties")
 load("../units.star", "Capacitance", "Frequency")
 
@@ -47,7 +46,7 @@ XIN = io("XIN", Net)
 XOUT = io("XOUT", Net)
 
 # Additional pins for 4-pin crystals
-GND = io("GND", Ground, optional=True)
+GND = io("GND", Net, optional=True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -73,7 +72,7 @@ def _footprint(package: Package) -> str:
     return _footprints[package]
 
 
-def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Ground | None):
+def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
         if not GND:
             error("GND is required for 4-pin crystals")
