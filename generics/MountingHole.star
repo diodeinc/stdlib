@@ -1,5 +1,5 @@
 load("../units.star", "unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -16,7 +16,13 @@ Plating = enum("TopBottom", "TopOnly", "Via")
 diameter = config("diameter", Diameter, convert=Diameter)
 standard = config("standard", Standard, default=Standard("DIN965"), convert=Standard, optional=True)
 plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
-properties = config("properties", dict, optional=True)
+
+# Properties – combined and normalized
+properties = config_properties({
+    "diameter": diameter,
+    "standard": standard,
+    "plating": plating,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -75,12 +81,5 @@ Component(
     pins={
         "P1": P1,
     },
-    properties=Properties(
-        properties,
-        {
-            "diameter": diameter,
-            "standard": standard,
-            "plating": plating,
-        },
-    ),
+    properties=properties,
 )

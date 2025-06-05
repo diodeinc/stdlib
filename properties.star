@@ -1,11 +1,10 @@
 Hint = struct(
-    near=lambda a, b: "near({}, {})".format(a, b),
-    right=lambda a, b: "right({}, {})".format(a, b),
-    left=lambda a, b: "left({}, {})".format(a, b),
-    above=lambda a, b: "above({}, {})".format(a, b),
-    below=lambda a, b: "below({}, {})".format(a, b),
+    near = lambda a, b: "near({}, {})".format(a, b),
+    right = lambda a, b: "right({}, {})".format(a, b),
+    left = lambda a, b: "left({}, {})".format(a, b),
+    above = lambda a, b: "above({}, {})".format(a, b),
+    below = lambda a, b: "below({}, {})".format(a, b),
 )
-
 
 def Properties(user_properties: dict | None, base_properties: dict) -> dict:
     """Helper function to merge user properties with base properties.
@@ -40,7 +39,6 @@ def Properties(user_properties: dict | None, base_properties: dict) -> dict:
             add_property(key, value)
 
     return properties
-
 
 def Layout(name: str, path: str | None = None, hints: list | None = None) -> None:
     """Helper function to create a layout object"""

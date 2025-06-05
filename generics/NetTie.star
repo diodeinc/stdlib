@@ -1,4 +1,4 @@
-load("../properties.star", "Properties")
+load("../config.star", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -17,8 +17,13 @@ mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=
 pad_size = config("pad_size", PadSize, default=PadSize("0.5mm"), optional=True)
 pin_count = config("pin_count", int, default=2, optional=True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount_type": mount_type,
+    "pad_size": pad_size,
+    "pin_count": pin_count,
+    "exclude_from_bom": True,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -75,10 +80,5 @@ Component(
     prefix="NT",
     pins=pins,
     pin_defs=pin_defs,
-    properties=Properties(
-        properties,
-        {
-            "exclude_from_bom": True,
-        },
-    ),
+    properties=properties,
 )

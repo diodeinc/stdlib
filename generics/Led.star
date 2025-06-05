@@ -1,6 +1,5 @@
 load("../units.star", "Voltage", "Current")
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -22,7 +21,15 @@ color = config("color", Color, convert=Color)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
 forward_current = config_unit("forward_current", Current, optional=True)
-properties = config("properties", dict, optional=True)
+
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "color": color,
+    "forward_voltage": forward_voltage,
+    "forward_current": forward_current,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -77,15 +84,5 @@ Component(
         "K": K,
         "A": A,
     },
-    properties=Properties(
-        properties,
-        {
-            "value": _value(color, package),
-            "color": color,
-            "package": package,
-            "mount": mount,
-            "forward_voltage": forward_voltage,
-            "forward_current": forward_current,
-        },
-    ),
+    properties=properties,
 )

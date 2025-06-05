@@ -1,4 +1,4 @@
-load("../properties.star", "Properties")
+load("../config.star", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -31,7 +31,14 @@ pin_count = config("pin_count", int, default=2, optional=True)
 style = config("style", SolderJumperStyle, convert=SolderJumperStyle)
 variant = config("variant", SolderJumperVariant, convert=SolderJumperVariant)
 pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), optional=True)
-properties = config("properties", dict, optional=True)
+
+# Properties – combined and normalized
+properties = config_properties(exclude_from_bom = True, properties = {
+    "pin_count": pin_count,
+    "style": style,
+    "variant": variant,
+    "pitch": pitch,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -92,14 +99,5 @@ Component(
     prefix="JP",
     pins=pins,
     pin_defs=pin_defs,
-    properties=Properties(
-        properties,
-        {
-            "pin_count": pin_count,
-            "style": style,
-            "variant": variant,
-            "pitch": pitch,
-            "symbol_path": "/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols/Jumper",
-        },
-    ),
+    properties=properties,
 )

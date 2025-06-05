@@ -1,6 +1,5 @@
 load("../units.star", "Voltage", "Current", "Frequency")
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -27,8 +26,18 @@ vcbo = config_unit("vcbo", Voltage, optional=True)
 ic_max = config_unit("ic_max", Current, optional=True)
 ft = config_unit("ft", Frequency, optional=True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "bjt_type": bjt_type,
+    "hfe": hfe,
+    "vceo": vceo,
+    "vebo": vebo,
+    "vcbo": vcbo,
+    "ic_max": ic_max,
+    "ft": ft,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -78,18 +87,5 @@ Component(
         "BASE": "2",
         "EMITTER": "3",
     },
-    properties=Properties(
-        properties,
-        {
-            "package": package,
-            "mount": mount,
-            "bjt_type": bjt_type,
-            "vceo": vceo,
-            "vebo": vebo,
-            "vcbo": vcbo,
-            "ic_max": ic_max,
-            "hfe": hfe,
-            "ft": ft,
-        },
-    ),
+    properties=properties,
 )

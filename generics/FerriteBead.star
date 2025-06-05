@@ -1,6 +1,5 @@
 load("../units.star", "Resistance", "Current", "Frequency")
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -22,8 +21,14 @@ frequency = config_unit("frequency", Frequency)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "resistance": resistance,
+    "frequency": frequency,
+    "current": current,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -81,12 +86,5 @@ Component(
         "P1": P1,
         "P2": P2,
     },
-    properties=Properties(
-        properties,
-        {
-            "value": _value(resistance, frequency, package),
-            "package": package,
-            "current": current,
-        },
-    ),
+    properties=properties,
 )

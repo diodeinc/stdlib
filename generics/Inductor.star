@@ -1,5 +1,4 @@
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_properties", "config_unit")
 load("../units.star", "Current", "Inductance")
 
 # -----------------------------------------------------------------------------
@@ -14,15 +13,20 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package, convert = Package)
 value = config_unit("value", Inductance)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-current = config_unit("current", Current, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+current = config_unit("current", Current, optional = True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "inductance": value,
+    "current": current,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -34,7 +38,6 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(package: Package) -> str:
     """Returns the appropriate inductor footprint based on the package."""
@@ -54,31 +57,22 @@ def _footprint(package: Package) -> str:
 
     return footprints[package]
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="INDUCTOR",
-    type="inductor",
-    footprint=_footprint(package),
-    prefix="L",
-    pin_defs={
+    name = "INDUCTOR",
+    type = "inductor",
+    footprint = _footprint(package),
+    prefix = "L",
+    pin_defs = {
         "P1": "1",
         "P2": "2",
     },
-    pins={
+    pins = {
         "P1": P1,
         "P2": P2,
     },
-    properties=Properties(
-        properties,
-        {
-            "value": value,
-            "current": current,
-            "package": package,
-            "mount": mount,
-        },
-    ),
+    properties = properties,
 )

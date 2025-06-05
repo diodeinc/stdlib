@@ -1,5 +1,4 @@
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_properties", "config_unit")
 load("../units.star", "Resistance", "Voltage")
 
 # -----------------------------------------------------------------------------
@@ -14,15 +13,20 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package, convert = Package)
 value = config_unit("value", Resistance)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-voltage = config_unit("voltage", Voltage, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+voltage = config_unit("voltage", Voltage, optional = True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "resistance": value,
+    "voltage": voltage,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -34,7 +38,6 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
@@ -53,31 +56,22 @@ def _footprint(package: Package) -> str:
 
     return kicad_footprints[package]
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="R",
-    type="resistor",
-    footprint=_footprint(package),
-    prefix="R",
-    pin_defs={
+    name = "R",
+    type = "resistor",
+    footprint = _footprint(package),
+    prefix = "R",
+    pin_defs = {
         "P1": "1",
         "P2": "2",
     },
-    pins={
+    pins = {
         "P1": P1,
         "P2": P2,
     },
-    properties=Properties(
-        properties,
-        {
-            "value": value,
-            "package": package,
-            "mount": mount,
-            "voltage": voltage,
-        },
-    ),
+    properties = properties,
 )

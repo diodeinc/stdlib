@@ -1,5 +1,4 @@
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_properties", "config_unit")
 load("../units.star", "Capacitance", "Frequency")
 
 # -----------------------------------------------------------------------------
@@ -27,15 +26,20 @@ Package = enum(
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package, convert = Package)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-load_capacitance = config_unit("load_capacitance", Capacitance, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+load_capacitance = config_unit("load_capacitance", Capacitance, optional = True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "frequency": frequency,
+    "load_capacitance": load_capacitance,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -46,12 +50,11 @@ XIN = io("XIN", Net)
 XOUT = io("XOUT", Net)
 
 # Additional pins for 4-pin crystals
-GND = io("GND", Net, optional=True)
+GND = io("GND", Net, optional = True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(package: Package) -> str:
     _footprints = {
@@ -70,7 +73,6 @@ def _footprint(package: Package) -> str:
     }
 
     return _footprints[package]
-
 
 def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
@@ -99,7 +101,6 @@ def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
         }
     return pins, pin_defs
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -107,19 +108,11 @@ def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
 pins, pin_defs = _pin_defs_and_pins(package, XIN, XOUT, GND)
 
 Component(
-    name="CRYSTAL",
-    type="crystal",
-    prefix="Y",
-    footprint=_footprint(package),
-    pins=pins,
-    pin_defs=pin_defs,
-    properties=Properties(
-        properties,
-        {
-            "frequency": frequency,
-            "load_capacitance": load_capacitance,
-            "package": package,
-            "mount": mount,
-        },
-    ),
+    name = "CRYSTAL",
+    type = "crystal",
+    prefix = "Y",
+    footprint = _footprint(package),
+    pins = pins,
+    pin_defs = pin_defs,
+    properties = properties,
 )

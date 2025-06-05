@@ -1,6 +1,5 @@
 load("../units.star", "Voltage", "Current")
-load("../config.star", "config_unit")
-load("../properties.star", "Properties")
+load("../config.star", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -24,8 +23,15 @@ vgs_max = config_unit("vgs_max", Voltage, optional=True)
 vds_max = config_unit("vds_max", Voltage, optional=True)
 id_max = config_unit("id_max", Current, optional=True)
 
-# Properties
-properties = config("properties", dict, optional=True)
+# Properties – combined and normalized
+properties = config_properties({
+    "mount": mount,
+    "package": package,
+    "channel": channel,
+    "vgs_max": vgs_max,
+    "vds_max": vds_max,
+    "id_max": id_max,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -72,15 +78,5 @@ Component(
         "GATE": GATE,
         "SOURCE": SOURCE,
     },
-    properties=Properties(
-        properties,
-        {
-            "package": package,
-            "mount": mount,
-            "channel": channel,
-            "vgs_max": vgs_max,
-            "vds_max": vds_max,
-            "id_max": id_max,
-        },
-    ),
+    properties=properties,
 )

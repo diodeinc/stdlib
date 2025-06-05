@@ -1,4 +1,4 @@
-load("../properties.star", "Properties")
+load("../config.star", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types and variants
@@ -75,8 +75,13 @@ Variant = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
+# Config
 variant = config("variant", Variant)
-properties = config("properties", dict, optional=True)
+
+# Properties – combined and normalized
+properties = config_properties({
+    "variant": variant,
+})
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -110,10 +115,5 @@ Component(
     pins={
         "P1": P1,
     },
-    properties=Properties(
-        properties,
-        {
-            "testpoint_variant": variant,
-        },
-    ),
+    properties=properties,
 )
