@@ -1,4 +1,5 @@
 # INTERFACES OF NETS
+
 Analog = interface(
     NET = Net,
 )
