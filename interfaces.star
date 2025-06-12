@@ -1,3 +1,4 @@
+# INTERFACES OF NETS
 Analog = interface(
     NET = Net,
 )
@@ -13,29 +14,8 @@ CanTtl = interface(
 )
 
 DiffPair = interface(
-    P = Net,
-    N = Net,
-)
-
-DisplayPort = interface(
-    AUX_P = Net,
-    AUX_N = Net,
-    ML0_P = Net,
-    ML0_N = Net,
-    ML1_P = Net,
-    ML1_N = Net,
-    ML2_P = Net,
-    ML2_N = Net,
-    ML3_P = Net,
-    ML3_N = Net,
-    HPD = Net,
-)
-
-Ethernet = interface(
-    TX_P = Net,
-    TX_N = Net,
-    RX_P = Net,
-    RX_N = Net,
+    P = Net("_P"),
+    N = Net("_N"),
 )
 
 Gpio = interface(
@@ -44,21 +24,6 @@ Gpio = interface(
 
 Ground = interface(
     NET = Net("GND", type = "ground"),
-)
-
-Hdmi = interface(
-    CLK_P = Net,
-    CLK_N = Net,
-    D0_P = Net,
-    D0_N = Net,
-    D1_P = Net,
-    D1_N = Net,
-    D2_P = Net,
-    D2_N = Net,
-    CEC = Net,
-    SCL = Net,
-    SDA = Net,
-    HPD = Net,
 )
 
 I2c = interface(
@@ -117,17 +82,6 @@ Lcd = interface(
     B7 = Net,
 )
 
-Lvds = interface(
-    CLK_P = Net,
-    CLK_N = Net,
-    DATA0_P = Net,
-    DATA0_N = Net,
-    DATA1_P = Net,
-    DATA1_N = Net,
-    DATA2_P = Net,
-    DATA2_N = Net,
-)
-
 Mdio = interface(
     MDC = Net,
     MDIO = Net,
@@ -151,19 +105,6 @@ Mii = interface(
     CRS = Net,
 )
 
-Mipi = interface(
-    CLK_P = Net,
-    CLK_N = Net,
-    DATA0_P = Net,
-    DATA0_N = Net,
-    DATA1_P = Net,
-    DATA1_N = Net,
-    DATA2_P = Net,
-    DATA2_N = Net,
-    DATA3_P = Net,
-    DATA3_N = Net,
-)
-
 OneWire = interface(
     DQ = Net,
 )
@@ -171,17 +112,6 @@ OneWire = interface(
 OscPair = interface(
     XIN = Net,
     XOUT = Net,
-)
-
-Pcie = interface(
-    TX_P = Net,
-    TX_N = Net,
-    RX_P = Net,
-    RX_N = Net,
-    REFCLK_P = Net,
-    REFCLK_N = Net,
-    PERST = Net,
-    WAKE = Net,
 )
 
 Power = interface(
@@ -231,13 +161,6 @@ Rmii = interface(
     REF_CLK = Net,
 )
 
-Sata = interface(
-    TX_P = Net,
-    TX_N = Net,
-    RX_P = Net,
-    RX_N = Net,
-)
-
 Sdio = interface(
     CLK = Net,
     CMD = Net,
@@ -284,16 +207,138 @@ def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
     uart_b = Uart(name = name_b, tx = rxa_txb, rx = txa_rxb)
     return (uart_a, uart_b)
 
+# INTERFACES OF INTERFACES
+
+Csi = interface(
+    clk = DiffPair,
+    d0 = DiffPair,
+    d1 = DiffPair,
+    d2 = DiffPair,
+    d3 = DiffPair,
+)
+
+
+DisplayPort = interface(
+    aux = DiffPair,
+    ml0 = DiffPair,
+    ml1 = DiffPair,
+    ml2 = DiffPair,
+    ml3 = DiffPair,
+    hpd = Net,
+)
+
+Dsi = interface(
+    clk = DiffPair,
+    d0 = DiffPair,
+    d1 = DiffPair,
+    d2 = DiffPair,
+    d3 = DiffPair,
+)
+
+Edp = interface(
+    aux = DiffPair,
+    tx0 = DiffPair,
+    tx1 = DiffPair,
+    tx2 = DiffPair,
+    tx3 = DiffPair,
+)
+
+Ethernet = interface(
+    tx = DiffPair,
+    rx = DiffPair,
+)
+
+Hdmi = interface(
+    clk = DiffPair,
+    d0 = DiffPair,
+    d1 = DiffPair,
+    d2 = DiffPair,
+    i2c = I2c,
+    CEC = Net,
+    HPD = Net,
+)
+
+Lvds = interface(
+    clk = DiffPair,
+    d0 = DiffPair,
+    d1 = DiffPair,
+    d2 = DiffPair,
+)
+
+Mipi = interface(
+    clk = DiffPair,
+    d0 = DiffPair,
+    d1 = DiffPair,
+    d2 = DiffPair,
+    d3 = DiffPair,
+)
+
+PcieGen3x2Lane = interface(
+    tx0 = DiffPair,
+    rx0 = DiffPair,
+    tx1 = DiffPair,
+    rx1 = DiffPair,
+    refclk = DiffPair,
+    reset_n = Net,
+    wake_n = Net,
+    clk_req_n = Net,
+)
+
+PcieGen3x1Lane = interface(
+    tx = DiffPair,
+    rx = DiffPair,
+    refclk = DiffPair,
+    reset_n = Net,
+    wake_n = Net,
+    clk_req_n = Net,
+)
+
+QLink = interface(
+    clk = DiffPair,
+    l0 = DiffPair,
+    l1 = DiffPair,
+    l2 = DiffPair,
+    l3 = DiffPair,
+    l4 = DiffPair,
+)
+
+Sata = interface(
+    tx = DiffPair,
+    rx = DiffPair,
+)
+
+Sdio = interface(
+    clk = Gpio,
+    cmd = Gpio,
+    data0 = Gpio,
+    data1 = Gpio,
+    data2 = Gpio,
+    data3 = Gpio,
+)
+
+Ufs = interface(
+    refclk = Gpio,
+    reset_n = Gpio,
+    l0_rx = DiffPair,
+    l0_tx = DiffPair,
+    l1_rx = DiffPair,
+    l1_tx = DiffPair,
+)
+
 Usb2 = interface(
-    DP = Net("D_P"),
-    DM = Net("D_N"),
+    data = DiffPair,
 )
 
 Usb3 = interface(
-    DP = Net,
-    DM = Net,
-    SSTX_N = Net,
-    SSTX_P = Net,
-    SSRX_N = Net,
-    SSRX_P = Net,
+    data = DiffPair,
+    ss_tx = DiffPair,
+    ss_rx = DiffPair,
+)
+
+Usb3p1 = interface(
+    data = DiffPair,
+    ss_tx0 = DiffPair,
+    ss_rx0 = DiffPair,
+    ss_tx1 = DiffPair,
+    ss_rx1 = DiffPair,
 )
