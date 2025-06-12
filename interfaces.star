@@ -309,12 +309,12 @@ Sata = interface(
 )
 
 Sdio = interface(
-    clk = Gpio,
-    cmd = Gpio,
-    data0 = Gpio,
-    data1 = Gpio,
-    data2 = Gpio,
-    data3 = Gpio,
+    CLK = Net,
+    CMD = Net,
+    DATA0 = Net,
+    DATA1 = Net,
+    DATA2 = Net,
+    DATA3 = Net,
 )
 
 Ufs = interface(
