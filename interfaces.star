@@ -164,6 +164,9 @@ Mipi = interface(
     DATA3_N = Net,
 )
 
+def NotConnected(name: str = "NC") -> Net:
+    return Net(name, type = "not_connected")
+
 OneWire = interface(
     DQ = Net,
 )
