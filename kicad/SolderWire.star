@@ -4,24 +4,28 @@ load("../config.star", "config_properties")
 # Component types
 # -----------------------------------------------------------------------------
 
-SolderWireSize = enum(
+Size = enum(
     "SMD_1x2mm",  # Small SMD pad
-    "SMD_5x7mm",  # Medium SMD pad
     "SMD_5x10mm",  # Large SMD pad
 )
+
+# Backwards compatibility
+SolderWireSize = Size
 
 # -----------------------------------------------------------------------------
 # Component parameters
 # -----------------------------------------------------------------------------
 
 # Required
-size = config("size", SolderWireSize, default = SolderWireSize("SMD_5x7mm"), convert = SolderWireSize)
+size = config("size", Size, default = Size("SMD_1x2mm"), convert = Size)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "size": size,
-})
-
+properties = config_properties(
+    properties = {
+        "size": size,
+    },
+    exclude_from_bom = True,
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -37,7 +41,6 @@ def _footprint(size: SolderWireSize) -> str:
     """Returns the appropriate solder wire pad footprint based on the size."""
     footprints = {
         SolderWireSize("SMD_1x2mm"): "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm",
-        SolderWireSize("SMD_5x7mm"): "Connector_Wire:SolderWirePad_1x01_SMD_5x7mm",
         SolderWireSize("SMD_5x10mm"): "Connector_Wire:SolderWirePad_1x01_SMD_5x10mm",
     }
 
@@ -57,5 +60,5 @@ Component(
     prefix = "P",
     pins = {"P1": P1},
     pin_defs = {"P1": "1"},
-    properties = properties
+    properties = properties,
 )
