@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PCB CLI
+        run: echo y | /bin/bash -c "$(curl -fsSL https://pcb.new/install.sh)"
+
+      - name: Build PCB files
+        run: find . -name "*.star" -type f | xargs pcb b
