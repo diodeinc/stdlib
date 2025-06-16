@@ -63,6 +63,7 @@ def _footprint(package: Package) -> str:
 Component(
     name = "R",
     type = "resistor",
+    symbol = "Device:R",
     footprint = _footprint(package),
     prefix = "R",
     pin_defs = {

@@ -64,6 +64,7 @@ def _footprint(package: Package) -> str:
 Component(
     name = "INDUCTOR",
     type = "inductor",
+    symbol = "Device:L",
     footprint = _footprint(package),
     prefix = "L",
     pin_defs = {

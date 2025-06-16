@@ -71,6 +71,7 @@ Component(
     name = "CAPACITOR",
     type = "capacitor",
     prefix = "C",
+    symbol = "Device:C",
     footprint = _footprint(mount, package),
     properties = properties,
     pins = {
