@@ -25,6 +25,7 @@ current = config_unit("current", Current, optional=True)
 properties = config_properties({
     "mount": mount,
     "package": package,
+    "value": f"{resistance}@{frequency}@{package}",
     "resistance": resistance,
     "frequency": frequency,
     "current": current,

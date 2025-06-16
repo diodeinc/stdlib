@@ -37,6 +37,7 @@ load_capacitance = config_unit("load_capacitance", Capacitance, optional = True)
 properties = config_properties({
     "mount": mount,
     "package": package,
+    "value": f"frequency: {frequency}, load capacitance: {load_capacitance}",
     "frequency": frequency,
     "load_capacitance": load_capacitance,
 })

@@ -24,6 +24,7 @@ voltage = config_unit("voltage", Voltage, optional = True)
 properties = config_properties({
     "mount": mount,
     "package": package,
+    "value": value,
     "resistance": value,
     "voltage": voltage,
 })

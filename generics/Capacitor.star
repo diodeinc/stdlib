@@ -29,6 +29,7 @@ t_min = config_unit("t_min", Temperature, optional = True)
 properties = config_properties({
     "mount": mount,
     "package": package,
+    "value": value,
     "capacitance": value,
     "voltage": voltage,
     "dielectric": dielectric,
