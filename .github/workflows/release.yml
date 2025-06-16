@@ -1,4 +1,4 @@
-name: Release on Tag
+name: Release
 
 on:
   push:
@@ -6,7 +6,13 @@ on:
       - "*"
 
 jobs:
-  create_release:
+  # First, run the CI workflow
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  # Then create the release if CI passes
+  release:
+    needs: ci
     runs-on: ubuntu-latest
     permissions:
       contents: write # needed for creating a release
