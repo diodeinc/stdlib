@@ -5,8 +5,8 @@ load("../config.star", "config_properties")
 # -----------------------------------------------------------------------------
 
 Pitch = enum(
-    "P2_00mm",  # 2.00mm pitch
-    "P2_54mm",  # 2.54mm pitch (standard)
+    "2.00mm",  # 2.00mm pitch
+    "2.54mm",  # 2.54mm pitch (standard)
 )
 
 Orientation = enum(
@@ -22,7 +22,7 @@ Orientation = enum(
 # Required
 pins = config("pins", int, default = 1)
 rows = config("rows", int, default = 1)
-pitch = config("pitch", Pitch, default = Pitch("P2_54mm"))
+pitch = config("pitch", Pitch, default = Pitch("2.54mm"))
 orientation = config("orientation", Orientation, default = Orientation("Vertical"))
 
 # Properties – combined and normalized
@@ -56,7 +56,7 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation) -> 
         error("Invalid row count: " + str(rows) + ". Must be 1 or 2.")
 
     # Build footprint name
-    pitch_str = "2.00mm" if pitch == Pitch("P2_00mm") else "2.54mm"
+    pitch_str = pitch.value
 
     # Format pin count with leading zero if needed
     pin_str = str(pins) if pins >= 10 else "0" + str(pins)
