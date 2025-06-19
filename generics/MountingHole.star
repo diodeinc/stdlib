@@ -74,6 +74,7 @@ Component(
     name="MH",
     type="mounting_hole",
     footprint=_footprint(diameter, standard, plating),
+    symbol="Mechanical:MountingHole",
     prefix="H",
     pin_defs={
         "P1": "1",

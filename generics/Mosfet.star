@@ -68,6 +68,7 @@ Component(
     type=f"{channel_type}-mosfet",
     footprint=_footprint(package),
     prefix="M",
+    symbol="Device:Q_NMOS_DGS",
     pin_defs={
         "DRAIN": "1",
         "GATE": "2",

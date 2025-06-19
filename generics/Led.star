@@ -76,6 +76,7 @@ Component(
     type="led",
     footprint=_footprint(package),
     prefix="D",
+    symbol="Device:LED",
     pin_defs={
         "K": "1",
         "A": "2",

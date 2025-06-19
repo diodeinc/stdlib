@@ -23,6 +23,21 @@ SolderJumperVariant = enum(
 )
 SolderJumperPitch = enum("P1.3mm", "P2.0mm")
 
+def _get_symbol(pin_count, style):
+    """Returns the appropriate solder jumper symbol based on pin count and style."""
+    if pin_count == 2:
+        if style.value == "Open":
+            return "Jumper:SolderJumper_2_Open"
+        else:
+            return "Jumper:SolderJumper_2_Bridged"
+    else:  # pin_count == 3
+        if style.value == "Open":
+            return "Jumper:SolderJumper_3_Open"
+        elif style.value in ["Bridged12", "Bridged2Bar12"]:
+            return "Jumper:SolderJumper_3_Bridged12"
+        else:
+            return "Jumper:SolderJumper_3_Bridged123"
+
 # -----------------------------------------------------------------------------
 # Component parameters
 # -----------------------------------------------------------------------------
@@ -96,6 +111,7 @@ Component(
     name="SJ",
     type="solder_jumper",
     footprint=_footprint(pin_count, style, variant, pitch),
+    symbol=_get_symbol(pin_count, style),
     prefix="JP",
     pins=pins,
     pin_defs=pin_defs,

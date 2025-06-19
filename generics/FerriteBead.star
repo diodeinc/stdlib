@@ -78,6 +78,7 @@ Component(
     name="FB",
     type="ferrite_bead",
     footprint=_footprint(package),
+    symbol="Device:FB",
     prefix="FB",
     pin_defs={
         "P1": "1",

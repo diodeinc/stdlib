@@ -67,6 +67,7 @@ Component(
     type = "inductor",
     footprint = _footprint(package),
     prefix = "L",
+    symbol = "Device:L",
     pin_defs = {
         "P1": "1",
         "P2": "2",

@@ -76,6 +76,7 @@ Component(
     name="BJT",
     type=_name(bjt_type),
     footprint=_footprint(package),
+    symbol="Device:Q",
     prefix="Q",
     pins={
         "COLLECTOR": COLLECTOR,

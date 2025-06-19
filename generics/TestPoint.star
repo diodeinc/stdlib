@@ -107,7 +107,8 @@ def _get_footprint(variant):
 Component(
     name="TP",
     type="test_point",
-    footprint=_get_footprint(variant),
+    footprint=_get_footprint(variant),    
+    symbol="TestPoint:TestPoint",
     prefix="TP",
     pin_defs={
         "P1": "1",

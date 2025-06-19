@@ -39,6 +39,15 @@ def TagConnectFootprint(tag_type: TagConnectType) -> str:
         error("Invalid Tag-Connect type: " + str(tag_type))
     return footprints[tag_type]
 
+def _get_symbol(pin_count: int) -> str:
+    """Returns a generic connector symbol based on pin count."""
+    # Use 2-row connectors for Tag-Connect
+    rows = 2
+    cols = pin_count // rows
+    # Format with zero padding manually
+    rows_str = "0" + str(rows) if rows < 10 else str(rows)
+    cols_str = "0" + str(cols) if cols < 10 else str(cols)
+    return f"Connector_Generic:Conn_{rows_str}x{cols_str}_Odd_Even"
 
 # -----------------------------------------------------------------------------
 # Component parameters
@@ -68,6 +77,7 @@ Component(
     name="TAG_CONNECT",
     type="tag_connect",
     footprint=TagConnectFootprint(tag_type),
+    symbol=_get_symbol(TagConnectPinCount(tag_type)),
     prefix="J",
     pins=pins,
     pin_defs=pin_defs,

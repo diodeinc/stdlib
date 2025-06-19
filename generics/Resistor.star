@@ -66,6 +66,7 @@ Component(
     type = "resistor",
     footprint = _footprint(package),
     prefix = "R",
+    symbol = "Device:R",
     pin_defs = {
         "P1": "1",
         "P2": "2",

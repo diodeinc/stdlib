@@ -25,6 +25,10 @@ properties = config_properties({
     "exclude_from_bom": True,
 })
 
+def _get_symbol(pin_count):
+    """Returns the appropriate net tie symbol based on pin count."""
+    return f"Device:NetTie_{pin_count}"
+
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------
@@ -77,6 +81,7 @@ Component(
     name="NT",
     type="net_tie",
     footprint=_get_footprint(pin_count, mount_type, pad_size),
+    symbol=_get_symbol(pin_count),
     prefix="NT",
     pins=pins,
     pin_defs=pin_defs,

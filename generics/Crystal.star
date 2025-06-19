@@ -113,6 +113,7 @@ Component(
     type = "crystal",
     prefix = "Y",
     footprint = _footprint(package),
+    symbol = "Device:Crystal",
     pins = pins,
     pin_defs = pin_defs,
     properties = properties,
