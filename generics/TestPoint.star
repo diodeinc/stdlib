@@ -99,10 +99,6 @@ def _get_footprint(variant):
     name = variant.value  # e.g., "Pad_D1.0mm"
     return f"{lib}:TestPoint_{name}"
 
-def _get_symbol(variant):
-    lib = "TestPoint"
-    name = variant.value  # e.g., "Pad_D1.0mm"
-    return f"{lib}:TestPoint_{name}"
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -112,7 +108,7 @@ Component(
     name="TP",
     type="test_point",
     footprint=_get_footprint(variant),    
-    symbol=_get_symbol(variant),
+    symbol="Connector:TestPoint",
     prefix="TP",
     pin_defs={
         "P1": "1",
