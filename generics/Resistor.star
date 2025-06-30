@@ -13,7 +13,7 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert = Package)
+package = config("package", Package, default = Package("0603"), convert = Package)
 value = config_unit("value", Resistance)
 
 # Optional
