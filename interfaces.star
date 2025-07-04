@@ -43,7 +43,7 @@ Gpio = interface(
 )
 
 Ground = interface(
-    NET = Net("GND", type = "ground"),
+    NET = Net("GND"),
 )
 
 Hdmi = interface(
@@ -165,7 +165,7 @@ Mipi = interface(
 )
 
 def NotConnected(name: str = "NC") -> Net:
-    return Net(name, type = "not_connected")
+    return Net(name)
 
 OneWire = interface(
     DQ = Net,
@@ -188,7 +188,7 @@ Pcie = interface(
 )
 
 Power = interface(
-    NET = Net("VCC", type = "power"),
+    NET = Net("VCC"),
 )
 
 Pwm = interface(
