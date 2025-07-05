@@ -1,8 +1,8 @@
 """Comprehensive test for all generic components."""
 
 # Load all generic components
-load("..", "Capacitor", "Led", "Resistor")
-load("../../properties.star", "Layout")
+load("../", "Capacitor", "Led", "Resistor")
+load("../../properties.zen", "Layout")
 
 Capacitor(name = "C1", value = "100nF", voltage = "16V", dielectric = "X7R", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
 Capacitor(name = "C2", value = "100nF", package = "0201", mpn = "MPN_C2", P1 = Net("P1"), P2 = Net("P2"))

@@ -1,4 +1,4 @@
-load("../properties.star", "Properties")
+load("../properties.zen", "Properties")
 
 # -----------------------------------------------------------------------------
 # Component types

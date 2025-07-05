@@ -1,5 +1,5 @@
-load("../config.star", "config_properties", "config_unit")
-load("../units.star", "Resistance", "Voltage")
+load("../units.zen", "Resistance", "Current", "Frequency")
+load("../config.zen", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -13,19 +13,21 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert = Package)
-value = config_unit("value", Resistance)
+package = config("package", Package, convert=Package)
+resistance = config_unit("resistance", Resistance)
+frequency = config_unit("frequency", Frequency)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-voltage = config_unit("voltage", Voltage, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+current = config_unit("current", Current, optional=True)
 
 # Properties – combined and normalized
 properties = config_properties({
     "mount": mount,
     "package": package,
-    "resistance": value,
-    "voltage": voltage,
+    "resistance": resistance,
+    "frequency": frequency,
+    "current": current,
 })
 
 # -----------------------------------------------------------------------------
@@ -39,8 +41,10 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _footprint(package: Package) -> str:
-    kicad_footprints = {
+    """Returns the resistor SMD footprint for the ferrite bead based on the package."""
+    resistor_footprints = {
         Package("0201"): "Resistor_SMD:R_0201_0603Metric",
         Package("0402"): "Resistor_SMD:R_0402_1005Metric",
         Package("0603"): "Resistor_SMD:R_0603_1608Metric",
@@ -51,28 +55,36 @@ def _footprint(package: Package) -> str:
         Package("2512"): "Resistor_SMD:R_2512_6332Metric",
     }
 
-    if package not in kicad_footprints:
+    if package not in resistor_footprints:
         error("Invalid package: " + str(package))
 
-    return kicad_footprints[package]
+    return resistor_footprints[package]
+
+
+def _value(resistance: Resistance, frequency: Frequency, package: Package) -> str:
+    """Returns the appropriate ferrite bead value based on the resistance and frequency."""
+    r = resistance.__str__(resistance)
+    f = frequency.__str__(frequency)
+    p = package.value
+    return f"Ferrite {r} @{f} {p}"
+
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "R",
-    type = "resistor",
-    symbol = "Device:R",
-    footprint = _footprint(package),
-    prefix = "R",
-    pin_defs = {
+    name="FB",
+    type="ferrite_bead",
+    footprint=_footprint(package),
+    prefix="FB",
+    pin_defs={
         "P1": "1",
         "P2": "2",
     },
-    pins = {
+    pins={
         "P1": P1,
         "P2": P2,
     },
-    properties = properties,
+    properties=properties,
 )

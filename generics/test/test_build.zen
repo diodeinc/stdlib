@@ -16,7 +16,7 @@ load(
     "SolderJumper",
     "TestPoint",
 )
-load("../../interfaces.star", "Ground")
+load("../../interfaces.zen", "Ground")
 
 # Create test nets
 VCC_3V3 = Net("VCC_3V3")

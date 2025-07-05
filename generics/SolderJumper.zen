@@ -1,4 +1,4 @@
-load("../config.star", "config_properties")
+load("../config.zen", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -62,7 +62,7 @@ def _footprint(pin_count, style, variant, pitch):
         name += "_Pad1.0x1.5mm"
     elif variant.value.startswith("RoundedPad"):
         name += "_RoundedPad1.0x1.5mm"
-    elif variant.value.startswith("TrianglePad"):
+    elif variant.value.zentswith("TrianglePad"):
         name += "_TrianglePad1.0x1.5mm"
 
     # NumberLabels

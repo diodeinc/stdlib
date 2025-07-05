@@ -1,5 +1,5 @@
-load("../units.star", "unit")
-load("../config.star", "config_properties")
+load("../units.zen", "unit")
+load("../config.zen", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types

@@ -9,8 +9,8 @@ def PinInterface(name: str, interface_type) -> struct:
     """Return a struct of PinOption objects for *interface_type* bound to *name*.
 
     Example:
-        load("stdlib/interfaces.star", "OscPair", "Usb2")
-        load("stdlib/pins.star", "bind_interface")
+        load("stdlib/interfaces.zen", "OscPair", "Usb2")
+        load("stdlib/pins.zen", "bind_interface")
 
         OSC = PinInterface("OSC", OscPair, ["xin", "xout"])
         USB = PinInterface("USB", Usb2, ["dp", "dm"])

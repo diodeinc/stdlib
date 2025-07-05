@@ -1,5 +1,5 @@
-load("../config.star", "config_properties", "config_unit")
-load("../units.star", "Current", "Inductance")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Current", "Inductance")
 
 # -----------------------------------------------------------------------------
 # Component types

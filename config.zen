@@ -1,4 +1,4 @@
-load("units.star", "unit")
+load("units.zen", "unit")
 
 def config_unit(name, UnitType, optional = False, default = None, **kwargs):
     """Helper function to create a config value for a unit type.

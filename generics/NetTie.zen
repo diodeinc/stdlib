@@ -1,4 +1,4 @@
-load("../config.star", "config_properties")
+load("../config.zen", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
