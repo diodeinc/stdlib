@@ -3,10 +3,12 @@
 ## Quick Start
 
 ```zen
-load("@stdlib/generics/Resistor.zen", Resistor = "Module")
-load("@stdlib/generics/Capacitor.zen", Capacitor = "Module")
-load("@stdlib/generics/Led.zen", Led = "Module")
 load("@stdlib/interfaces.zen", "Ground", "Power")
+
+
+Resistor = Module("@stdlib/generics/Resistor.zen")
+Capacitor = Module("@stdlib/generics/Capacitor.star")
+Inductor = Module("@stdlib/generics/Inductor.star")
 
 vcc = Power("3V3")
 gnd = Ground("GND")
