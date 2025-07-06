@@ -8,20 +8,21 @@ load("@stdlib/generics/Capacitor.zen", Capacitor = "Module")
 load("@stdlib/generics/Led.zen", Led = "Module")
 load("@stdlib/interfaces.zen", "Ground", "Power")
 
-VCC = Power("3V3")
-GND = Ground("GND")
+vcc = Power("3V3")
+gnd = Ground("GND")
 
 # LED with current limiting resistor
-Resistor("R1", "220Ohm", "0603", P1=VCC.NET, P2=Net("LED_A"))
-Led("D1", color="green", package="0603", A=Net("LED_A"), K=GND.NET)
-Capacitor("C1", "100nF", "0402", voltage="16V", P1=VCC.NET, P2=GND.NET)
+Resistor("R1", "220Ohm", "0603", P1=vcc.NET, P2=Net("LED_A"))
+Led("D1", color="green", package="0603", A=Net("LED_A"), K=gnd.NET)
+Capacitor("C1", "100nF", "0402", voltage="16V", P1=vcc.NET, P2=gnd.NET)
 ```
 
 ## Core Concepts
 
 **Nets**: `Net("name")`, `Power("VCC")`, `Ground("GND")`, `Gpio("GPIO1")`, `NotConnected()`  
-**Access**: Use `.NET` on interface nets: `VCC.NET`, `GND.NET`  
-**Loading**: `load("@stdlib/generics/Component.zen", Component = "Module")`
+**Access**: Use `.NET` on interface nets: `VCC.NET`, `gnd.NET`  
+**Loading**: `load("@stdlib/generics/Component.zen", Component = "Module")`  
+**Naming Convention**: Net variables should be CAPITALIZED (e.g., `UART_TX`, `LED_CTRL`), while interface variables should be lowercase (e.g., `uart`, `spi`, `i2c`)
 
 ## Units
 
@@ -49,8 +50,8 @@ Capacitor("C1", "100nF", "0402", voltage="16V", P1=VCC.NET, P2=GND.NET)
 | voltage | str  | ✗        | e.g. `"50V"`                                                   |
 
 ```zen
-Resistor("R1", "10kOhm", "0603", P1=VCC, P2=GND.NET)
-Resistor("R2", "4.7kOhm 1%", "0402", voltage="50V", P1=SIG, P2=GND.NET)
+Resistor("R1", "10kOhm", "0603", P1=vcc.NET, P2=gnd.NET)
+Resistor("R2", "4.7kOhm 1%", "0402", voltage="50V", P1=SIG, P2=gnd.NET)
 ```
 
 ### Capacitor
@@ -64,8 +65,8 @@ Resistor("R2", "4.7kOhm 1%", "0402", voltage="50V", P1=SIG, P2=GND.NET)
 | esr        | str  | ✗        | e.g. `"100mOhm"`                                       |
 
 ```zen
-Capacitor("C1", "100nF", "0402", voltage="16V", dielectric="X7R", P1=VCC, P2=GND.NET)
-Capacitor("C2", "10uF 20%", "1206", voltage="25V", P1=VIN, P2=GND.NET)
+Capacitor("C1", "100nF", "0402", voltage="16V", dielectric="X7R", P1=vcc.NET, P2=gnd.NET)
+Capacitor("C2", "10uF 20%", "1206", voltage="25V", P1=vin.NET, P2=gnd.NET)
 ```
 
 ### Inductor
@@ -103,8 +104,8 @@ FerriteBead("FB1", resistance="100Ohm", frequency="100MHz", package="0603", P1=V
 | forward_current | str  | ✗        | e.g. `"20mA"`                                                                     |
 
 ```zen
-Led("D1", color="green", package="0603", A=LED_CTRL, K=GND.NET)
-Led("D2", color="red", package="0402", forward_voltage="2.0V", A=SIG, K=GND.NET)
+Led("D1", color="green", package="0603", A=LED_CTRL, K=gnd.NET)
+Led("D2", color="red", package="0402", forward_voltage="2.0V", A=SIG, K=gnd.NET)
 ```
 
 ### Bjt
@@ -118,7 +119,7 @@ Led("D2", color="red", package="0402", forward_voltage="2.0V", A=SIG, K=GND.NET)
 | ic_max   | str   | ✗        | Max collector current                     |
 
 ```zen
-Bjt("Q1", bjt_type="NPN", package="SOT-23-3", COLLECTOR=LOAD, BASE=CTRL, EMITTER=GND.NET)
+Bjt("Q1", bjt_type="NPN", package="SOT-23-3", COLLECTOR=LOAD, BASE=CTRL, EMITTER=gnd.NET)
 Bjt("Q2", bjt_type="PNP", package="SOT-23-3", hfe=100.0, vceo="30V", COLLECTOR=OUT, BASE=IN, EMITTER=VCC)
 ```
 
@@ -133,7 +134,7 @@ Bjt("Q2", bjt_type="PNP", package="SOT-23-3", hfe=100.0, vceo="30V", COLLECTOR=O
 | rds_on  | str  | ✗        | On-resistance        |
 
 ```zen
-Mosfet("M1", channel="N", package="SOT-23-3", GATE=CTRL, DRAIN=LOAD, SOURCE=GND.NET)
+Mosfet("M1", channel="N", package="SOT-23-3", GATE=CTRL, DRAIN=LOAD, SOURCE=gnd.NET)
 Mosfet("M2", channel="P", package="SOT-23-3", vds_max="20V", GATE=EN, DRAIN=OUT, SOURCE=VCC)
 ```
 
@@ -148,8 +149,8 @@ Mosfet("M2", channel="P", package="SOT-23-3", vds_max="20V", GATE=EN, DRAIN=OUT,
 | esr              | str  | ✗        | Series resistance                                               |
 
 ```zen
-Crystal("X1", frequency="16MHz", load_capacitance="18pF", package="5032_4Pin", XIN=MCU_XI, XOUT=MCU_XO, GND=GND.NET)
-Crystal("X2", frequency="32.768kHz", load_capacitance="12.5pF", package="3225_4Pin", XIN=RTC_XI, XOUT=RTC_XO, GND=GND.NET)
+Crystal("X1", frequency="16MHz", load_capacitance="18pF", package="5032_4Pin", XIN=MCU_XI, XOUT=MCU_XO, GND=gnd.NET)
+Crystal("X2", frequency="32.768kHz", load_capacitance="12.5pF", package="3225_4Pin", XIN=RTC_XI, XOUT=RTC_XO, GND=gnd.NET)
 ```
 
 ### TestPoint
@@ -186,7 +187,7 @@ MountingHole("MH1", diameter="M3", standard="DIN965", plating="TopBottom")
 
 ```zen
 SolderJumper("SJ1", style="Open", variant="Pad", pitch="P1.3mm", P1=OPT_A, P2=OPT_B)
-SolderJumper("SJ2", pin_count=3, style="Bridged12", variant="Pad", pitch="P1.3mm", P1=A, P2=COM, P3=B)
+SolderJumper("SJ2", pin_count=3, style="Bridged12", variant="Pad", pitch="P1.3mm", P1=NET_A, P2=NET_COM, P3=NET_B)
 ```
 
 ### NetTie
@@ -210,8 +211,8 @@ NetTie("NT1", pad_size="0.5mm", pin_count=2, P1=AGND, P2=DGND)
 | orientation | str  | ✓        | `Vertical`, `Horizontal`, `Vertical_SMD` |
 
 ```zen
-PinSocket("J1", pins=6, rows=1, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=GND.NET, P3=TX, P4=RX, P5=RST, P6=BOOT)
-PinSocket("J2", pins=10, rows=2, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=GND.NET, ...) # P1-P20
+PinSocket("J1", pins=6, rows=1, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=gnd.NET, P3=UART_TX, P4=UART_RX, P5=RST_N, P6=BOOT_MODE)
+PinSocket("J2", pins=10, rows=2, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=gnd.NET, ...) # P1-P20
 ```
 
 ### SolderWire
@@ -236,7 +237,7 @@ Types: `TC2030-IDC-NL-2x03` (6-pin), `TC2050-IDC-FP-2x05` (10-pin), `TC2070-IDC-
 Suffixes: `-NL` = no legs, `-FP` = with footprint, `-BottomClip` = clip compatible
 
 ```zen
-TagConnect("J1", tag_type="TC2030-IDC-NL-2x03", P1=VCC, P2=SWDIO, P3=RST, P4=SWCLK, P5=GND.NET, P6=SWO)
+TagConnect("J1", tag_type="TC2030-IDC-NL-2x03", P1=VCC, P2=SWDIO, P3=RST, P4=SWCLK, P5=gnd.NET, P6=SWO)
 ```
 
 ### MolexPicoBlade
@@ -248,7 +249,7 @@ TagConnect("J1", tag_type="TC2030-IDC-NL-2x03", P1=VCC, P2=SWDIO, P3=RST, P4=SWC
 Format: `[PartNumber]_[Pins]_[Orientation]` where Pins=`1x02`-`1x17`, Orientation=`Vertical`/`Horizontal`
 
 ```zen
-MolexPicoBlade("J1", variant="53047-0410_1x04_Vertical", P1=VCC, P2=GND.NET, P3=SDA, P4=SCL)
+MolexPicoBlade("J1", variant="53047-0410_1x04_Vertical", P1=VCC, P2=gnd.NET, P3=I2C_SDA, P4=I2C_SCL)
 ```
 
 ## Interfaces
@@ -257,9 +258,9 @@ MolexPicoBlade("J1", variant="53047-0410_1x04_Vertical", P1=VCC, P2=GND.NET, P3=
 load("@stdlib/interfaces.zen", "Uart", "I2c", "Spi", "Power", "Ground")
 
 # Basic interfaces
-uart = Uart(TX=Net("TX"), RX=Net("RX"))
-i2c = I2c(SDA=Net("SDA"), SCL=Net("SCL"))
-spi = Spi(CS=Net("CS"), MISO=Net("MISO"), MOSI=Net("MOSI"), CLK=Net("CLK"))
+uart = Uart(TX=Net("UART_TX"), RX=Net("UART_RX"))
+i2c = I2c(SDA=Net("I2C_SDA"), SCL=Net("I2C_SCL"))
+spi = Spi(CS=Net("SPI_CS"), MISO=Net("SPI_MISO"), MOSI=Net("SPI_MOSI"), CLK=Net("SPI_CLK"))
 
 # Interface pairs
 (uart_a, uart_b) = UartPair("MCU", "FTDI")  # Creates cross-connected UARTs
@@ -298,7 +299,7 @@ pin_map = {
 
 # Build connections
 builder = PinMapBuilder(pin_map)
-spi_bus = Spi(CLK=Net("CLK"), MISO=Net("MISO"), MOSI=Net("MOSI"), CS=Net("CS"))
+spi_bus = Spi(CLK=Net("SPI_CLK"), MISO=Net("SPI_MISO"), MOSI=Net("SPI_MOSI"), CS=Net("SPI_CS"))
 builder.assign("SPI1", spi_bus, clk="PA5", miso="PA6", mosi="PA7")
 pins = builder.build()
 ```
