@@ -52,23 +52,30 @@ P = [io(f"P{i}", Net) for i in range(1, pin_count + 1)]
 
 
 def _footprint(pin_count, style, variant, pitch):
-    base = "Jumper:SolderJumper-"
+    # Simplified mapping for common solder jumper footprints
+    if pin_count == 2:
+        if style == SolderJumperStyle("Open"):
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+        else:
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Bridged_Pad1.0x1.5mm.kicad_mod")
+    elif pin_count == 3:
+        if style == SolderJumperStyle("Open"):
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+        else:
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm.kicad_mod")
+    else:
+        error(f"Unsupported pin count: {pin_count}")
 
-    # Compose the footprint name
-    name = str(pin_count) + "_" + pitch.value + "_" + style.value
 
-    # Variant handling
-    if variant.value.startswith("Pad"):
-        name += "_Pad1.0x1.5mm"
-    elif variant.value.startswith("RoundedPad"):
-        name += "_RoundedPad1.0x1.5mm"
-    elif variant.value.zentswith("TrianglePad"):
-        name += "_TrianglePad1.0x1.5mm"
-
-    # NumberLabels
-    if "NumberLabels" in variant.value:
-        name += "_NumberLabels"
-    return base + name
+def _symbol(pin_count):
+    """Returns the appropriate jumper symbol based on pin count."""
+    # Use NetTie symbols for solder jumpers
+    if pin_count == 2:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_2")
+    elif pin_count == 3:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_3")
+    else:
+        error(f"Unsupported pin count: {pin_count}")
 
 
 def _pins_and_connections(pin_count):
@@ -95,6 +102,7 @@ pins, pin_defs = _pins_and_connections(pin_count)
 Component(
     name="SJ",
     type="solder_jumper",
+    symbol=_symbol(pin_count),
     footprint=_footprint(pin_count, style, variant, pitch),
     prefix="JP",
     pins=pins,

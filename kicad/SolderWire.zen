@@ -37,11 +37,14 @@ P1 = io("P1", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+def _symbol(size: SolderWireSize):
+    return Symbol(library = "@kicad-symbols/Connector_Generic.kicad_sym", name = "Conn_01x01")
+
 def _footprint(size: SolderWireSize) -> str:
     """Returns the appropriate solder wire pad footprint based on the size."""
     footprints = {
-        SolderWireSize("SMD_1x2mm"): "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm",
-        SolderWireSize("SMD_5x10mm"): "Connector_Wire:SolderWirePad_1x01_SMD_5x10mm",
+        SolderWireSize("SMD_1x2mm"): File("@kicad-footprints/Connector_Wire.pretty/SolderWirePad_1x01_SMD_1x2mm.kicad_mod"),
+        SolderWireSize("SMD_5x10mm"): File("@kicad-footprints/Connector_Wire.pretty/SolderWirePad_1x01_SMD_5x10mm.kicad_mod"),
     }
 
     if size not in footprints:
@@ -56,7 +59,7 @@ Component(
     name = "SW",
     type = "solder_wire",
     footprint = _footprint(size),
-    symbol = "Connector_Generic:Conn_01x01",
+    symbol = _symbol(size),
     prefix = "P",
     pins = {"P1": P1},
     pin_defs = {"P1": "1"},

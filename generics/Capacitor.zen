@@ -5,7 +5,7 @@ load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
 # Component types
 # -----------------------------------------------------------------------------
 
-Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512")
+Package = enum("0201", "0402", "0603", "0805", "1206", "1210")
 Mount = enum("SMD")
 Dielectric = enum("C0G", "NP0", "X5R", "X7R", "X7S", "X7T", "Y5V", "Z5U")
 
@@ -46,16 +46,17 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _footprint(mount: Mount, package: Package) -> str:
+def _symbol(mount: Mount, package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "C")
+
+def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
-        (Mount("SMD"), Package("0201")): "Capacitor_SMD:C_0201_0603Metric",
-        (Mount("SMD"), Package("0402")): "Capacitor_SMD:C_0402_1005Metric",
-        (Mount("SMD"), Package("0603")): "Capacitor_SMD:C_0603_1608Metric",
-        (Mount("SMD"), Package("0805")): "Capacitor_SMD:C_0805_2012Metric",
-        (Mount("SMD"), Package("1206")): "Capacitor_SMD:C_1206_3216Metric",
-        (Mount("SMD"), Package("1210")): "Capacitor_SMD:C_1210_3225Metric",
-        (Mount("SMD"), Package("2010")): "Capacitor_SMD:C_2010_5025Metric",
-        (Mount("SMD"), Package("2512")): "Capacitor_SMD:C_2512_7032Metric",
+        (Mount("SMD"), Package("0201")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod"),
+        (Mount("SMD"), Package("0402")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod"),
+        (Mount("SMD"), Package("0603")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod"),
+        (Mount("SMD"), Package("0805")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod"),
+        (Mount("SMD"), Package("1206")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod"),
+        (Mount("SMD"), Package("1210")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod"),
     }
 
     if (mount, package) not in kicad_footprints:
@@ -71,7 +72,7 @@ Component(
     name = "CAPACITOR",
     type = "capacitor",
     prefix = "C",
-    symbol = "Device:C",
+    symbol = _symbol(mount, package),
     footprint = _footprint(mount, package),
     properties = properties,
     pins = {

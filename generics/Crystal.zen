@@ -56,20 +56,23 @@ GND = io("GND", Net, optional = True)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _footprint(package: Package) -> str:
+def _symbol(package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
+
+def _footprint(package: Package):
     _footprints = {
-        Package("2012_2Pin"): "Crystal:Crystal_SMD_2012-2Pin_2.0x1.2mm",
-        Package("3215_2Pin"): "Crystal:Crystal_SMD_3215-2Pin_3.2x1.5mm",
-        Package("5032_2Pin"): "Crystal:Crystal_SMD_5032-2Pin_5.0x3.2mm",
-        Package("5032_4Pin"): "Crystal:Crystal_SMD_5032-4Pin_5.0x3.2mm",
-        Package("7050_2Pin"): "Crystal:Crystal_SMD_7050-2Pin_7.0x5.0mm",
-        Package("7050_4Pin"): "Crystal:Crystal_SMD_7050-4Pin_7.0x5.0mm",
-        Package("3225_4Pin"): "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
-        Package("2520_4Pin"): "Crystal:Crystal_SMD_2520-4Pin_2.5x2.0mm",
-        Package("2016_4Pin"): "Crystal:Crystal_SMD_2016-4Pin_2.0x1.6mm",
-        Package("1210_4Pin"): "Crystal:Crystal_SMD_1210-4Pin_1.2x1.0mm",
-        Package("0603_2Pin"): "Crystal:Crystal_SMD_0603-2Pin_6.0x3.5mm",
-        Package("0603_4Pin"): "Crystal:Crystal_SMD_0603-4Pin_6.0x3.5mm",
+        Package("2012_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2012-2Pin_2.0x1.2mm.kicad_mod"),
+        Package("3215_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_3215-2Pin_3.2x1.5mm.kicad_mod"),
+        Package("5032_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-2Pin_5.0x3.2mm.kicad_mod"),
+        Package("5032_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-4Pin_5.0x3.2mm.kicad_mod"),
+        Package("7050_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-2Pin_7.0x5.0mm.kicad_mod"),
+        Package("7050_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-4Pin_7.0x5.0mm.kicad_mod"),
+        Package("3225_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_3225-4Pin_3.2x2.5mm.kicad_mod"),
+        Package("2520_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2520-4Pin_2.5x2.0mm.kicad_mod"),
+        Package("2016_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2016-4Pin_2.0x1.6mm.kicad_mod"),
+        Package("1210_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_1210-4Pin_1.2x1.0mm.kicad_mod"),
+        Package("0603_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-2Pin_6.0x3.5mm.kicad_mod"),
+        Package("0603_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-4Pin_6.0x3.5mm.kicad_mod"),
     }
 
     return _footprints[package]
@@ -111,6 +114,7 @@ Component(
     name = "CRYSTAL",
     type = "crystal",
     prefix = "Y",
+    symbol = _symbol(package),
     footprint = _footprint(package),
     pins = pins,
     pin_defs = pin_defs,
