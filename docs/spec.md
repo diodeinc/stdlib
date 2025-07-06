@@ -23,7 +23,8 @@ Capacitor("C1", "100nF", "0402", voltage="16V", P1=vcc.NET, P2=gnd.NET)
 
 **Nets**: `Net("name")`, `Power("VCC")`, `Ground("GND")`, `Gpio("GPIO1")`, `NotConnected()`  
 **Access**: Use `.NET` on interface nets: `VCC.NET`, `gnd.NET`  
-**Loading**: `load("@stdlib/generics/Component.zen", Component = "Module")`  
+**Loading**: `load("@stdlib/interfaces.zen", "Power", "Ground", "Spi")`  
+**Generics**: `Generic = Module("@stdlib/generics/<Generic>.zen")`  
 **Naming Convention**: Net variables should be CAPITALIZED (e.g., `UART_TX`, `LED_CTRL`), while interface variables should be lowercase (e.g., `uart`, `spi`, `i2c`)
 
 ## Units
