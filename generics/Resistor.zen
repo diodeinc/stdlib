@@ -39,7 +39,10 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _footprint(package: Package):
+def _symbol(mount: Mount, package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R")
+
+def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
         Package("0201"): File("@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod"),
         Package("0402"): File("@kicad-footprints/Resistor_SMD.pretty/R_0402_1005Metric.kicad_mod"),
@@ -62,8 +65,8 @@ def _footprint(package: Package):
 
 Component(
     name = "R",
-    symbol = Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R_US"),
-    footprint = _footprint(package),
+    symbol = _symbol(mount, package),
+    footprint = _footprint(mount, package),
     prefix = "R",
     pin_defs = {
         "P1": "1",
