@@ -57,7 +57,6 @@ def _footprint(size: SolderWireSize) -> str:
 
 Component(
     name = "SW",
-    type = "solder_wire",
     footprint = _footprint(size),
     symbol = _symbol(size),
     prefix = "P",

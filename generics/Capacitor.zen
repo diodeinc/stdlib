@@ -70,7 +70,6 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "CAPACITOR",
-    type = "capacitor",
     prefix = "C",
     symbol = _symbol(mount, package),
     footprint = _footprint(mount, package),

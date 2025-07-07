@@ -62,7 +62,6 @@ def _footprint(package: Package):
 
 Component(
     name = "R",
-    type = "resistor",
     symbol = Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R_US"),
     footprint = _footprint(package),
     prefix = "R",

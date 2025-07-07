@@ -112,7 +112,6 @@ pins, pin_defs = _pin_defs_and_pins(package, XIN, XOUT, GND)
 
 Component(
     name = "CRYSTAL",
-    type = "crystal",
     prefix = "Y",
     symbol = _symbol(package),
     footprint = _footprint(package),
