@@ -40,7 +40,7 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "L_Coupled")
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "L")
 
 def _footprint(package: Package) -> str:
     """Returns the appropriate inductor footprint based on the package."""

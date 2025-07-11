@@ -68,7 +68,7 @@ Capacitor(
     package = "0805",
     dielectric = "X5R",
     voltage = "25V",
-    P1 = VCC_5V,
+    P1 = VCC_3V3,
     P2 = GND.NET,
 )
 
