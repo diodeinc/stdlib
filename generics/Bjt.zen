@@ -1,5 +1,5 @@
-load("../units.star", "Voltage", "Current", "Frequency")
-load("../config.star", "config_unit", "config_properties")
+load("../units.zen", "Voltage", "Current", "Frequency")
+load("../config.zen", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -54,7 +54,7 @@ EMITTER = io("EMITTER", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("SOT-23-3"): "Package_TO_SOT_SMD:SOT-23-3",
+        Package("SOT-23-3"): File("@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod"),
     }
 
     if package not in kicad_footprints:
@@ -68,6 +68,18 @@ def _name(bjt_type: BjtType) -> str:
     return f"{type_str}-bjt"
 
 
+def _symbol(bjt_type: BjtType):
+    symbols = {
+        BjtType("NPN"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_NPN"),
+        BjtType("PNP"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_PNP"),
+    }
+    
+    if bjt_type not in symbols:
+        error("Invalid BJT type: " + str(bjt_type))
+    
+    return symbols[bjt_type]
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -75,6 +87,7 @@ def _name(bjt_type: BjtType) -> str:
 Component(
     name="BJT",
     type=_name(bjt_type),
+    symbol=_symbol(bjt_type),
     footprint=_footprint(package),
     prefix="Q",
     pins={

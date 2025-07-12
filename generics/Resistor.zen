@@ -1,5 +1,5 @@
-load("../config.star", "config_properties", "config_unit")
-load("../units.star", "Current", "Inductance")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Resistance", "Voltage")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -14,18 +14,18 @@ Mount = enum("SMD")
 
 # Required
 package = config("package", Package, convert = Package)
-value = config_unit("value", Inductance)
+value = config_unit("value", Resistance)
 
 # Optional
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-current = config_unit("current", Current, optional = True)
+voltage = config_unit("voltage", Voltage, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
     "mount": mount,
     "package": package,
-    "inductance": value,
-    "current": current,
+    "resistance": value,
+    "voltage": voltage,
 })
 
 # -----------------------------------------------------------------------------
@@ -39,34 +39,35 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _footprint(package: Package) -> str:
-    """Returns the appropriate inductor footprint based on the package."""
-    footprints = {
-        Package("0201"): "Inductor_SMD:L_0201_0603Metric",
-        Package("0402"): "Inductor_SMD:L_0402_1005Metric",
-        Package("0603"): "Inductor_SMD:L_0603_1608Metric",
-        Package("0805"): "Inductor_SMD:L_0805_2012Metric",
-        Package("1206"): "Inductor_SMD:L_1206_3216Metric",
-        Package("1210"): "Inductor_SMD:L_1210_3225Metric",
-        Package("2010"): "Inductor_SMD:L_2010_5025Metric",
-        Package("2512"): "Inductor_SMD:L_2512_7032Metric",
+def _symbol(mount: Mount, package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R")
+
+def _footprint(mount: Mount, package: Package):
+    kicad_footprints = {
+        Package("0201"): File("@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod"),
+        Package("0402"): File("@kicad-footprints/Resistor_SMD.pretty/R_0402_1005Metric.kicad_mod"),
+        Package("0603"): File("@kicad-footprints/Resistor_SMD.pretty/R_0603_1608Metric.kicad_mod"),
+        Package("0805"): File("@kicad-footprints/Resistor_SMD.pretty/R_0805_2012Metric.kicad_mod"),
+        Package("1206"): File("@kicad-footprints/Resistor_SMD.pretty/R_1206_3216Metric.kicad_mod"),
+        Package("1210"): File("@kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod"),
+        Package("2010"): File("@kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod"),
+        Package("2512"): File("@kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod"),
     }
 
-    if package not in footprints:
+    if package not in kicad_footprints:
         error("Invalid package: " + str(package))
 
-    return footprints[package]
+    return kicad_footprints[package]
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "INDUCTOR",
-    type = "inductor",
-    symbol = "Device:L",
-    footprint = _footprint(package),
-    prefix = "L",
+    name = "R",
+    symbol = _symbol(mount, package),
+    footprint = _footprint(mount, package),
+    prefix = "R",
     pin_defs = {
         "P1": "1",
         "P2": "2",

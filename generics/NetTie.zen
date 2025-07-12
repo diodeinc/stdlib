@@ -1,4 +1,4 @@
-load("../config.star", "config_properties")
+load("../config.zen", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -38,10 +38,26 @@ P = [io(f"P{i}", Net) for i in range(1, pin_count + 1)]
 
 def _get_footprint(pin_count, mount_type, pad_size):
     """Returns the appropriate net tie footprint."""
-    pins = str(pin_count)
-    mount = mount_type.value
-    pad = pad_size.value
-    return f"NetTie:NetTie-{pins}_{mount}_Pad{pad}"
+    # Use jumper footprints as a substitute for net ties
+    if pin_count == 2:
+        return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+    elif pin_count == 3:
+        return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+    else:
+        # For 4-pin, use a 2x2 jumper arrangement
+        return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+
+
+def _get_symbol(pin_count):
+    """Returns the appropriate net tie symbol based on pin count."""
+    if pin_count == 2:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_2")
+    elif pin_count == 3:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_3")
+    elif pin_count == 4:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_4")
+    else:
+        error(f"Unsupported pin count: {pin_count}")
 
 
 def _get_pins_and_connections(P):
@@ -76,6 +92,7 @@ pins, pin_defs = _get_pins_and_connections(P)
 Component(
     name="NT",
     type="net_tie",
+    symbol=_get_symbol(pin_count),
     footprint=_get_footprint(pin_count, mount_type, pad_size),
     prefix="NT",
     pins=pins,
