@@ -61,7 +61,7 @@ def _symbol(package: Package):
     if "2Pin" in str(package):
         return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
     else:
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal_GND2")
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal_GND24")
 
 def _footprint(package: Package):
     _footprints = {
@@ -89,6 +89,7 @@ def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
             "1": XIN,
             "2": GND,
             "3": XOUT,
+            "4": GND,
         }
     else:
         pins = {

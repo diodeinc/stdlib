@@ -43,9 +43,9 @@ properties = config_properties({
 # IO ports
 # -----------------------------------------------------------------------------
 
-COLLECTOR = io("COLLECTOR", Net)
-BASE = io("BASE", Net)
-EMITTER = io("EMITTER", Net)
+C = io("C", Net)
+B = io("B", Net)
+E = io("E", Net)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -91,9 +91,9 @@ Component(
     footprint=_footprint(package),
     prefix="Q",
     pins={
-        "B": BASE,
-        "C": COLLECTOR,
-        "E": EMITTER,
+        "B": B,
+        "C": C,
+        "E": E,
     },
     properties=properties,
 )

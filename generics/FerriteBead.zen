@@ -73,9 +73,13 @@ Component(
     symbol = _symbol(package),
     footprint = _footprint(package),
     prefix = "FB",
+    pin_defs = {
+        "P1": "1",
+        "P2": "2",
+    },
     pins = {
-        "1": P1,
-        "2": P2,
+        "P1": P1,
+        "P2": P2,
     },
     properties = properties,
 )

@@ -37,9 +37,9 @@ properties = config_properties({
 # IO ports
 # -----------------------------------------------------------------------------
 
-DRAIN = io("DRAIN", Net)
-GATE = io("GATE", Net)
-SOURCE = io("SOURCE", Net)
+D = io("D", Net)
+G = io("G", Net)
+S = io("S", Net)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -82,9 +82,9 @@ Component(
     footprint=_footprint(package),
     prefix="M",
     pins={
-        "G": GATE,
-        "D": DRAIN,
-        "S": SOURCE,
+        "G": G,
+        "D": D,
+        "S": S,
     },
     properties=properties,
 )

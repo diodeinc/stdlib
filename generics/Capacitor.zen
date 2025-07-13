@@ -1,3 +1,4 @@
+load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
 
@@ -75,8 +76,12 @@ Component(
     symbol = _symbol(mount, package),
     footprint = _footprint(mount, package),
     properties = properties,
+    pin_defs = {
+        "P1": "1",
+        "P2": "2",
+    },
     pins = {
-        "1": P1,
-        "2": P2,
+        "P1": P1,
+        "P2": P2,
     },
 )
