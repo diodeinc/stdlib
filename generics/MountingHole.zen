@@ -1,5 +1,5 @@
-load("../units.zen", "unit")
 load("../config.zen", "config_properties")
+load("../units.zen", "unit")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -13,9 +13,9 @@ Plating = enum("TopBottom", "TopOnly", "Via")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-diameter = config("diameter", Diameter, convert=Diameter)
-standard = config("standard", Standard, default=Standard("DIN965"), convert=Standard, optional=True)
-plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
+diameter = config("diameter", Diameter, convert = Diameter)
+standard = config("standard", Standard, default = Standard("DIN965"), convert = Standard, optional = True)
+plating = config("plating", Plating, default = Plating("TopBottom"), convert = Plating, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -28,12 +28,11 @@ properties = config_properties({
 # IO ports
 # -----------------------------------------------------------------------------
 
-P1 = io("P1", Net, optional=True)
+P1 = io("P1", Net, optional = True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Plating | None = None) -> str:
     """
@@ -47,6 +46,7 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
     Returns:
     - Footprint path string
     """
+
     # For simplicity, we'll use basic mounting hole footprints
     # The full parametric mapping would require too many combinations
     basic_footprints = {
@@ -64,22 +64,18 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
 
     return basic_footprints[diameter]
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="MH",
-    type="mounting_hole",
-    symbol=Symbol(library = "@kicad-symbols/Mechanical.kicad_sym", name = "MountingHole"),
-    footprint=_footprint(diameter, standard, plating),
-    prefix="H",
-    pin_defs={
-        "P1": "1",
+    name = "MH",
+    type = "mounting_hole",
+    symbol = Symbol(library = "@kicad-symbols/Mechanical.kicad_sym", name = "MountingHole_Pad"),
+    footprint = _footprint(diameter, standard, plating),
+    prefix = "H",
+    pins = {
+        "1": P1,
     },
-    pins={
-        "P1": P1,
-    },
-    properties=properties,
+    properties = properties,
 )

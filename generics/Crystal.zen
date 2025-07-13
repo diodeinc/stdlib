@@ -7,6 +7,7 @@ load("../units.zen", "Capacitance", "Frequency")
 
 Mount = enum("SMD")
 Package = enum(
+    "0603_4Pin",
     "2012_2Pin",
     "3215_2Pin",
     "5032_2Pin",
@@ -18,7 +19,6 @@ Package = enum(
     "2016_4Pin",
     "1210_4Pin",
     "0603_2Pin",
-    "0603_4Pin",
 )
 
 # -----------------------------------------------------------------------------
@@ -58,7 +58,10 @@ GND = io("GND", Net, optional = True)
 # -----------------------------------------------------------------------------
 
 def _symbol(package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
+    if "2Pin" in str(package):
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
+    else:
+        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal_GND2")
 
 def _footprint(package: Package):
     _footprints = {
@@ -78,45 +81,31 @@ def _footprint(package: Package):
 
     return _footprints[package]
 
-def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
+def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
         if not GND:
             error("GND is required for 4-pin crystals")
         pins = {
-            "XIN": XIN,
-            "GND1": GND,
-            "XOUT": XOUT,
-            "GND2": GND,
-        }
-        pin_defs = {
-            "XIN": "1",
-            "GND1": "2",
-            "XOUT": "3",
-            "GND2": "4",
+            "1": XIN,
+            "2": GND,
+            "3": XOUT,
         }
     else:
         pins = {
-            "XIN": XIN,
-            "XOUT": XOUT,
+            "1": XIN,
+            "2": XOUT,
         }
-        pin_defs = {
-            "XIN": "1",
-            "XOUT": "2",
-        }
-    return pins, pin_defs
+    return pins
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
-
-pins, pin_defs = _pin_defs_and_pins(package, XIN, XOUT, GND)
 
 Component(
     name = "CRYSTAL",
     prefix = "Y",
     symbol = _symbol(package),
     footprint = _footprint(package),
-    pins = pins,
-    pin_defs = pin_defs,
+    pins = _pins(package, XIN, XOUT, GND),
     properties = properties,
 )

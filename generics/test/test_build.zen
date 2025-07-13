@@ -15,7 +15,6 @@ Resistor = Module("../Resistor.zen")
 SolderJumper = Module("../SolderJumper.zen")
 TestPoint = Module("../TestPoint.zen")
 
-
 # Create test nets
 VCC_3V3 = Net("VCC_3V3")
 VCC_5V = Net("VCC_5V")

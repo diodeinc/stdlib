@@ -60,7 +60,6 @@ Component(
     footprint = _footprint(size),
     symbol = _symbol(size),
     prefix = "P",
-    pins = {"P1": P1},
-    pin_defs = {"P1": "1"},
+    pins = {"Pin_1": P1},
     properties = properties,
 )

@@ -91,14 +91,9 @@ Component(
     footprint=_footprint(package),
     prefix="Q",
     pins={
-        "COLLECTOR": COLLECTOR,
-        "BASE": BASE,
-        "EMITTER": EMITTER,
-    },
-    pin_defs={
-        "COLLECTOR": "1",
-        "BASE": "2",
-        "EMITTER": "3",
+        "B": BASE,
+        "C": COLLECTOR,
+        "E": EMITTER,
     },
     properties=properties,
 )

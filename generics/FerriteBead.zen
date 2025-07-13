@@ -1,5 +1,5 @@
-load("../units.zen", "Resistance", "Current", "Frequency")
-load("../config.zen", "config_unit", "config_properties")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Current", "Frequency", "Resistance")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -13,13 +13,13 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package, convert = Package)
 resistance = config_unit("resistance", Resistance)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-current = config_unit("current", Current, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+current = config_unit("current", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -45,7 +45,6 @@ P2 = io("P2", Net)
 def _symbol(package: Package):
     return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "FerriteBead")
 
-
 def _footprint(package: Package) -> str:
     """Returns the resistor SMD footprint for the ferrite bead based on the package."""
     resistor_footprints = {
@@ -64,24 +63,19 @@ def _footprint(package: Package) -> str:
 
     return resistor_footprints[package]
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="FB",
-    type="ferrite_bead",
-    symbol=_symbol(package),
-    footprint=_footprint(package),
-    prefix="FB",
-    pin_defs={
-        "P1": "1",
-        "P2": "2",
+    name = "FB",
+    type = "ferrite_bead",
+    symbol = _symbol(package),
+    footprint = _footprint(package),
+    prefix = "FB",
+    pins = {
+        "1": P1,
+        "2": P2,
     },
-    pins={
-        "P1": P1,
-        "P2": P2,
-    },
-    properties=properties,
+    properties = properties,
 )

@@ -76,11 +76,7 @@ Component(
     footprint = _footprint(mount, package),
     properties = properties,
     pins = {
-        "P1": P1,
-        "P2": P2,
-    },
-    pin_defs = {
-        "P1": "1",
-        "P2": "2",
+        "1": P1,
+        "2": P2,
     },
 )

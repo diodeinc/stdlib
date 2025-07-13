@@ -69,12 +69,10 @@ def _symbol(tag_type: TagConnectType):
 # -----------------------------------------------------------------------------
 
 pins = {}
-pin_defs = {}
 
 for i in range(1, _pin_count(tag_type) + 1):
-    pin_name = f"P{i}"
+    pin_name = f"Pin_{i}"
     pins[pin_name] = io(pin_name, Net)
-    pin_defs[pin_name] = str(i)
 
 
 # -----------------------------------------------------------------------------
@@ -88,7 +86,6 @@ Component(
     footprint=_footprint(tag_type),
     prefix="J",
     pins=pins,
-    pin_defs=pin_defs,
     properties=Properties(
         properties,
         {

@@ -81,15 +81,10 @@ Component(
     symbol=_symbol(channel),
     footprint=_footprint(package),
     prefix="M",
-    pin_defs={
-        "DRAIN": "1",
-        "GATE": "2",
-        "SOURCE": "3",
-    },
     pins={
-        "DRAIN": DRAIN,
-        "GATE": GATE,
-        "SOURCE": SOURCE,
+        "G": GATE,
+        "D": DRAIN,
+        "S": SOURCE,
     },
     properties=properties,
 )

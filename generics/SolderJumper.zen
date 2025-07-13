@@ -100,7 +100,7 @@ def _pins_and_connections(pin_count):
     pins = {}
     nets = P
     for i in range(pin_count):
-        pin_name = "P" + str(i + 1)
+        pin_name = str(i + 1)
         pin_defs[pin_name] = str(i + 1)
         net = nets[i]
         if net != None:
@@ -121,6 +121,5 @@ Component(
     footprint=_footprint(pin_count, style, variant, pitch),
     prefix="JP",
     pins=pins,
-    pin_defs=pin_defs,
     properties=properties,
 )

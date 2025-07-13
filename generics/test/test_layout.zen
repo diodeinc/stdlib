@@ -1,19 +1,51 @@
 """Comprehensive test for all generic components."""
 
+load("/Users/davide/src/diodeinc/packages/stdlib/generics/MountingHole.zen", "diameter")
+
 # Load all generic components
 load("../../properties.zen", "Layout")
 
 Capacitor = Module("../Capacitor.zen")
 Resistor = Module("../Resistor.zen")
 Led = Module("../Led.zen")
+Crystal = Module("../Crystal.zen")
+Inductor = Module("../Inductor.zen")
+FerriteBead = Module("../FerriteBead.zen")
+MountingHole = Module("../MountingHole.zen")
 
-Capacitor(name = "C1", value = "100nF", voltage = "16V", dielectric = "X7R", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
-Capacitor(name = "C2", value = "100nF", package = "0201", mpn = "MPN_C2", P1 = Net("P1"), P2 = Net("P2"))
-Resistor(name = "R1", value = "100kOhm", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
-Resistor(name = "R2", value = "1kOhm", package = "0201", mpn = "MPN_R2", P1 = Net("P1"), P2 = Net("P2"))
-Led(name = "D1", color = "red", package = "0603", A = Net("LED_A"), K = Net("LED_K"))
-Led(name = "D2", color = "blue", package = "0805", forward_voltage = "3.3V", forward_current = "20mA", A = Net("LED_A2"), K = Net("LED_K2"))
-Led(name = "D3", color = "green", package = "0402", mpn = "MPN_LED3", A = Net("LED_A3"), K = Net("LED_K3"))
+# Capacitors
+for package in Capacitor.Package.values():
+    Capacitor(name = "C_" + str(package), value = "100nF", voltage = "16V", dielectric = "X7R", package = package, P1 = Net("P1"), P2 = Net("P2"))
+
+# Resistors
+for package in Resistor.Package.values():
+    Resistor(name = "R_" + str(package), value = "100kOhm", package = package, P1 = Net("P1"), P2 = Net("P2"))
+
+# Inductors
+for package in Inductor.Package.values():
+    Inductor(name = "L_" + str(package), value = "100uH", package = package, P1 = Net("P1"), P2 = Net("P2"))
+
+# Ferrite Beads
+for package in FerriteBead.Package.values():
+    FerriteBead(name = "FB_" + str(package), package = package, P1 = Net("P1"), P2 = Net("P2"))
+
+# LEDs
+for package in Led.Package.values():
+    Led(name = "D_" + str(package), color = "red", package = package, A = Net("LED_A"), K = Net("LED_K"))
+
+# Crystals 2Pin
+for package in [package for package in Crystal.Package.values() if "2Pin" in str(package)]:
+    Crystal(name = "Y_" + str(package), package = package, XIN = Net("XIN_" + str(package)), XOUT = Net("XOUT_" + str(package)))
+
+# Crystals 4Pin
+for package in [package for package in Crystal.Package.values() if "4Pin" in str(package)]:
+    Crystal(name = "Y" + str(package), package = package, XIN = Net("XIN_" + str(package)), XOUT = Net("XOUT_" + str(package)), GND = Net("GND_" + str(package)))
+
+# Mounting Holes
+for diameter in MountingHole.Diameter.values():
+    for standard in MountingHole.Standard.values():
+        for plating in MountingHole.Plating.values():
+            MountingHole(name = "MH_" + str(diameter) + "_" + str(standard) + "_" + str(plating), diameter = diameter, standard = standard, plating = plating)
 
 Layout(
     name = "C1",

@@ -83,34 +83,25 @@ def _get_symbol(pin_count):
         error(f"Unsupported pin count: {pin_count}")
 
 
-def _get_pins_and_connections(P):
+def _get_pins(P):
     """Get both the pin specifications and connection mappings based on pin count."""
-    pin_defs = {
-        "P1": "1",
-        "P2": "2",
-    }
     pins = {
-        "P1": P[0],
-        "P2": P[1],
+        "1": P[0],
+        "2": P[1],
     }
 
     if str(pin_count) >= "3":
-        pin_defs["P3"] = "3"
-        pins["P3"] = P[2]
+        pins["3"] = P[2]
 
     if str(pin_count) >= "4":
-        pin_defs["P4"] = "4"
-        pins["P4"] = P[3]
+        pins["4"] = P[3]
 
-    return pins, pin_defs
+    return pins
 
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
-
-# Determine pin count based on provided nets
-pins, pin_defs = _get_pins_and_connections(P)
 
 Component(
     name="NT",
@@ -118,7 +109,6 @@ Component(
     symbol=_get_symbol(pin_count),
     footprint=_get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint),
     prefix="NT",
-    pins=pins,
-    pin_defs=pin_defs,
+    pins=_get_pins(P),
     properties=properties,
 )
