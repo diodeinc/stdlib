@@ -24,7 +24,7 @@ Gpio = interface(
 )
 
 Ground = interface(
-    NET = Net("GND", type = "ground"),
+    NET = Net("GND"),
 )
 
 I2c = interface(
@@ -116,7 +116,7 @@ OscPair = interface(
 )
 
 Power = interface(
-    NET = Net("VCC", type = "power"),
+    NET = Net("VCC"),
 )
 
 Pwm = interface(
