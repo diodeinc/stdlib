@@ -116,7 +116,6 @@ Component(
     prefix = "Y",
     symbol = _symbol(package),
     footprint = _footprint(package),
-    symbol = "Device:Crystal",
     pins = pins,
     pin_defs = pin_defs,
     properties = properties,

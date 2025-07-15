@@ -74,7 +74,6 @@ Component(
     type="mounting_hole",
     symbol=Symbol(library = "@kicad-symbols/Mechanical.kicad_sym", name = "MountingHole"),
     footprint=_footprint(diameter, standard, plating),
-    symbol="Mechanical:MountingHole",
     prefix="H",
     pin_defs={
         "P1": "1",

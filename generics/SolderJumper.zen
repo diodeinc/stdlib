@@ -119,7 +119,6 @@ Component(
     type="solder_jumper",
     symbol=_symbol(pin_count),
     footprint=_footprint(pin_count, style, variant, pitch),
-    symbol=_get_symbol(pin_count, style),
     prefix="JP",
     pins=pins,
     pin_defs=pin_defs,

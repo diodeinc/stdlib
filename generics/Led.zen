@@ -77,7 +77,6 @@ Component(
     symbol=Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "LED"),
     footprint=_footprint(package),
     prefix="D",
-    symbol="Device:LED",
     pin_defs={
         "K": "1",
         "A": "2",
