@@ -100,7 +100,7 @@ Capacitance = record(
     value=float,
     unit=field(Farads, Farads("F")),
     tolerance=field(float, 0.1),
-    __str__=field(typing.Callable, _unit_to_str_with_tolerance),
+    __str__=field(typing.Callable, _unit_to_str),
 )
 Resistance = record(
     value=float,
