@@ -5,7 +5,7 @@ load(
     "I2c",
     "OscPair",
     "Power",
-    "PwmPair",
+    "Pwm",
     "Qspi",
     "Spi",
     "Swd",
@@ -39,14 +39,14 @@ def PinMap(pins: Pins = {}):
     UART1 = PinInterface("UART1", Uart)
     SPI0 = PinInterface("SPI0", Spi)
     SPI1 = PinInterface("SPI1", Spi)
-    PWM0 = PinInterface("PWM0", PwmPair)
-    PWM1 = PinInterface("PWM1", PwmPair)
-    PWM2 = PinInterface("PWM2", PwmPair)
-    PWM3 = PinInterface("PWM3", PwmPair)
-    PWM4 = PinInterface("PWM4", PwmPair)
-    PWM5 = PinInterface("PWM5", PwmPair)
-    PWM6 = PinInterface("PWM6", PwmPair)
-    PWM7 = PinInterface("PWM7", PwmPair)
+    PWM0 = PinInterface("PWM0", Pwm)
+    PWM1 = PinInterface("PWM1", Pwm)
+    PWM2 = PinInterface("PWM2", Pwm)
+    PWM3 = PinInterface("PWM3", Pwm)
+    PWM4 = PinInterface("PWM4", Pwm)
+    PWM5 = PinInterface("PWM5", Pwm)
+    PWM6 = PinInterface("PWM6", Pwm)
+    PWM7 = PinInterface("PWM7", Pwm)
     ADC0 = PinInterface("ADC0", Analog)
     ADC1 = PinInterface("ADC1", Analog)
     ADC2 = PinInterface("ADC2", Analog)
