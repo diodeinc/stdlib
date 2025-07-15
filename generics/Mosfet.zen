@@ -1,5 +1,5 @@
-load("../units.star", "Voltage", "Current")
-load("../config.star", "config_unit", "config_properties")
+load("../units.zen", "Voltage", "Current")
+load("../config.zen", "config_unit", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -48,13 +48,25 @@ SOURCE = io("SOURCE", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("SOT-23-3"): "Package_TO_SOT_SMD:SOT-23-3",
+        Package("SOT-23-3"): File("@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod"),
     }
 
     if package not in kicad_footprints:
         error("Invalid package: " + str(package))
 
     return kicad_footprints[package]
+
+
+def _symbol(channel: MosfetChannel):
+    symbols = {
+        MosfetChannel("N"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_NMOS"),
+        MosfetChannel("P"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_PMOS"),
+    }
+    
+    if channel not in symbols:
+        error("Invalid MOSFET channel: " + str(channel))
+    
+    return symbols[channel]
 
 
 # -----------------------------------------------------------------------------
@@ -66,6 +78,7 @@ channel_type = str(channel.value).lower()
 Component(
     name="MOSFET",
     type=f"{channel_type}-mosfet",
+    symbol=_symbol(channel),
     footprint=_footprint(package),
     prefix="M",
     symbol="Device:Q_NMOS_DGS",

@@ -1,5 +1,5 @@
-load("../config.star", "config_properties", "config_unit")
-load("../units.star", "Resistance", "Voltage")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Resistance", "Voltage")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -40,16 +40,19 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _footprint(package: Package) -> str:
+def _symbol(mount: Mount, package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R")
+
+def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
-        Package("0201"): "Resistor_SMD:R_0201_0603Metric",
-        Package("0402"): "Resistor_SMD:R_0402_1005Metric",
-        Package("0603"): "Resistor_SMD:R_0603_1608Metric",
-        Package("0805"): "Resistor_SMD:R_0805_2012Metric",
-        Package("1206"): "Resistor_SMD:R_1206_3216Metric",
-        Package("1210"): "Resistor_SMD:R_1210_3225Metric",
-        Package("2010"): "Resistor_SMD:R_2010_5025Metric",
-        Package("2512"): "Resistor_SMD:R_2512_6332Metric",
+        Package("0201"): File("@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod"),
+        Package("0402"): File("@kicad-footprints/Resistor_SMD.pretty/R_0402_1005Metric.kicad_mod"),
+        Package("0603"): File("@kicad-footprints/Resistor_SMD.pretty/R_0603_1608Metric.kicad_mod"),
+        Package("0805"): File("@kicad-footprints/Resistor_SMD.pretty/R_0805_2012Metric.kicad_mod"),
+        Package("1206"): File("@kicad-footprints/Resistor_SMD.pretty/R_1206_3216Metric.kicad_mod"),
+        Package("1210"): File("@kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod"),
+        Package("2010"): File("@kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod"),
+        Package("2512"): File("@kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod"),
     }
 
     if package not in kicad_footprints:
@@ -63,8 +66,8 @@ def _footprint(package: Package) -> str:
 
 Component(
     name = "R",
-    type = "resistor",
-    footprint = _footprint(package),
+    symbol = _symbol(mount, package),
+    footprint = _footprint(mount, package),
     prefix = "R",
     symbol = "Device:R_Small_US",
     pin_defs = {

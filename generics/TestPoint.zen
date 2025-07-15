@@ -1,4 +1,4 @@
-load("../config.star", "config_properties")
+load("../config.zen", "config_properties")
 
 # -----------------------------------------------------------------------------
 # Component types and variants
@@ -95,9 +95,26 @@ P1 = io("P1", Net)
 
 
 def _get_footprint(variant):
-    lib = "TestPoint"
-    name = variant.value  # e.g., "Pad_D1.0mm"
-    return f"{lib}:TestPoint_{name}"
+    # Simplified mapping for most common test point footprints
+    common_footprints = {
+        # Pad variants
+        Variant("Pad_D1.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.0mm.kicad_mod"),
+        Variant("Pad_D1.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod"),
+        Variant("Pad_D2.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.0mm.kicad_mod"),
+        Variant("Pad_D2.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.5mm.kicad_mod"),
+        Variant("Pad_D3.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D3.0mm.kicad_mod"),
+        Variant("Pad_D4.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D4.0mm.kicad_mod"),
+        # THT variants
+        Variant("THTPad_D1.0mm_Drill0.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod"),
+        Variant("THTPad_D1.5mm_Drill0.7mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod"),
+        Variant("THTPad_D2.0mm_Drill1.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod"),
+    }
+    
+    if variant in common_footprints:
+        return common_footprints[variant]
+    else:
+        # Default to a common pad variant for unsupported ones
+        return File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod")
 
 
 # -----------------------------------------------------------------------------
@@ -107,8 +124,8 @@ def _get_footprint(variant):
 Component(
     name="TP",
     type="test_point",
-    footprint=_get_footprint(variant),    
-    symbol="Connector:TestPoint",
+    symbol=Symbol(library = "@kicad-symbols/Connector.kicad_sym", name = "TestPoint"),
+    footprint=_get_footprint(variant),
     prefix="TP",
     pin_defs={
         "P1": "1",

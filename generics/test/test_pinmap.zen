@@ -1,5 +1,5 @@
 load(
-    "../../interfaces.star",
+    "../../interfaces.zen",
     "Analog",
     "Ground",
     "I2c",
@@ -13,7 +13,7 @@ load(
     "Usb2",
 )
 load(
-    "../../pins.star",
+    "../../pins.zen",
     "PinInterface",
     "PinMapBuilder",
     "Pins",
