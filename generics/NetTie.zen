@@ -56,7 +56,7 @@ def _get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint):
         pins = str(pin_count)
         mount = mount_type.value
         pad = pad_size.value
-        if mount == MountType("SMD_THT"):
+        if mount == "SMD_THT":
             if pin_count == 2:
                 if pad_size == PadSize("0.3mm"):
                     return File("footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod")
