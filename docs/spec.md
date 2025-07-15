@@ -7,8 +7,8 @@ load("@stdlib/interfaces.zen", "Ground", "Power")
 
 
 Resistor = Module("@stdlib/generics/Resistor.zen")
-Capacitor = Module("@stdlib/generics/Capacitor.star")
-Inductor = Module("@stdlib/generics/Inductor.star")
+Capacitor = Module("@stdlib/generics/Capacitor.zen")
+Inductor = Module("@stdlib/generics/Inductor.zen")
 
 vcc = Power("3V3")
 gnd = Ground("GND")
@@ -53,6 +53,8 @@ Capacitor("C1", "100nF", "0402", voltage="16V", P1=vcc.NET, P2=gnd.NET)
 | voltage | str  | ✗        | e.g. `"50V"`                                                   |
 
 ```zen
+Resistor = Module("@stdlib/generics/Resistor.zen")
+
 Resistor("R1", "10kOhm", "0603", P1=vcc.NET, P2=gnd.NET)
 Resistor("R2", "4.7kOhm 1%", "0402", voltage="50V", P1=SIG, P2=gnd.NET)
 ```
@@ -68,6 +70,8 @@ Resistor("R2", "4.7kOhm 1%", "0402", voltage="50V", P1=SIG, P2=gnd.NET)
 | esr        | str  | ✗        | e.g. `"100mOhm"`                                       |
 
 ```zen
+Capacitor = Module("@stdlib/generics/Capacitor.zen")
+
 Capacitor("C1", "100nF", "0402", voltage="16V", dielectric="X7R", P1=vcc.NET, P2=gnd.NET)
 Capacitor("C2", "10uF 20%", "1206", voltage="25V", P1=vin.NET, P2=gnd.NET)
 ```
@@ -81,6 +85,8 @@ Capacitor("C2", "10uF 20%", "1206", voltage="25V", P1=vin.NET, P2=gnd.NET)
 | current | str  | ✗        | e.g. `"1A"`                        |
 
 ```zen
+Inductor = Module("@stdlib/generics/Inductor.zen")
+
 Inductor("L1", "10uH", "0805", current="1A", P1=SW, P2=VOUT)
 ```
 
@@ -94,6 +100,8 @@ Inductor("L1", "10uH", "0805", current="1A", P1=SW, P2=VOUT)
 | current    | str  | ✗        | Current rating         |
 
 ```zen
+FerriteBead = Module("@stdlib/generics/FerriteBead.zen")
+
 FerriteBead("FB1", resistance="100Ohm", frequency="100MHz", package="0603", P1=VCC_IN, P2=VCC_OUT)
 ```
 
@@ -107,6 +115,8 @@ FerriteBead("FB1", resistance="100Ohm", frequency="100MHz", package="0603", P1=V
 | forward_current | str  | ✗        | e.g. `"20mA"`                                                                     |
 
 ```zen
+Led = Module("@stdlib/generics/Led.zen")
+
 Led("D1", color="green", package="0603", A=LED_CTRL, K=gnd.NET)
 Led("D2", color="red", package="0402", forward_voltage="2.0V", A=SIG, K=gnd.NET)
 ```
@@ -122,6 +132,8 @@ Led("D2", color="red", package="0402", forward_voltage="2.0V", A=SIG, K=gnd.NET)
 | ic_max   | str   | ✗        | Max collector current                     |
 
 ```zen
+Bjt = Module("@stdlib/generics/Bjt.zen")
+
 Bjt("Q1", bjt_type="NPN", package="SOT-23-3", COLLECTOR=LOAD, BASE=CTRL, EMITTER=gnd.NET)
 Bjt("Q2", bjt_type="PNP", package="SOT-23-3", hfe=100.0, vceo="30V", COLLECTOR=OUT, BASE=IN, EMITTER=VCC)
 ```
@@ -137,6 +149,8 @@ Bjt("Q2", bjt_type="PNP", package="SOT-23-3", hfe=100.0, vceo="30V", COLLECTOR=O
 | rds_on  | str  | ✗        | On-resistance        |
 
 ```zen
+Mosfet = Module("@stdlib/generics/Mosfet.zen")
+
 Mosfet("M1", channel="N", package="SOT-23-3", GATE=CTRL, DRAIN=LOAD, SOURCE=gnd.NET)
 Mosfet("M2", channel="P", package="SOT-23-3", vds_max="20V", GATE=EN, DRAIN=OUT, SOURCE=VCC)
 ```
@@ -152,6 +166,8 @@ Mosfet("M2", channel="P", package="SOT-23-3", vds_max="20V", GATE=EN, DRAIN=OUT,
 | esr              | str  | ✗        | Series resistance                                               |
 
 ```zen
+Crystal = Module("@stdlib/generics/Crystal.zen")
+
 Crystal("X1", frequency="16MHz", load_capacitance="18pF", package="5032_4Pin", XIN=MCU_XI, XOUT=MCU_XO, GND=gnd.NET)
 Crystal("X2", frequency="32.768kHz", load_capacitance="12.5pF", package="3225_4Pin", XIN=RTC_XI, XOUT=RTC_XO, GND=gnd.NET)
 ```
@@ -163,6 +179,8 @@ Crystal("X2", frequency="32.768kHz", load_capacitance="12.5pF", package="3225_4P
 | variant | str  | ✓        | `Pad_D1.0mm`, `Pad_D1.5mm`, `Pad_D2.0mm`, etc. |
 
 ```zen
+TestPoint = Module("@stdlib/generics/TestPoint.zen")
+
 TestPoint("TP1", variant="Pad_D1.5mm", P1=VCC_3V3)
 TestPoint("TP2", variant="Pad_D1.0mm", P1=DEBUG_TX)
 ```
@@ -176,6 +194,8 @@ TestPoint("TP2", variant="Pad_D1.0mm", P1=DEBUG_TX)
 | plating  | str  | ✓        | `None`, `TopBottom`                  |
 
 ```zen
+MountingHole = Module("@stdlib/generics/MountingHole.zen")
+
 MountingHole("MH1", diameter="M3", standard="DIN965", plating="TopBottom")
 ```
 
@@ -189,6 +209,8 @@ MountingHole("MH1", diameter="M3", standard="DIN965", plating="TopBottom")
 | pin_count | int  | ✗        | `2` (default) or `3`                                                      |
 
 ```zen
+SolderJumper = Module("@stdlib/generics/SolderJumper.zen")
+
 SolderJumper("SJ1", style="Open", variant="Pad", pitch="P1.3mm", P1=OPT_A, P2=OPT_B)
 SolderJumper("SJ2", pin_count=3, style="Bridged12", variant="Pad", pitch="P1.3mm", P1=NET_A, P2=NET_COM, P3=NET_B)
 ```
@@ -201,6 +223,8 @@ SolderJumper("SJ2", pin_count=3, style="Bridged12", variant="Pad", pitch="P1.3mm
 | pin_count | int  | ✓        | `2` or `3`     |
 
 ```zen
+NetTie = Module("@stdlib/generics/NetTie.zen")
+
 NetTie("NT1", pad_size="0.5mm", pin_count=2, P1=AGND, P2=DGND)
 ```
 
@@ -214,6 +238,8 @@ NetTie("NT1", pad_size="0.5mm", pin_count=2, P1=AGND, P2=DGND)
 | orientation | str  | ✓        | `Vertical`, `Horizontal`, `Vertical_SMD` |
 
 ```zen
+PinSocket = Module("@stdlib/kicad/PinSocket.zen")
+
 PinSocket("J1", pins=6, rows=1, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=gnd.NET, P3=UART_TX, P4=UART_RX, P5=RST_N, P6=BOOT_MODE)
 PinSocket("J2", pins=10, rows=2, pitch="2.54mm", orientation="Vertical", P1=VCC, P2=gnd.NET, ...) # P1-P20
 ```
@@ -227,6 +253,8 @@ PinSocket("J2", pins=10, rows=2, pitch="2.54mm", orientation="Vertical", P1=VCC,
 | drill_size | str  | ✓        | `0.5mm`-`3.0mm` |
 
 ```zen
+SolderWire = Module("@stdlib/kicad/SolderWire.zen")
+
 SolderWire("W1", awg="AWG22", pad_size="2.0mm", drill_size="1.0mm", P1=VIN)
 ```
 
@@ -240,6 +268,8 @@ Types: `TC2030-IDC-NL-2x03` (6-pin), `TC2050-IDC-FP-2x05` (10-pin), `TC2070-IDC-
 Suffixes: `-NL` = no legs, `-FP` = with footprint, `-BottomClip` = clip compatible
 
 ```zen
+TagConnect = Module("@stdlib/kicad/TagConnect.zen")
+
 TagConnect("J1", tag_type="TC2030-IDC-NL-2x03", P1=VCC, P2=SWDIO, P3=RST, P4=SWCLK, P5=gnd.NET, P6=SWO)
 ```
 
@@ -252,6 +282,8 @@ TagConnect("J1", tag_type="TC2030-IDC-NL-2x03", P1=VCC, P2=SWDIO, P3=RST, P4=SWC
 Format: `[PartNumber]_[Pins]_[Orientation]` where Pins=`1x02`-`1x17`, Orientation=`Vertical`/`Horizontal`
 
 ```zen
+MolexPicoBlade = Module("@stdlib/kicad/MolexPicoBlade.zen")
+
 MolexPicoBlade("J1", variant="53047-0410_1x04_Vertical", P1=VCC, P2=gnd.NET, P3=I2C_SDA, P4=I2C_SCL)
 ```
 
