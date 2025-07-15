@@ -14,7 +14,7 @@ Dielectric = enum("C0G", "NP0", "X5R", "X7R", "X7S", "X7T", "Y5V", "Z5U")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, default = Package("0603"), convert = Package)
+package = config("package", Package, default = Package("0603"))
 value = config_unit("value", Capacitance)
 
 # Optional
