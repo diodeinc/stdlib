@@ -12,6 +12,19 @@ CanTtl = interface(
     RX = Net(),
 )
 
+Csi = interface(
+    CLK_P = Net(),
+    CLK_N = Net(),
+    D0_P = Net(),
+    D0_N = Net(),
+    D1_P = Net(),
+    D1_N = Net(),
+    D2_P = Net(),
+    D2_N = Net(),
+    D3_P = Net(),
+    D3_N = Net(),
+)
+
 DiffPair = interface(
     P = Net(),
     N = Net(),
@@ -29,6 +42,32 @@ DisplayPort = interface(
     ML3_P = Net(),
     ML3_N = Net(),
     HPD = Net(),
+)
+
+Dsi = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    D0_P = Net,
+    D0_N = Net,
+    D1_P = Net,
+    D1_N = Net,
+    D2_P = Net,
+    D2_N = Net,
+    D3_P = Net,
+    D3_N = Net,
+)
+
+Edp = interface(
+    AUX_P = Net,
+    AUX_N = Net,
+    TX0_P = Net,
+    TX0_N = Net,
+    TX1_P = Net,
+    TX1_N = Net,
+    TX2_P = Net,
+    TX2_N = Net,
+    TX3_P = Net,
+    TX3_N = Net,
 )
 
 Ethernet = interface(
@@ -187,6 +226,34 @@ Pcie = interface(
     WAKE = Net(),
 )
 
+PcieGen3x1Lane = interface(
+    TX_P = Net,
+    TX_N = Net,
+    RX_P = Net,
+    RX_N = Net,
+    REFCLK_P = Net,
+    REFCLK_N = Net,
+    RESET_N = Net,
+    WAKE_N = Net,
+    CLK_REQ_N = Net,
+)
+
+PcieGen3x2Lane = interface(
+    TX0_P = Net,
+    TX0_N = Net,
+    RX0_P = Net,
+    RX0_N = Net,
+    TX1_P = Net,
+    TX1_N = Net,
+    RX1_P = Net,
+    RX1_N = Net,
+    REFCLK_P = Net,
+    REFCLK_N = Net,
+    RESET_N = Net,
+    WAKE_N = Net,
+    CLK_REQ_N = Net,
+)
+
 Power = interface(
     NET = Net("VCC", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "VCC")),
 )
@@ -287,6 +354,19 @@ def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
     uart_b = Uart(name = name_b, tx = rxa_txb, rx = txa_rxb)
     return (uart_a, uart_b)
 
+Ufs = interface(
+    REFCLK = Net,
+    RESET_N = Net,
+    L0_RX_P = Net,
+    L0_RX_N = Net,
+    L0_TX_P = Net,
+    L0_TX_N = Net,
+    L1_RX_P = Net,
+    L1_RX_N = Net,
+    L1_TX_P = Net,
+    L1_TX_N = Net,
+)
+
 Usb2 = interface(
     DP = Net("D_P"),
     DM = Net("D_N"),
@@ -299,4 +379,21 @@ Usb3 = interface(
     SSTX_P = Net(),
     SSRX_N = Net(),
     SSRX_P = Net(),
+)
+
+UsbTypeC = interface(
+    DP = Net("D_P"),
+    DM = Net("D_N"),
+    SSTX0_P = Net,
+    SSTX0_N = Net,
+    SSRX0_P = Net,
+    SSRX0_N = Net,
+    SSTX1_P = Net,
+    SSTX1_N = Net,
+    SSRX1_P = Net,
+    SSRX1_N = Net,
+    SBU1 = Net,
+    SBU2 = Net,
+    CC1 = Net,
+    CC2 = Net,
 )
