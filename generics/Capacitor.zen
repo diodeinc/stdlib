@@ -14,7 +14,7 @@ Dielectric = enum("C0G", "NP0", "X5R", "X7R", "X7S", "X7T", "Y5V", "Z5U")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package)
+package = config("package", Package, default = Package("0603"), convert = Package)
 value = config_unit("value", Capacitance)
 
 # Optional
@@ -29,6 +29,7 @@ t_min = config_unit("t_min", Temperature, optional = True)
 properties = config_properties({
     "mount": mount,
     "package": package,
+    "value": value,
     "capacitance": value,
     "voltage": voltage,
     "dielectric": dielectric,

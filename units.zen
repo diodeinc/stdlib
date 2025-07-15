@@ -77,7 +77,6 @@ def _unit_to_str(self):
     tolerance_str = str(int(tolerance + 0.5))
     return f"{value_str}{prefix}{unit_str} +/-{tolerance_str}%"
 
-
 # Toleranced units
 Time = record(
     value=float,

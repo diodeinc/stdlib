@@ -23,6 +23,7 @@ current = config_unit("current", Current, optional = True)
 # Properties – combined and normalized
 properties = config_properties({
     "mount": mount,
+    "value": value,
     "package": package,
     "inductance": value,
     "current": current,
