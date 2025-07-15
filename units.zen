@@ -75,71 +75,6 @@ def _unit_to_str(self):
     # Return formatted string with value, prefix, unit and tolerance
     # Format tolerance as integer by rounding
     tolerance_str = str(int(tolerance + 0.5))
-    return f"{value_str}{prefix}{unit_str}"
-
-
-def _unit_to_str_with_tolerance(self):
-    """Convert a unit record to a string representation with SI prefix and tolerance."""
-    # Extract the value and tolerance
-    value = self.value
-    tolerance = self.tolerance * 100  # Convert to percentage
-
-    # Define SI prefixes and their multipliers in descending order
-    prefixes = [
-        ("Y", 1e24),
-        ("Z", 1e21),
-        ("E", 1e18),
-        ("P", 1e15),
-        ("T", 1e12),
-        ("G", 1e9),
-        ("M", 1e6),
-        ("k", 1e3),
-        ("", 1),
-        ("m", 1e-3),
-        ("u", 1e-6),
-        ("n", 1e-9),
-        ("p", 1e-12),
-        ("f", 1e-15),
-        ("a", 1e-18),
-        ("z", 1e-21),
-        ("y", 1e-24),
-    ]
-
-    # Find the appropriate prefix
-    prefix = ""
-    scaled_value = value
-    for p, m in prefixes:
-        if abs(value) >= m:
-            prefix = p
-            scaled_value = value / m
-            break
-
-    # Format the value with 3 significant digits
-    if abs(scaled_value) >= 100:
-        # Round to nearest integer (no decimal places)
-        rounded = scaled_value + (0.5 if scaled_value >= 0 else -0.5)
-        value_str = str(int(rounded))
-    elif abs(scaled_value) >= 10:
-        # Round to one decimal place
-        temp = scaled_value * 10.0
-        rounded = temp + (0.5 if temp >= 0 else -0.5)
-        value_str = str(int(rounded) / 10.0)
-    else:
-        # Round to two decimal places
-        temp = scaled_value * 100.0
-        rounded = temp + (0.5 if temp >= 0 else -0.5)
-        value_str = str(int(rounded) / 100.0)
-
-    # Remove trailing zeros after decimal point
-    if "." in value_str:
-        value_str = value_str.rstrip("0").rstrip(".")
-
-    # Get the unit string and remove quotes
-    unit_str = self.unit.value
-
-    # Return formatted string with value, prefix, unit and tolerance
-    # Format tolerance as integer by rounding
-    tolerance_str = str(int(tolerance + 0.5))
     return f"{value_str}{prefix}{unit_str} +/-{tolerance_str}%"
 
 # Toleranced units
@@ -171,7 +106,7 @@ Resistance = record(
     value=float,
     unit=field(Ohms, Ohms("Ohms")),
     tolerance=field(float, 0.1),
-    __str__=field(typing.Callable, _unit_to_str_with_tolerance),
+    __str__=field(typing.Callable, _unit_to_str),
 )
 Inductance = record(
     value=float,
