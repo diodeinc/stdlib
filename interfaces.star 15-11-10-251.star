@@ -1,0 +1,418 @@
+# INTERFACES OF NETS
+# -- Interface definitions (sorted alphabetically) --
+
+Analog = interface(
+    NET = Net,
+)
+
+Can = interface(
+    CAN_H = Net,
+    CAN_L = Net,
+)
+
+CanTtl = interface(
+    TX = Net,
+    RX = Net,
+)
+
+Csi = interface(
+    CLK_P = Net("CLK_P"),
+    CLK_N = Net("CLK_N"),
+    D0_P = Net("D0_P"),
+    D0_N = Net("D0_N"),
+    D1_P = Net("D1_P"),
+    D1_N = Net("D1_N"),
+    D2_P = Net("D2_P"),
+    D2_N = Net("D2_N"),
+    D3_P = Net("D3_P"),
+    D3_N = Net("D3_N"),
+)
+
+DiffPair = interface(
+    P = Net,
+    N = Net,
+)
+
+DisplayPort = interface(
+    AUX_P = Net,
+    AUX_N = Net,
+    ML0_P = Net,
+    ML0_N = Net,
+    ML1_P = Net,
+    ML1_N = Net,
+    ML2_P = Net,
+    ML2_N = Net,
+    ML3_P = Net,
+    ML3_N = Net,
+    HPD = Net,
+)
+
+Dsi = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    D0_P = Net,
+    D0_N = Net,
+    D1_P = Net,
+    D1_N = Net,
+    D2_P = Net,
+    D2_N = Net,
+    D3_P = Net,
+    D3_N = Net,
+)
+
+Edp = interface(
+    AUX_P = Net,
+    AUX_N = Net,
+    TX0_P = Net,
+    TX0_N = Net,
+    TX1_P = Net,
+    TX1_N = Net,
+    TX2_P = Net,
+    TX2_N = Net,
+    TX3_P = Net,
+    TX3_N = Net,
+)
+
+Ethernet = interface(
+    TX_P = Net,
+    TX_N = Net,
+    RX_P = Net,
+    RX_N = Net,
+)
+
+Gpio = interface(
+    NET = Net,
+)
+
+Ground = interface(
+    NET = Net("GND"),
+)
+
+Hdmi = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    D0_P = Net,
+    D0_N = Net,
+    D1_P = Net,
+    D1_N = Net,
+    D2_P = Net,
+    D2_N = Net,
+    CEC = Net,
+    SCL = Net,
+    SDA = Net,
+    HPD = Net,
+)
+
+I2c = interface(
+    SDA = Net,
+    SCL = Net,
+)
+
+I2s = interface(
+    BCLK = Net,
+    LRCLK = Net,
+    SDATA = Net,
+    MCLK = Net,
+)
+
+I3c = interface(
+    SDA = Net,
+    SCL = Net,
+)
+
+Jtag = interface(
+    TDI = Net,
+    TDO = Net,
+    TCK = Net,
+    TMS = Net,
+    TRST = Net,
+)
+
+Lcd = interface(
+    VSYNC = Net,
+    HSYNC = Net,
+    DE = Net,
+    CLK = Net,
+    R0 = Net,
+    R1 = Net,
+    R2 = Net,
+    R3 = Net,
+    R4 = Net,
+    R5 = Net,
+    R6 = Net,
+    R7 = Net,
+    G0 = Net,
+    G1 = Net,
+    G2 = Net,
+    G3 = Net,
+    G4 = Net,
+    G5 = Net,
+    G6 = Net,
+    G7 = Net,
+    B0 = Net,
+    B1 = Net,
+    B2 = Net,
+    B3 = Net,
+    B4 = Net,
+    B5 = Net,
+    B6 = Net,
+    B7 = Net,
+)
+
+Lvds = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    DATA0_P = Net,
+    DATA0_N = Net,
+    DATA1_P = Net,
+    DATA1_N = Net,
+    DATA2_P = Net,
+    DATA2_N = Net,
+)
+
+Mdio = interface(
+    MDC = Net,
+    MDIO = Net,
+)
+
+Mii = interface(
+    TXD0 = Net,
+    TXD1 = Net,
+    TXD2 = Net,
+    TXD3 = Net,
+    TX_EN = Net,
+    TX_CLK = Net,
+    RXD0 = Net,
+    RXD1 = Net,
+    RXD2 = Net,
+    RXD3 = Net,
+    RX_DV = Net,
+    RX_CLK = Net,
+    RX_ER = Net,
+    COL = Net,
+    CRS = Net,
+)
+
+Mipi = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    DATA0_P = Net,
+    DATA0_N = Net,
+    DATA1_P = Net,
+    DATA1_N = Net,
+    DATA2_P = Net,
+    DATA2_N = Net,
+    DATA3_P = Net,
+    DATA3_N = Net,
+)
+
+OneWire = interface(
+    DQ = Net,
+)
+
+OscPair = interface(
+    XIN = Net,
+    XOUT = Net,
+)
+
+Pcie = interface(
+    TX_P = Net,
+    TX_N = Net,
+    RX_P = Net,
+    RX_N = Net,
+    REFCLK_P = Net,
+    REFCLK_N = Net,
+    PERST = Net,
+    WAKE = Net,
+)
+
+PcieGen3x1Lane = interface(
+    TX_P = Net,
+    TX_N = Net,
+    RX_P = Net,
+    RX_N = Net,
+    REFCLK_P = Net,
+    REFCLK_N = Net,
+    RESET_N = Net,
+    WAKE_N = Net,
+    CLK_REQ_N = Net,
+)
+
+PcieGen3x2Lane = interface(
+    TX0_P = Net,
+    TX0_N = Net,
+    RX0_P = Net,
+    RX0_N = Net,
+    TX1_P = Net,
+    TX1_N = Net,
+    RX1_P = Net,
+    RX1_N = Net,
+    REFCLK_P = Net,
+    REFCLK_N = Net,
+    RESET_N = Net,
+    WAKE_N = Net,
+    CLK_REQ_N = Net,
+)
+
+Power = interface(
+    NET = Net("VCC"),
+)
+
+Pwm = interface(
+    NET = Net,
+)
+
+PwmPair = interface(
+    A = Net,
+    B = Net,
+)
+
+QLink = interface(
+    CLK_P = Net,
+    CLK_N = Net,
+    L0_P = Net,
+    L0_N = Net,
+    L1_P = Net,
+    L1_N = Net,
+    L2_P = Net,
+    L2_N = Net,
+    L3_P = Net,
+    L3_N = Net,
+    L4_P = Net,
+    L4_N = Net,
+)
+
+Qspi = interface(
+    CS = Net,
+    CLK = Net,
+    IO0 = Net,
+    IO1 = Net,
+    IO2 = Net,
+    IO3 = Net,
+)
+
+Rgmii = interface(
+    TXD0 = Net,
+    TXD1 = Net,
+    TXD2 = Net,
+    TXD3 = Net,
+    TX_CTL = Net,
+    TXC = Net,
+    RXD0 = Net,
+    RXD1 = Net,
+    RXD2 = Net,
+    RXD3 = Net,
+    RX_CTL = Net,
+    RXC = Net,
+)
+
+Rmii = interface(
+    TXD0 = Net,
+    TXD1 = Net,
+    TX_EN = Net,
+    RXD0 = Net,
+    RXD1 = Net,
+    CRS_DV = Net,
+    REF_CLK = Net,
+)
+
+Sata = interface(
+    TX_P = Net,
+    TX_N = Net,
+    RX_P = Net,
+    RX_N = Net,
+)
+
+Sdio = interface(
+    CLK = Net,
+    CMD = Net,
+    DAT0 = Net,
+    DAT1 = Net,
+    DAT2 = Net,
+    DAT3 = Net,
+)
+
+Sdmmc = interface(
+    CLK = Net,
+    CMD = Net,
+    DAT0 = Net,
+    DAT1 = Net,
+    DAT2 = Net,
+    DAT3 = Net,
+    DAT4 = Net,
+    DAT5 = Net,
+    DAT6 = Net,
+    DAT7 = Net,
+)
+
+Spi = interface(
+    CS = Net,
+    MISO = Net,
+    MOSI = Net,
+    CLK = Net,
+)
+
+Swd = interface(
+    SWDIO = Net,
+    SWCLK = Net,
+)
+
+Uart = interface(
+    TX = Net,
+    RX = Net,
+)
+
+def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
+    txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
+    rxa_txb = Net(name_a + "_RX/" + name_b + "_TX")
+    uart_a = Uart(name = name_a, tx = txa_rxb, rx = rxa_txb)
+    uart_b = Uart(name = name_b, tx = rxa_txb, rx = txa_rxb)
+    return (uart_a, uart_b)
+
+Ufs = interface(
+    REFCLK = Net,
+    RESET_N = Net,
+    L0_RX_P = Net,
+    L0_RX_N = Net,
+    L0_TX_P = Net,
+    L0_TX_N = Net,
+    L1_RX_P = Net,
+    L1_RX_N = Net,
+    L1_TX_P = Net,
+    L1_TX_N = Net,
+)
+
+Usb2 = interface(
+    DP = Net("D_P"),
+    DM = Net("D_N"),
+)
+
+Usb3 = interface(
+    DP = Net("D_P"),
+    DM = Net("D_N"),
+    SSTX_P = Net,
+    SSTX_N = Net,
+    SSRX_P = Net,
+    SSRX_N = Net,
+)
+
+UsbTypeC = interface(
+    DP = Net("D_P"),
+    DM = Net("D_N"),
+    SSTX0_P = Net,
+    SSTX0_N = Net,
+    SSRX0_P = Net,
+    SSRX0_N = Net,
+    SSTX1_P = Net,
+    SSTX1_N = Net,
+    SSRX1_P = Net,
+    SSRX1_N = Net,
+    SBU1 = Net,
+    SBU2 = Net,
+    CC1 = Net,
+    CC2 = Net,
+)
+
+# Utility for marking no-connects
+def NotConnected(name: str = "NC") -> Net:
+    return Net(name)
