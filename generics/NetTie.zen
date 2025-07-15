@@ -5,7 +5,7 @@ load("../config.zen", "config_properties")
 # -----------------------------------------------------------------------------
 
 PadSize = enum("0.3mm", "0.5mm", "1.0mm", "2.0mm")
-MountType = enum("SMD", "THT")
+MountType = enum("SMD", "THT", "SMD_THT")
 PinCount = enum("2", "3", "4")
 
 # -----------------------------------------------------------------------------
@@ -16,6 +16,7 @@ PinCount = enum("2", "3", "4")
 mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=True)
 pad_size = config("pad_size", PadSize, default=PadSize("0.5mm"), optional=True)
 pin_count = config("pin_count", int, default=2, optional=True)
+use_jumper_footprint = config("use_jumper_footprint", bool, default=False, optional=True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -40,17 +41,33 @@ P = [io(f"P{i}", Net) for i in range(1, pin_count + 1)]
 # -----------------------------------------------------------------------------
 
 
-def _get_footprint(pin_count, mount_type, pad_size):
+def _get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint):
     """Returns the appropriate net tie footprint."""
-    # Use jumper footprints as a substitute for net ties
-    if pin_count == 2:
-        return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
-    elif pin_count == 3:
-        return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+    if use_jumper_footprint:
+        # Use jumper footprints as a substitute for net ties
+        if pin_count == 2:
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+        elif pin_count == 3:
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+        else:
+            # For 4-pin, use a 2x2 jumper arrangement
+            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
     else:
-        # For 4-pin, use a 2x2 jumper arrangement
-        return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
-
+        pins = str(pin_count)
+        mount = mount_type.value
+        pad = pad_size.value
+        if mount == "SMD_THT" 
+            if pin_count == 2:
+                if pad_size == "0.3mm":
+                    return File("footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod")
+                elif pad_size == "1.0mm":
+                    return File("footprints/NetTie-2_SMD_THT_Pad1.0mm.kicad_mod")
+                else:
+                    error(f"Unsupported pad size: {pad_size}")
+            else:
+                error(f"Unsupported pin count: {pin_count}")    
+        else:
+            return File(f"@kicad-footprints/NetTie.pretty/NetTie-{pins}_{mount}_Pad{pad}.kicad_mod")
 
 def _get_symbol(pin_count):
     """Returns the appropriate net tie symbol based on pin count."""
@@ -97,8 +114,7 @@ Component(
     name="NT",
     type="net_tie",
     symbol=_get_symbol(pin_count),
-    footprint=_get_footprint(pin_count, mount_type, pad_size),
-    symbol=_get_symbol(pin_count),
+    footprint=_get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint),
     prefix="NT",
     pins=pins,
     pin_defs=pin_defs,
