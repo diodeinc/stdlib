@@ -30,7 +30,7 @@ jobs:
 
       - name: Verify pcb installation
         run: |
-          pcb --version
+          pcb help
 
       - name: Build stdlib (Unix)
         if: runner.os != 'Windows'
