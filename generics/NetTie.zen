@@ -105,7 +105,6 @@ def _get_pins(P):
 
 Component(
     name="NT",
-    type="net_tie",
     symbol=_get_symbol(pin_count),
     footprint=_get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint),
     prefix="NT",

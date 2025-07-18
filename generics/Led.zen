@@ -45,21 +45,24 @@ K = io("K", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("0201"): File("@kicad-footprints/LED_SMD.pretty/LED_0201_0603Metric.kicad_mod"),
-        Package("0402"): File("@kicad-footprints/LED_SMD.pretty/LED_0402_1005Metric.kicad_mod"),
-        Package("0603"): File("@kicad-footprints/LED_SMD.pretty/LED_0603_1608Metric.kicad_mod"),
-        Package("0805"): File("@kicad-footprints/LED_SMD.pretty/LED_0805_2012Metric.kicad_mod"),
-        Package("1206"): File("@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric.kicad_mod"),
-        Package("1210"): File("@kicad-footprints/LED_SMD.pretty/LED_1210_3225Metric.kicad_mod"),
-        Package("2010"): File("@kicad-footprints/LED_SMD.pretty/LED_2010_5025Metric.kicad_mod"),
-        Package("2512"): File("@kicad-footprints/LED_SMD.pretty/LED_2512_6332Metric.kicad_mod"),
-        Package("1210_Reverse"): File("@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm.kicad_mod"),
-        Package("1812"): File("@kicad-footprints/LED_SMD.pretty/LED_1812_4532Metric.kicad_mod"),
+        Package("0201"): "@kicad-footprints/LED_SMD.pretty/LED_0201_0603Metric.kicad_mod",
+        Package("0402"): "@kicad-footprints/LED_SMD.pretty/LED_0402_1005Metric.kicad_mod",
+        Package("0603"): "@kicad-footprints/LED_SMD.pretty/LED_0603_1608Metric.kicad_mod",
+        Package("0805"): "@kicad-footprints/LED_SMD.pretty/LED_0805_2012Metric.kicad_mod",
+        Package("1206"): "@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric.kicad_mod",
+        Package("1210"): "@kicad-footprints/LED_SMD.pretty/LED_1210_3225Metric.kicad_mod",
+        Package("2010"): "@kicad-footprints/LED_SMD.pretty/LED_2010_5025Metric.kicad_mod",
+        Package("2512"): "@kicad-footprints/LED_SMD.pretty/LED_2512_6332Metric.kicad_mod",
+        Package("1210_Reverse"): "@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm.kicad_mod",
+        Package("1812"): "@kicad-footprints/LED_SMD.pretty/LED_1812_4532Metric.kicad_mod",
     }
     if package not in kicad_footprints:
         error("Invalid package: " + str(package))
-    return kicad_footprints[package]
+    return File(kicad_footprints[package])
 
+def _symbol(_package: Package):
+    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "LED")
+    
 
 def _value(color: Color, package: Package) -> str:
     color = str(color.value).title()
@@ -73,8 +76,7 @@ def _value(color: Color, package: Package) -> str:
 
 Component(
     name="LED",
-    type="led",
-    symbol=Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "LED"),
+    symbol=_symbol(package),
     footprint=_footprint(package),
     prefix="D",
     pins={

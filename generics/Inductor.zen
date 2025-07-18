@@ -46,20 +46,20 @@ def _symbol(package: Package):
 def _footprint(package: Package) -> str:
     """Returns the appropriate inductor footprint based on the package."""
     footprints = {
-        Package("0201"): File("@kicad-footprints/Inductor_SMD.pretty/L_0201_0603Metric.kicad_mod"),
-        Package("0402"): File("@kicad-footprints/Inductor_SMD.pretty/L_0402_1005Metric.kicad_mod"),
-        Package("0603"): File("@kicad-footprints/Inductor_SMD.pretty/L_0603_1608Metric.kicad_mod"),
-        Package("0805"): File("@kicad-footprints/Inductor_SMD.pretty/L_0805_2012Metric.kicad_mod"),
-        Package("1206"): File("@kicad-footprints/Inductor_SMD.pretty/L_1206_3216Metric.kicad_mod"),
-        Package("1210"): File("@kicad-footprints/Inductor_SMD.pretty/L_1210_3225Metric.kicad_mod"),
-        Package("2010"): File("@kicad-footprints/Inductor_SMD.pretty/L_2010_5025Metric.kicad_mod"),
-        Package("2512"): File("@kicad-footprints/Inductor_SMD.pretty/L_2512_6332Metric.kicad_mod"),
+        Package("0201"): "@kicad-footprints/Inductor_SMD.pretty/L_0201_0603Metric.kicad_mod",
+        Package("0402"): "@kicad-footprints/Inductor_SMD.pretty/L_0402_1005Metric.kicad_mod",
+        Package("0603"): "@kicad-footprints/Inductor_SMD.pretty/L_0603_1608Metric.kicad_mod",
+        Package("0805"): "@kicad-footprints/Inductor_SMD.pretty/L_0805_2012Metric.kicad_mod",
+        Package("1206"): "@kicad-footprints/Inductor_SMD.pretty/L_1206_3216Metric.kicad_mod",
+        Package("1210"): "@kicad-footprints/Inductor_SMD.pretty/L_1210_3225Metric.kicad_mod",
+        Package("2010"): "@kicad-footprints/Inductor_SMD.pretty/L_2010_5025Metric.kicad_mod",
+        Package("2512"): "@kicad-footprints/Inductor_SMD.pretty/L_2512_6332Metric.kicad_mod",
     }
 
     if package not in footprints:
         error("Invalid package: " + str(package))
 
-    return footprints[package]
+    return File(footprints[package])
 
 # -----------------------------------------------------------------------------
 # Component definition

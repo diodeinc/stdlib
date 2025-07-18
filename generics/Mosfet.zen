@@ -1,5 +1,5 @@
-load("../units.zen", "Voltage", "Current")
-load("../config.zen", "config_unit", "config_properties")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Current", "Voltage")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -14,14 +14,14 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
-channel = config("channel", MosfetChannel, convert=MosfetChannel)
+package = config("package", Package, convert = Package)
+channel = config("channel", MosfetChannel, convert = MosfetChannel)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-vgs_max = config_unit("vgs_max", Voltage, optional=True)
-vds_max = config_unit("vds_max", Voltage, optional=True)
-id_max = config_unit("id_max", Current, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+vgs_max = config_unit("vgs_max", Voltage, optional = True)
+vds_max = config_unit("vds_max", Voltage, optional = True)
+id_max = config_unit("id_max", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -45,7 +45,6 @@ S = io("S", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-
 def _footprint(package: Package) -> str:
     kicad_footprints = {
         Package("SOT-23-3"): File("@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod"),
@@ -56,18 +55,16 @@ def _footprint(package: Package) -> str:
 
     return kicad_footprints[package]
 
-
 def _symbol(channel: MosfetChannel):
     symbols = {
         MosfetChannel("N"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_NMOS"),
         MosfetChannel("P"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_PMOS"),
     }
-    
+
     if channel not in symbols:
         error("Invalid MOSFET channel: " + str(channel))
-    
-    return symbols[channel]
 
+    return symbols[channel]
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -76,15 +73,14 @@ def _symbol(channel: MosfetChannel):
 channel_type = str(channel.value).lower()
 
 Component(
-    name="MOSFET",
-    type=f"{channel_type}-mosfet",
-    symbol=_symbol(channel),
-    footprint=_footprint(package),
-    prefix="M",
-    pins={
+    name = "M",
+    symbol = _symbol(channel),
+    footprint = _footprint(package),
+    prefix = "M",
+    pins = {
         "G": G,
         "D": D,
         "S": S,
     },
-    properties=properties,
+    properties = properties,
 )

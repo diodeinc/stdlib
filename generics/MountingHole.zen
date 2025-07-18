@@ -70,7 +70,6 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
 
 Component(
     name = "MH",
-    type = "mounting_hole",
     symbol = Symbol(library = "@kicad-symbols/Mechanical.kicad_sym", name = "MountingHole_Pad"),
     footprint = _footprint(diameter, standard, plating),
     prefix = "H",

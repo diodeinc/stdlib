@@ -116,7 +116,6 @@ pins, pin_defs = _pins_and_connections(pin_count)
 
 Component(
     name="SJ",
-    type="solder_jumper",
     symbol=_symbol(pin_count),
     footprint=_footprint(pin_count, style, variant, pitch),
     prefix="JP",

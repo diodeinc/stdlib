@@ -53,18 +53,18 @@ def _symbol(mount: Mount, package: Package):
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
-        (Mount("SMD"), Package("0201")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod"),
-        (Mount("SMD"), Package("0402")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod"),
-        (Mount("SMD"), Package("0603")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod"),
-        (Mount("SMD"), Package("0805")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod"),
-        (Mount("SMD"), Package("1206")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod"),
-        (Mount("SMD"), Package("1210")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod"),
+        (Mount("SMD"), Package("0201")): "@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod",
+        (Mount("SMD"), Package("0402")): "@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod",
+        (Mount("SMD"), Package("0603")): "@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod",
+        (Mount("SMD"), Package("0805")): "@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod",
+        (Mount("SMD"), Package("1206")): "@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod",
+        (Mount("SMD"), Package("1210")): "@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod",
     }
 
     if (mount, package) not in kicad_footprints:
         error("Invalid footprint: " + str(mount) + " " + str(package))
 
-    return kicad_footprints[(mount, package)]
+    return File(kicad_footprints[(mount, package)])
 
 # -----------------------------------------------------------------------------
 # Component definition

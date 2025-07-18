@@ -93,24 +93,27 @@ P1 = io("P1", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _get_footprint(variant):
+def _symbol(variant: Variant):
+    return Symbol(library = "@kicad-symbols/Connector.kicad_sym", name = "TestPoint")
+
+def _footprint(variant):
     # Simplified mapping for most common test point footprints
     common_footprints = {
         # Pad variants
-        Variant("Pad_D1.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.0mm.kicad_mod"),
-        Variant("Pad_D1.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod"),
-        Variant("Pad_D2.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.0mm.kicad_mod"),
-        Variant("Pad_D2.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.5mm.kicad_mod"),
-        Variant("Pad_D3.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D3.0mm.kicad_mod"),
-        Variant("Pad_D4.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D4.0mm.kicad_mod"),
+        Variant("Pad_D1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.0mm.kicad_mod",
+        Variant("Pad_D1.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
+        Variant("Pad_D2.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.0mm.kicad_mod",
+        Variant("Pad_D2.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.5mm.kicad_mod",
+        Variant("Pad_D3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D3.0mm.kicad_mod",
+        Variant("Pad_D4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D4.0mm.kicad_mod",
         # THT variants
-        Variant("THTPad_D1.0mm_Drill0.5mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod"),
-        Variant("THTPad_D1.5mm_Drill0.7mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod"),
-        Variant("THTPad_D2.0mm_Drill1.0mm"): File("@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod"),
+        Variant("THTPad_D1.0mm_Drill0.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod",
+        Variant("THTPad_D1.5mm_Drill0.7mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod",
+        Variant("THTPad_D2.0mm_Drill1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod",
     }
 
     if variant in common_footprints:
-        return common_footprints[variant]
+        return File(common_footprints[variant])
     else:
         # Default to a common pad variant for unsupported ones
         return File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod")
@@ -121,9 +124,8 @@ def _get_footprint(variant):
 
 Component(
     name = "TP",
-    type = "test_point",
-    symbol = Symbol(library = "@kicad-symbols/Connector.kicad_sym", name = "TestPoint"),
-    footprint = _get_footprint(variant),
+    symbol = _symbol(variant),
+    footprint = _footprint(variant),
     prefix = "TP",
     pins = {
         "1": P1,
