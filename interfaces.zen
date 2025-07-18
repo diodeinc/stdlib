@@ -240,7 +240,7 @@ PcieGen3x1Lane = interface(
 
 PcieGen3x2Lane = interface(
     TX0_P = Net(),
-    TX0_N = Net(),    
+    TX0_N = Net(),
     RX0_P = Net(),
     RX0_N = Net(),
     TX1_P = Net(),

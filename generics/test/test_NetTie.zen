@@ -9,11 +9,12 @@ for mount_type in NetTie.MountType.values():
     for pad_size in NetTie.PadSize.values():
         for pin_count in [2, 3, 4]:
             name = "NT_" + str(mount_type) + "_" + str(pad_size) + "_" + str(pin_count) + "pin"
+
             # Create the appropriate number of nets based on pin_count
             nets = {}
             for i in range(1, pin_count + 1):
-                nets[f"P{i}"] = Net(name + f"_P{i}")
-            
+                nets["P{}".format(i)] = Net(name + "_P{}".format(i))
+
             NetTie(
                 name = name,
                 mount_type = mount_type,
@@ -25,4 +26,4 @@ for mount_type in NetTie.MountType.values():
 Layout(
     name = "preview",
     path = "build/NetTie",
-) 
+)

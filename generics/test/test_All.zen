@@ -15,4 +15,4 @@ Modules = [
 ]
 
 for mod in Modules:
-    Module(f"{mod}.zen")(name = mod)
+    Module("{}.zen".format(mod))(name = mod)

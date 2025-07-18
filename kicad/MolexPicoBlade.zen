@@ -68,8 +68,8 @@ MolexPicoBladeVariant = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-variant = config("variant", MolexPicoBladeVariant, convert=MolexPicoBladeVariant)
-properties = config("properties", dict, optional=True)
+variant = config("variant", MolexPicoBladeVariant, convert = MolexPicoBladeVariant)
+properties = config("properties", dict, optional = True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -95,12 +95,11 @@ def _pin_count(variant: MolexPicoBladeVariant) -> int:
 
 pins = {}
 for pin in range(1, _pin_count(variant) + 1):
-    pins[f"Pin_{pin}"] = io(f"Pin_{pin}", Net)
+    pins["Pin_{}".format(pin)] = io("Pin_{}".format(pin), Net)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(variant: MolexPicoBladeVariant):
     # Use a simplified mapping for common variants
@@ -111,13 +110,12 @@ def _footprint(variant: MolexPicoBladeVariant):
         MolexPicoBladeVariant("53047-0510_1x05_Vertical"): File("@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0510_1x05_P1.25mm_Vertical.kicad_mod"),
         MolexPicoBladeVariant("53047-0610_1x06_Vertical"): File("@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0610_1x06_P1.25mm_Vertical.kicad_mod"),
     }
-    
+
     if variant in common_footprints:
         return common_footprints[variant]
     else:
         # Default to a 2-pin vertical variant for others
         return File("@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0210_1x02_P1.25mm_Vertical.kicad_mod")
-
 
 def _symbol(pin_count: int):
     """Get the appropriate symbol based on pin count."""
@@ -134,13 +132,13 @@ def _mpn(variant: MolexPicoBladeVariant) -> str:
 pin_count = _pin_count(variant)
 
 Component(
-    name="MPB",
-    type="molex_picoblade",
-    symbol=_symbol(pin_count),
-    footprint=_footprint(variant),
-    prefix="J",
-    pins=pins,
-    properties=Properties(
+    name = "MPB",
+    type = "molex_picoblade",
+    symbol = _symbol(pin_count),
+    footprint = _footprint(variant),
+    prefix = "J",
+    pins = pins,
+    properties = Properties(
         properties,
         {
             "value": _mpn(variant),

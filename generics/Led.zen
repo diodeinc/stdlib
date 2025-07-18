@@ -1,5 +1,5 @@
-load("../units.zen", "Voltage", "Current")
-load("../config.zen", "config_unit", "config_properties")
+load("../config.zen", "config_properties", "config_unit")
+load("../units.zen", "Current", "Voltage")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -14,13 +14,13 @@ Color = enum("red", "green", "blue", "yellow", "white", "amber", "orange", "pink
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
-color = config("color", Color, convert=Color)
+package = config("package", Package, convert = Package)
+color = config("color", Color, convert = Color)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
-forward_current = config_unit("forward_current", Current, optional=True)
+mount = config("mount", Mount, default = Mount("SMD"), optional = True)
+forward_voltage = config_unit("forward_voltage", Voltage, optional = True)
+forward_current = config_unit("forward_current", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -41,7 +41,6 @@ K = io("K", Net)
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
-
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
@@ -65,26 +64,24 @@ def _symbol(_package: Package):
         "library": "@kicad-symbols/Device.kicad_sym",
         "name": "LED",
     }
-    
 
 def _value(color: Color, package: Package) -> str:
     color = str(color.value).title()
     package = str(package.value)
-    return f"LED {package} {color}"
-
+    return "LED {} {}".format(package, color)
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="LED",
-    symbol=Symbol(**_symbol(package)),
-    footprint=File(_footprint(package)),
-    prefix="D",
-    pins={
+    name = "LED",
+    symbol = Symbol(**_symbol(package)),
+    footprint = File(_footprint(package)),
+    prefix = "D",
+    pins = {
         "K": K,
         "A": A,
     },
-    properties=properties,
+    properties = properties,
 )

@@ -48,10 +48,10 @@ def PinMapBuilder(pin_map: PinMap, pin_nets: Pins = {}):
         pins = state["pins"]
         pin_net = pins.get(pin_name)
         if pin_net:
-            error(f"Pin already connected: {pin_name} -> {pin_net}, can't be {net}")
+            error("Pin already connected: {} -> {}, can't be {}".format(pin_name, pin_net, net))
         if pin_name not in state["pin_map"]:
             available = state["pin_map"].keys()
-            error(f"Pin {pin_name} not found in pin map: {available}")
+            error("Pin {} not found in pin map: {}".format(pin_name, available))
         pins[pin_name] = net
         return builder  # fluent chaining
 
@@ -59,13 +59,13 @@ def PinMapBuilder(pin_map: PinMap, pin_nets: Pins = {}):
         interfaces = _make_interfaces(state["pin_map"])
         if name not in interfaces:
             iface_keys = interfaces.keys()
-            error(f"{name} not in {iface_keys}")
+            error("{} not in {}".format(name, iface_keys))
 
         # Filter by interface type – only keep pins where *nets* matches.
         iface_pins = {p: o for p, o in interfaces[name].items() if isinstance(nets, o.interface_type)}
         if not iface_pins:
             net_type = str(type(nets))
-            error(f"{name} can't take interface of type {net_type}")
+            error("{} can't take interface of type {}".format(name, net_type))
 
         available_pins = iface_pins.keys()
         available_fields = {i.field: None for i in iface_pins.values()}.keys()
@@ -73,12 +73,12 @@ def PinMapBuilder(pin_map: PinMap, pin_nets: Pins = {}):
         for field, pin_name in kwargs.items():
             pin = iface_pins.get(pin_name)
             if not pin:
-                error(f"Pin {pin_name} not found for {name}: {available_pins}")
+                error("Pin {} not found for {}: {}".format(pin_name, name, available_pins))
             if field not in available_fields:
-                error(f"Field {field} not found for {name}: {available_fields}")
+                error("Field {} not found for {}: {}".format(field, name, available_fields))
             if pin.field != field:
                 alt_pins = [p for p, i in iface_pins.items() if i.field == field]
-                error(f"{pin_name} can't be {name}.{field}: pick from {alt_pins}")
+                error("{} can't be {}.{}: pick from {}".format(pin_name, name, field, alt_pins))
             _connect(pin_name, getattr(nets, field))
         return builder
 
