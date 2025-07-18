@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, zen-symbols]
+    branches: [main]
   pull_request:
-    branches: [main, zen-symbols]
+    branches: [main]
 
 jobs:
   build-matrix:
