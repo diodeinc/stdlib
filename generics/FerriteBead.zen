@@ -43,7 +43,10 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "FerriteBead")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "FerriteBead",
+    }
 
 def _footprint(package: Package) -> str:
     """Returns the resistor SMD footprint for the ferrite bead based on the package."""
@@ -61,7 +64,7 @@ def _footprint(package: Package) -> str:
     if package not in resistor_footprints:
         error("Invalid package: " + str(package))
 
-    return File(resistor_footprints[package])
+    return resistor_footprints[package]
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -69,8 +72,8 @@ def _footprint(package: Package) -> str:
 
 Component(
     name = "FB",
-    symbol = _symbol(package),
-    footprint = _footprint(package),
+    symbol = Symbol(**_symbol(package)),
+    footprint = File(_footprint(package)),
     prefix = "FB",
     pin_defs = {
         "P1": "1",

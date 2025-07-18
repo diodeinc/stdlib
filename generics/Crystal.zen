@@ -59,9 +59,15 @@ GND = io("GND", Net, optional = True)
 
 def _symbol(package: Package):
     if "2Pin" in str(package):
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Crystal",
+        }
     else:
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal_GND24")
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Crystal_GND24",
+        }
 
 def _footprint(package: Package):
     _footprints = {
@@ -79,7 +85,7 @@ def _footprint(package: Package):
         Package("0603_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-4Pin_6.0x3.5mm.kicad_mod",
     }
 
-    return File(_footprints[package])
+    return _footprints[package]
 
 def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
@@ -105,8 +111,8 @@ def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
 Component(
     name = "Y",
     prefix = "Y",
-    symbol = _symbol(package),
-    footprint = _footprint(package),
+    symbol = Symbol(**_symbol(package)),
+    footprint = File(_footprint(package)),
     pins = _pins(package, XIN, XOUT, GND),
     properties = properties,
 )

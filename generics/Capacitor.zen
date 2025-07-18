@@ -49,7 +49,10 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(mount: Mount, package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "C")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "C",
+    }
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
@@ -64,7 +67,7 @@ def _footprint(mount: Mount, package: Package):
     if (mount, package) not in kicad_footprints:
         error("Invalid footprint: " + str(mount) + " " + str(package))
 
-    return File(kicad_footprints[(mount, package)])
+    return kicad_footprints[(mount, package)]
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -73,8 +76,8 @@ def _footprint(mount: Mount, package: Package):
 Component(
     name = "C",
     prefix = "C",
-    symbol = _symbol(mount, package),
-    footprint = _footprint(mount, package),
+    symbol = Symbol(**_symbol(mount, package)),
+    footprint = File(_footprint(mount, package)),
     properties = properties,
     pin_defs = {
         "P1": "1",

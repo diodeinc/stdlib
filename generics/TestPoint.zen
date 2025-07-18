@@ -94,7 +94,10 @@ P1 = io("P1", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(variant: Variant):
-    return Symbol(library = "@kicad-symbols/Connector.kicad_sym", name = "TestPoint")
+    return {
+        "library": "@kicad-symbols/Connector.kicad_sym",
+        "name": "TestPoint",
+    }
 
 def _footprint(variant):
     # Simplified mapping for most common test point footprints
@@ -113,10 +116,10 @@ def _footprint(variant):
     }
 
     if variant in common_footprints:
-        return File(common_footprints[variant])
+        return common_footprints[variant]
     else:
         # Default to a common pad variant for unsupported ones
-        return File("@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod")
+        return "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod"
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -124,8 +127,8 @@ def _footprint(variant):
 
 Component(
     name = "TP",
-    symbol = _symbol(variant),
-    footprint = _footprint(variant),
+    symbol = Symbol(**_symbol(variant)),
+    footprint = File(_footprint(variant)),
     prefix = "TP",
     pins = {
         "1": P1,

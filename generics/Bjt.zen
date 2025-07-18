@@ -54,7 +54,7 @@ E = io("E", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("SOT-23-3"): File("@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod"),
+        Package("SOT-23-3"): "@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod",
     }
 
     if package not in kicad_footprints:
@@ -87,7 +87,7 @@ def _symbol(bjt_type: BjtType):
 Component(
     name="Q",
     symbol=_symbol(bjt_type),
-    footprint=_footprint(package),
+    footprint=File(_footprint(package)),
     prefix="Q",
     pins={
         "B": B,

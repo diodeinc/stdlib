@@ -47,7 +47,7 @@ S = io("S", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("SOT-23-3"): File("@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod"),
+        Package("SOT-23-3"): "@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod",
     }
 
     if package not in kicad_footprints:
@@ -57,8 +57,14 @@ def _footprint(package: Package) -> str:
 
 def _symbol(channel: MosfetChannel):
     symbols = {
-        MosfetChannel("N"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_NMOS"),
-        MosfetChannel("P"): Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Q_PMOS"),
+        MosfetChannel("N"): {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Q_NMOS",
+        },
+        MosfetChannel("P"): {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Q_PMOS",
+        },
     }
 
     if channel not in symbols:
@@ -74,8 +80,8 @@ channel_type = str(channel.value).lower()
 
 Component(
     name = "M",
-    symbol = _symbol(channel),
-    footprint = _footprint(package),
+    symbol = Symbol(**_symbol(channel)),
+    footprint = File(_footprint(package)),
     prefix = "M",
     pins = {
         "G": G,

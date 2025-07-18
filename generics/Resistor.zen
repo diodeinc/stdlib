@@ -42,7 +42,10 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(mount: Mount, package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "R",
+    }
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
@@ -59,7 +62,7 @@ def _footprint(mount: Mount, package: Package):
     if package not in kicad_footprints:
         error("Invalid package: " + str(package))
 
-    return File(kicad_footprints[package])
+    return kicad_footprints[package]
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -67,8 +70,8 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "R",
-    symbol = properties.get("symbol", _symbol(mount, package)),
-    footprint = properties.get("footprint", _footprint(mount, package)),
+    symbol = Symbol(**_symbol(mount, package)),
+    footprint = File(_footprint(mount, package)),
     prefix = "R",
     pin_defs = {
         "P1": "1",

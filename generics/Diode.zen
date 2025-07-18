@@ -53,7 +53,10 @@ def _symbol(variant: Variant):
         Variant("Zener"): "@kicad-symbols/Device.kicad_sym:D_Zener",
     }
 
-    return Symbol(library = symbols[variant].split(":")[0], name = symbols[variant].split(":")[1])
+    return {
+        "library": symbols[variant].split(":")[0],
+        "name": symbols[variant].split(":")[1],
+    }
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
@@ -78,8 +81,8 @@ def _footprint(mount: Mount, package: Package):
 Component(
     name = "D",
     prefix = "D",
-    symbol = _symbol(variant),
-    footprint = _footprint(mount, package),
+    symbol = Symbol(**_symbol(variant)),
+    footprint = File(_footprint(mount, package)),
     properties = properties,
     pins = {
         "A": A,

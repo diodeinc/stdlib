@@ -58,10 +58,13 @@ def _footprint(package: Package) -> str:
     }
     if package not in kicad_footprints:
         error("Invalid package: " + str(package))
-    return File(kicad_footprints[package])
+    return kicad_footprints[package]
 
 def _symbol(_package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "LED")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "LED",
+    }
     
 
 def _value(color: Color, package: Package) -> str:
@@ -76,8 +79,8 @@ def _value(color: Color, package: Package) -> str:
 
 Component(
     name="LED",
-    symbol=_symbol(package),
-    footprint=_footprint(package),
+    symbol=Symbol(**_symbol(package)),
+    footprint=File(_footprint(package)),
     prefix="D",
     pins={
         "K": K,
