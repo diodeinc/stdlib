@@ -1,3 +1,4 @@
+load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Resistance", "Voltage")
 
@@ -41,18 +42,21 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(mount: Mount, package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "R")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "R",
+    }
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
-        Package("0201"): File("@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod"),
-        Package("0402"): File("@kicad-footprints/Resistor_SMD.pretty/R_0402_1005Metric.kicad_mod"),
-        Package("0603"): File("@kicad-footprints/Resistor_SMD.pretty/R_0603_1608Metric.kicad_mod"),
-        Package("0805"): File("@kicad-footprints/Resistor_SMD.pretty/R_0805_2012Metric.kicad_mod"),
-        Package("1206"): File("@kicad-footprints/Resistor_SMD.pretty/R_1206_3216Metric.kicad_mod"),
-        Package("1210"): File("@kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod"),
-        Package("2010"): File("@kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod"),
-        Package("2512"): File("@kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod"),
+        Package("0201"): "@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod",
+        Package("0402"): "@kicad-footprints/Resistor_SMD.pretty/R_0402_1005Metric.kicad_mod",
+        Package("0603"): "@kicad-footprints/Resistor_SMD.pretty/R_0603_1608Metric.kicad_mod",
+        Package("0805"): "@kicad-footprints/Resistor_SMD.pretty/R_0805_2012Metric.kicad_mod",
+        Package("1206"): "@kicad-footprints/Resistor_SMD.pretty/R_1206_3216Metric.kicad_mod",
+        Package("1210"): "@kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod",
+        Package("2010"): "@kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod",
+        Package("2512"): "@kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod",
     }
 
     if package not in kicad_footprints:
@@ -66,8 +70,8 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "R",
-    symbol = _symbol(mount, package),
-    footprint = _footprint(mount, package),
+    symbol = Symbol(**_symbol(mount, package)),
+    footprint = File(_footprint(mount, package)),
     prefix = "R",
     pin_defs = {
         "P1": "1",

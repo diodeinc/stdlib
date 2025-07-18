@@ -1,0 +1,12 @@
+load("../../properties.zen", "Layout")
+
+Diode = Module("../Diode.zen")
+
+for package in Diode.Package.values():
+    for variant in Diode.Variant.values():
+        Diode(name = "D_{}_{}".format(package, variant), package = package, variant = variant, A = Net("A"), K = Net("K"))
+
+Layout(
+    name = "Diode",
+    path = "build/Diode",
+)

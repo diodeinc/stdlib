@@ -4,121 +4,182 @@ load("../config.zen", "config_properties")
 # Component types
 # -----------------------------------------------------------------------------
 
+# Legacy enums (deprecated)
 PadSize = enum("0.3mm", "0.5mm", "1.0mm", "2.0mm")
 MountType = enum("SMD", "THT", "SMD_THT")
 PinCount = enum("2", "3", "4")
+
+# New variant enum - combines pin count, mount type, and pad size
+Variant = enum(
+    # 2-pin variants
+    "2_SMD_0.3mm",
+    "2_SMD_0.5mm",
+    "2_SMD_2.0mm",
+    "2_THT_0.3mm",
+    "2_THT_1.0mm",
+    "2_SMD_THT_0.3mm",
+    "2_SMD_THT_1.0mm",
+
+    # 3-pin variants
+    "3_SMD_0.5mm",
+    "3_SMD_2.0mm",
+    "3_THT_0.3mm",
+    "3_THT_1.0mm",
+
+    # 4-pin variants
+    "4_SMD_0.5mm",
+    "4_SMD_2.0mm",
+    "4_THT_0.3mm",
+    "4_THT_1.0mm",
+)
 
 # -----------------------------------------------------------------------------
 # Component parameters
 # -----------------------------------------------------------------------------
 
-# Optional
-mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=True)
-pad_size = config("pad_size", PadSize, default=PadSize("0.5mm"), optional=True)
-pin_count = config("pin_count", int, default=2, optional=True)
-use_jumper_footprint = config("use_jumper_footprint", bool, default=False, optional=True)
+# New variant-based approach (preferred)
+variant = config("variant", Variant, optional = True)
+
+# Legacy parameters (deprecated)
+mount_type = config("mount_type", MountType, default = MountType("SMD"), optional = True)
+pad_size = config("pad_size", PadSize, default = PadSize("0.5mm"), optional = True)
+pin_count_legacy = config("pin_count", int, default = 2, optional = True)
+use_jumper_footprint = config("use_jumper_footprint", bool, default = False, optional = True)
+
+# Determine actual pin count from variant or legacy parameter
+pin_count = int(variant.value.split("_")[0]) if variant else pin_count_legacy
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount_type": mount_type,
-    "pad_size": pad_size,
+    "variant": variant if variant else None,
+    "mount_type": mount_type if not variant else None,
+    "pad_size": pad_size if not variant else None,
     "pin_count": pin_count,
     "exclude_from_bom": True,
 })
-
-def _get_symbol(pin_count):
-    """Returns the appropriate net tie symbol based on pin count."""
-    return f"Device:NetTie_{pin_count}"
 
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------
 
-P = [io(f"P{i}", Net) for i in range(1, pin_count + 1)]
+P = [io("P{}".format(i), Net) for i in range(1, pin_count + 1)]
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
 
+def _variant_footprint(variant):
+    """Returns the footprint for a specific variant."""
 
-def _get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint):
+    # Map of variants to their footprint paths
+    variant_footprints = {
+        # 2-pin variants
+        "2_SMD_0.3mm": "footprints/NetTie-2_SMD_Pad0.3mm.kicad_mod",
+        "2_SMD_0.5mm": "@kicad-footprints/NetTie.pretty/NetTie-2_SMD_Pad0.5mm.kicad_mod",
+        "2_SMD_2.0mm": "@kicad-footprints/NetTie.pretty/NetTie-2_SMD_Pad2.0mm.kicad_mod",
+        "2_THT_0.3mm": "@kicad-footprints/NetTie.pretty/NetTie-2_THT_Pad0.3mm.kicad_mod",
+        "2_THT_1.0mm": "@kicad-footprints/NetTie.pretty/NetTie-2_THT_Pad1.0mm.kicad_mod",
+        "2_SMD_THT_0.3mm": "footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod",
+        "2_SMD_THT_1.0mm": "footprints/NetTie-2_SMD_THT_Pad1.0mm.kicad_mod",
+
+        # 3-pin variants
+        "3_SMD_0.5mm": "@kicad-footprints/NetTie.pretty/NetTie-3_SMD_Pad0.5mm.kicad_mod",
+        "3_SMD_2.0mm": "@kicad-footprints/NetTie.pretty/NetTie-3_SMD_Pad2.0mm.kicad_mod",
+        "3_THT_0.3mm": "@kicad-footprints/NetTie.pretty/NetTie-3_THT_Pad0.3mm.kicad_mod",
+        "3_THT_1.0mm": "@kicad-footprints/NetTie.pretty/NetTie-3_THT_Pad1.0mm.kicad_mod",
+
+        # 4-pin variants
+        "4_SMD_0.5mm": "@kicad-footprints/NetTie.pretty/NetTie-4_SMD_Pad0.5mm.kicad_mod",
+        "4_SMD_2.0mm": "@kicad-footprints/NetTie.pretty/NetTie-4_SMD_Pad2.0mm.kicad_mod",
+        "4_THT_0.3mm": "@kicad-footprints/NetTie.pretty/NetTie-4_THT_Pad0.3mm.kicad_mod",
+        "4_THT_1.0mm": "@kicad-footprints/NetTie.pretty/NetTie-4_THT_Pad1.0mm.kicad_mod",
+    }
+
+    return variant_footprints.get(variant.value, None)
+
+def _legacy_footprint(pin_count, mount_type, pad_size):
+    """Return the appropriate net tie footprint."""
+
+    mount = mount_type.value
+    pad = pad_size.value
+    if mount == "SMD_THT":
+        if pin_count == 2:
+            if pad_size == PadSize("0.3mm"):
+                return "footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod"
+            elif pad_size == PadSize("1.0mm"):
+                return "footprints/NetTie-2_SMD_THT_Pad1.0mm.kicad_mod"
+            else:
+                error("Unsupported pad size: {}".format(pad_size))
+        else:
+            error("Unsupported pin count: {}".format(pin_count))
+    elif mount == "SMD" and pin_count == 2 and pad_size == PadSize("0.3mm"):
+        return "footprints/NetTie-2_SMD_Pad0.3mm.kicad_mod"
+    else:
+        return "@kicad-footprints/NetTie.pretty/NetTie-{}_{}_Pad{}.kicad_mod".format(pin_count, mount, pad)
+
+def _footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant):
     """Returns the appropriate net tie footprint."""
+
     if use_jumper_footprint:
         # Use jumper footprints as a substitute for net ties
         if pin_count == 2:
-            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+            return "@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod"
         elif pin_count == 3:
-            return File("@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
+            return "@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod"
         else:
             # For 4-pin, use a 2x2 jumper arrangement
-            return File("@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod")
-    else:
-        pins = str(pin_count)
-        mount = mount_type.value
-        pad = pad_size.value
-        if mount == "SMD_THT":
-            if pin_count == 2:
-                if pad_size == PadSize("0.3mm"):
-                    return File("footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod")
-                elif pad_size == PadSize("1.0mm"):
-                    return File("footprints/NetTie-2_SMD_THT_Pad1.0mm.kicad_mod")
-                else:
-                    error(f"Unsupported pad size: {pad_size}")
-            else:
-                error(f"Unsupported pin count: {pin_count}")    
-        elif mount == "SMD" and pin_count == 2 and pad_size == PadSize("0.3mm"):
-            return File("footprints/NetTie-2_SMD_Pad0.3mm.kicad_mod")
-        else:
-            return File(f"@kicad-footprints/NetTie.pretty/NetTie-{pins}_{mount}_Pad{pad}.kicad_mod")
+            return "@kicad-footprints/Jumper.pretty/SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm.kicad_mod"
 
-def _get_symbol(pin_count):
+    # Use variant-based approach if variant is provided
+    if variant:
+        return _variant_footprint(variant)
+    else:
+        return _legacy_footprint(pin_count, mount_type, pad_size)
+
+def _symbol(pin_count):
     """Returns the appropriate net tie symbol based on pin count."""
     if pin_count == 2:
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_2")
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "NetTie_2",
+        }
     elif pin_count == 3:
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_3")
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "NetTie_3",
+        }
     elif pin_count == 4:
-        return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "NetTie_4")
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "NetTie_4",
+        }
     else:
-        error(f"Unsupported pin count: {pin_count}")
+        error("Unsupported pin count: {}".format(pin_count))
 
-
-def _get_pins_and_connections(P):
+def _pins(P):
     """Get both the pin specifications and connection mappings based on pin count."""
-    pin_defs = {
-        "P1": "1",
-        "P2": "2",
-    }
     pins = {
-        "P1": P[0],
-        "P2": P[1],
+        "1": P[0],
+        "2": P[1],
     }
 
     if str(pin_count) >= "3":
-        pin_defs["P3"] = "3"
-        pins["P3"] = P[2]
+        pins["3"] = P[2]
 
     if str(pin_count) >= "4":
-        pin_defs["P4"] = "4"
-        pins["P4"] = P[3]
+        pins["4"] = P[3]
 
-    return pins, pin_defs
-
+    return pins
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
-# Determine pin count based on provided nets
-pins, pin_defs = _get_pins_and_connections(P)
-
 Component(
-    name="NT",
-    type="net_tie",
-    symbol=_get_symbol(pin_count),
-    footprint=_get_footprint(pin_count, mount_type, pad_size, use_jumper_footprint),
-    prefix="NT",
-    pins=pins,
-    pin_defs=pin_defs,
-    properties=properties,
+    name = "NT",
+    symbol = Symbol(**_symbol(pin_count)),
+    footprint = File(_footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant)),
+    prefix = "NT",
+    pins = _pins(P),
+    properties = properties,
 )

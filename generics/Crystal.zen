@@ -7,6 +7,7 @@ load("../units.zen", "Capacitance", "Frequency")
 
 Mount = enum("SMD")
 Package = enum(
+    "0603_4Pin",
     "2012_2Pin",
     "3215_2Pin",
     "5032_2Pin",
@@ -18,7 +19,6 @@ Package = enum(
     "2016_4Pin",
     "1210_4Pin",
     "0603_2Pin",
-    "0603_4Pin",
 )
 
 # -----------------------------------------------------------------------------
@@ -58,65 +58,61 @@ GND = io("GND", Net, optional = True)
 # -----------------------------------------------------------------------------
 
 def _symbol(package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "Crystal")
+    if "2Pin" in str(package):
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Crystal",
+        }
+    else:
+        return {
+            "library": "@kicad-symbols/Device.kicad_sym",
+            "name": "Crystal_GND24",
+        }
 
 def _footprint(package: Package):
     _footprints = {
-        Package("2012_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2012-2Pin_2.0x1.2mm.kicad_mod"),
-        Package("3215_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_3215-2Pin_3.2x1.5mm.kicad_mod"),
-        Package("5032_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-2Pin_5.0x3.2mm.kicad_mod"),
-        Package("5032_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-4Pin_5.0x3.2mm.kicad_mod"),
-        Package("7050_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-2Pin_7.0x5.0mm.kicad_mod"),
-        Package("7050_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-4Pin_7.0x5.0mm.kicad_mod"),
-        Package("3225_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_3225-4Pin_3.2x2.5mm.kicad_mod"),
-        Package("2520_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2520-4Pin_2.5x2.0mm.kicad_mod"),
-        Package("2016_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_2016-4Pin_2.0x1.6mm.kicad_mod"),
-        Package("1210_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_1210-4Pin_1.2x1.0mm.kicad_mod"),
-        Package("0603_2Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-2Pin_6.0x3.5mm.kicad_mod"),
-        Package("0603_4Pin"): File("@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-4Pin_6.0x3.5mm.kicad_mod"),
+        Package("2012_2Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_2012-2Pin_2.0x1.2mm.kicad_mod",
+        Package("3215_2Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_3215-2Pin_3.2x1.5mm.kicad_mod",
+        Package("5032_2Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-2Pin_5.0x3.2mm.kicad_mod",
+        Package("5032_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_5032-4Pin_5.0x3.2mm.kicad_mod",
+        Package("7050_2Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-2Pin_7.0x5.0mm.kicad_mod",
+        Package("7050_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_7050-4Pin_7.0x5.0mm.kicad_mod",
+        Package("3225_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_3225-4Pin_3.2x2.5mm.kicad_mod",
+        Package("2520_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_2520-4Pin_2.5x2.0mm.kicad_mod",
+        Package("2016_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_2016-4Pin_2.0x1.6mm.kicad_mod",
+        Package("1210_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_1210-4Pin_1.2x1.0mm.kicad_mod",
+        Package("0603_2Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-2Pin_6.0x3.5mm.kicad_mod",
+        Package("0603_4Pin"): "@kicad-footprints/Crystal.pretty/Crystal_SMD_0603-4Pin_6.0x3.5mm.kicad_mod",
     }
 
     return _footprints[package]
 
-def _pin_defs_and_pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
+def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
         if not GND:
             error("GND is required for 4-pin crystals")
         pins = {
-            "XIN": XIN,
-            "GND1": GND,
-            "XOUT": XOUT,
-            "GND2": GND,
-        }
-        pin_defs = {
-            "XIN": "1",
-            "GND1": "2",
-            "XOUT": "3",
-            "GND2": "4",
+            "1": XIN,
+            "2": GND,
+            "3": XOUT,
+            "4": GND,
         }
     else:
         pins = {
-            "XIN": XIN,
-            "XOUT": XOUT,
+            "1": XIN,
+            "2": XOUT,
         }
-        pin_defs = {
-            "XIN": "1",
-            "XOUT": "2",
-        }
-    return pins, pin_defs
+    return pins
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
-pins, pin_defs = _pin_defs_and_pins(package, XIN, XOUT, GND)
-
 Component(
-    name = "CRYSTAL",
+    name = "Y",
     prefix = "Y",
-    symbol = _symbol(package),
-    footprint = _footprint(package),
-    pins = pins,
-    pin_defs = pin_defs,
+    symbol = Symbol(**_symbol(package)),
+    footprint = File(_footprint(package)),
+    pins = _pins(package, XIN, XOUT, GND),
     properties = properties,
 )

@@ -1,3 +1,4 @@
+load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
 
@@ -48,16 +49,19 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 def _symbol(mount: Mount, package: Package):
-    return Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "C")
+    return {
+        "library": "@kicad-symbols/Device.kicad_sym",
+        "name": "C",
+    }
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
-        (Mount("SMD"), Package("0201")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod"),
-        (Mount("SMD"), Package("0402")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod"),
-        (Mount("SMD"), Package("0603")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod"),
-        (Mount("SMD"), Package("0805")): File("@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod"),
-        (Mount("SMD"), Package("1206")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod"),
-        (Mount("SMD"), Package("1210")): File("@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod"),
+        (Mount("SMD"), Package("0201")): "@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod",
+        (Mount("SMD"), Package("0402")): "@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod",
+        (Mount("SMD"), Package("0603")): "@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod",
+        (Mount("SMD"), Package("0805")): "@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod",
+        (Mount("SMD"), Package("1206")): "@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod",
+        (Mount("SMD"), Package("1210")): "@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod",
     }
 
     if (mount, package) not in kicad_footprints:
@@ -70,17 +74,17 @@ def _footprint(mount: Mount, package: Package):
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "CAPACITOR",
+    name = "C",
     prefix = "C",
-    symbol = _symbol(mount, package),
-    footprint = _footprint(mount, package),
+    symbol = Symbol(**_symbol(mount, package)),
+    footprint = File(_footprint(mount, package)),
     properties = properties,
-    pins = {
-        "P1": P1,
-        "P2": P2,
-    },
     pin_defs = {
         "P1": "1",
         "P2": "2",
+    },
+    pins = {
+        "P1": P1,
+        "P2": P2,
     },
 )

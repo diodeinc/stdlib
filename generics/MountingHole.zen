@@ -1,5 +1,5 @@
-load("../units.zen", "unit")
 load("../config.zen", "config_properties")
+load("../units.zen", "unit")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -13,9 +13,9 @@ Plating = enum("TopBottom", "TopOnly", "Via")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-diameter = config("diameter", Diameter, convert=Diameter)
-standard = config("standard", Standard, default=Standard("DIN965"), convert=Standard, optional=True)
-plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
+diameter = config("diameter", Diameter, convert = Diameter)
+standard = config("standard", Standard, default = Standard("DIN965"), convert = Standard, optional = True)
+plating = config("plating", Plating, default = Plating("TopBottom"), convert = Plating, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -28,12 +28,17 @@ properties = config_properties({
 # IO ports
 # -----------------------------------------------------------------------------
 
-P1 = io("P1", Net, optional=True)
+P1 = io("P1", Net, optional = True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
 
+def _symbol(diameter: Diameter, standard: Standard | None = None, plating: Plating | None = None) -> dict:
+    return {
+        "library": "@kicad-symbols/Mechanical.kicad_sym",
+        "name": "MountingHole_Pad",
+    }
 
 def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Plating | None = None) -> str:
     """
@@ -47,16 +52,17 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
     Returns:
     - Footprint path string
     """
+
     # For simplicity, we'll use basic mounting hole footprints
     # The full parametric mapping would require too many combinations
     basic_footprints = {
-        Diameter("M2"): File("@kicad-footprints/MountingHole.pretty/MountingHole_2.2mm_M2.kicad_mod"),
-        Diameter("M2.5"): File("@kicad-footprints/MountingHole.pretty/MountingHole_2.7mm_M2.5.kicad_mod"),
-        Diameter("M3"): File("@kicad-footprints/MountingHole.pretty/MountingHole_3.2mm_M3.kicad_mod"),
-        Diameter("M4"): File("@kicad-footprints/MountingHole.pretty/MountingHole_4.3mm_M4.kicad_mod"),
-        Diameter("M5"): File("@kicad-footprints/MountingHole.pretty/MountingHole_5.3mm_M5.kicad_mod"),
-        Diameter("M6"): File("@kicad-footprints/MountingHole.pretty/MountingHole_6.4mm_M6.kicad_mod"),
-        Diameter("M8"): File("@kicad-footprints/MountingHole.pretty/MountingHole_8.4mm_M8.kicad_mod"),
+        Diameter("M2"): "@kicad-footprints/MountingHole.pretty/MountingHole_2.2mm_M2.kicad_mod",
+        Diameter("M2.5"): "@kicad-footprints/MountingHole.pretty/MountingHole_2.7mm_M2.5.kicad_mod",
+        Diameter("M3"): "@kicad-footprints/MountingHole.pretty/MountingHole_3.2mm_M3.kicad_mod",
+        Diameter("M4"): "@kicad-footprints/MountingHole.pretty/MountingHole_4.3mm_M4.kicad_mod",
+        Diameter("M5"): "@kicad-footprints/MountingHole.pretty/MountingHole_5.3mm_M5.kicad_mod",
+        Diameter("M6"): "@kicad-footprints/MountingHole.pretty/MountingHole_6.4mm_M6.kicad_mod",
+        Diameter("M8"): "@kicad-footprints/MountingHole.pretty/MountingHole_8.4mm_M8.kicad_mod",
     }
 
     if diameter not in basic_footprints:
@@ -64,22 +70,17 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
 
     return basic_footprints[diameter]
 
-
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name="MH",
-    type="mounting_hole",
-    symbol=Symbol(library = "@kicad-symbols/Mechanical.kicad_sym", name = "MountingHole"),
-    footprint=_footprint(diameter, standard, plating),
-    prefix="H",
-    pin_defs={
-        "P1": "1",
+    name = "MH",
+    symbol = Symbol(**_symbol(diameter, standard, plating)),
+    footprint = _footprint(diameter, standard, plating),
+    prefix = "H",
+    pins = {
+        "1": P1,
     },
-    pins={
-        "P1": P1,
-    },
-    properties=properties,
+    properties = properties,
 )

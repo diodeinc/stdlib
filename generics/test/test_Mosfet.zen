@@ -1,0 +1,27 @@
+"""Comprehensive test for Mosfet component."""
+
+load("../../properties.zen", "Layout")
+
+Mosfet = Module("../Mosfet.zen")
+
+# Test all combinations of Package and MosfetChannel
+for mount in Mosfet.Mount.values():
+    for package in Mosfet.Package.values():
+        for channel in Mosfet.MosfetChannel.values():
+            name = "Q_" + str(package) + "_" + str(channel)
+            Mosfet(
+                name = name,
+                package = package,
+                channel = channel,
+                vgs_max = "20V",
+                vds_max = "30V",
+                id_max = "5A",
+                G = Net(name + "_G"),
+                D = Net(name + "_D"),
+                S = Net(name + "_S"),
+            )
+
+Layout(
+    name = "preview",
+    path = "build/Mosfet",
+)

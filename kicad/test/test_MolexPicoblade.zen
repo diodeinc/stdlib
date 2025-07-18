@@ -1,7 +1,11 @@
 load("..", "SolderWire")
+load("../../properties.zen", "Layout")
 
 for wire_size in SolderWire.Size:
     name = "SolderWire_" + wire_size.value
     SolderWire(name = name, size = wire_size.value, P1 = Net("Net1"))
 
-add_property("layout_path", "build/preview")
+Layout(
+    name = "preview",
+    path = "build/SolderWire",
+)
