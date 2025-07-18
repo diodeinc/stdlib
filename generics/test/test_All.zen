@@ -2,6 +2,7 @@ Modules = [
     "test_Bjt",
     "test_Capacitor",
     "test_Crystal",
+    "test_Diode",
     "test_FerriteBead",
     "test_Inductor",
     "test_Led",
