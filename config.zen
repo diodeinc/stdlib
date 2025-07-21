@@ -47,14 +47,6 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
         Value field, ready for use in Component definition.
     """
 
-    # Helper to convert values to strings
-    # def to_string(value):
-    #     if hasattr(value, "__str__"):
-    #         return value.__str__(value)
-    #     if hasattr(value, "value"):
-    #         return value.value
-    #     return str(value)
-
     # Helper to normalize and add properties
     def add_property(result, key, value):
         if value == None:
