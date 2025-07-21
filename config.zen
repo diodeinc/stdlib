@@ -86,6 +86,7 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
             add_property(result, key, value)
 
     # Generate Value field
+
     mpn_val = result.get("Mpn", "")
     if mpn_val:
         result["Value"] = mpn_val
@@ -93,6 +94,6 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
         # Metadata keys to exclude from Value generation
         META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value"]
         value_parts = [v for k, v in result.items() if k not in META_KEYS and v]
-        result["Value"] = " ".join(value_parts)
+        result["Bom"] = " ".join(value_parts)
 
     return result
