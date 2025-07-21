@@ -1,4 +1,3 @@
-load("/Users/davide/src/diodeinc/packages/stdlib/generics/Resistor.zen", "voltage")
 load("../../properties.zen", "Layout")
 
 Resistor = Module("../Resistor.zen")
