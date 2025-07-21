@@ -1,5 +1,6 @@
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Current", "Voltage")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -25,7 +26,7 @@ id_max = config_unit("id_max", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount": mount,
+    "value": format_value(vgs_max, vds_max, id_max),
     "package": package,
     "channel": channel,
     "vgs_max": vgs_max,

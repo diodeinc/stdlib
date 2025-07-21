@@ -80,6 +80,7 @@ variant = config("variant", Variant)
 
 # Properties – combined and normalized
 properties = config_properties({
+    "value": "",
     "variant": variant,
 })
 

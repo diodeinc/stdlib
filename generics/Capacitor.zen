@@ -1,6 +1,7 @@
 load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -28,9 +29,8 @@ t_min = config_unit("t_min", Temperature, optional = True)
 
 # Properties
 properties = config_properties({
-    "mount": mount,
+    "value": format_value(value, voltage, dielectric, esr),
     "package": package,
-    "value": value,
     "capacitance": value,
     "voltage": voltage,
     "dielectric": dielectric,

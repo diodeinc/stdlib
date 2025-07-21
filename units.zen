@@ -168,7 +168,14 @@ def _check_prefix(unit: str, unit_type: str) -> float:
 
     # Normalize the unit by removing plural form if present
     normalized_unit = unit.rstrip("s") if len(unit) > 1 else unit
-    prefix = normalized_unit.lower().replace(unit_type.lower(), "")
+
+    # Find the position where the unit_type (case-insensitive) appears in normalized_unit
+    unit_type_lower = unit_type.lower()
+    normalized_unit_lower = normalized_unit.lower()
+    idx = normalized_unit_lower.find(unit_type_lower)
+    if idx == -1:
+        error(f"Unit type '{unit_type}' not found in '{unit}'")
+    prefix = normalized_unit[:idx]
 
     if prefix not in multipliers:
         allowed = list(multipliers.keys())

@@ -1,5 +1,6 @@
 load("../config.zen", "config_properties")
 load("../units.zen", "unit")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -19,6 +20,7 @@ plating = config("plating", Plating, default = Plating("TopBottom"), convert = P
 
 # Properties – combined and normalized
 properties = config_properties({
+    "value": format_value(diameter, standard, plating),
     "diameter": diameter,
     "standard": standard,
     "plating": plating,
