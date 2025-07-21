@@ -1,4 +1,5 @@
 load("units.zen", "unit")
+load("utils.zen", "format_value")
 
 def config_unit(name, UnitType, optional = False, default = None, **kwargs):
     """Helper function to create a config value for a unit type.
@@ -46,20 +47,12 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
         Value field, ready for use in Component definition.
     """
 
-    # Helper to convert values to strings
-    def to_string(value):
-        if hasattr(value, "__str__"):
-            return value.__str__(value)
-        if hasattr(value, "value"):
-            return value.value
-        return str(value)
-
     # Helper to normalize and add properties
     def add_property(result, key, value):
         if value == None:
             return
-        key = to_string(key).lower().capitalize()
-        result[key] = to_string(value)
+        key = format_value(key).lower().capitalize()
+        result[key] = format_value(value)
 
     # Get configuration values
     user_properties = config("user_properties", dict, default = {}, optional = True)
@@ -85,11 +78,13 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
         for key, value in user_properties.items():
             add_property(result, key, value)
 
-    # Generate Value field
+    # If Mpn is set, use it as Value
     mpn_val = result.get("Mpn", "")
     if mpn_val:
         result["Value"] = mpn_val
-    else:
+
+    # If Value is not set, generate it from the other properties
+    if not result.get("Value", None):
         # Metadata keys to exclude from Value generation
         META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value"]
         value_parts = [v for k, v in result.items() if k not in META_KEYS and v]

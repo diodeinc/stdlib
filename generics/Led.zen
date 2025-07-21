@@ -24,8 +24,7 @@ forward_current = config_unit("forward_current", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount": mount,
-    "package": package,
+    "package": "{} {}".format(package.value, color.value),
     "color": color,
     "forward_voltage": forward_voltage,
     "forward_current": forward_current,

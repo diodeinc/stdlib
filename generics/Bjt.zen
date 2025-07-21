@@ -28,7 +28,6 @@ ft = config_unit("ft", Frequency, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount": mount,
     "package": package,
     "bjt_type": bjt_type,
     "hfe": hfe,

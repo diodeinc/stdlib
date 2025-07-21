@@ -74,56 +74,59 @@ def _unit_to_str(self):
 
     # Return formatted string with value, prefix, unit and tolerance
     # Format tolerance as integer by rounding
-    tolerance_str = str(int(tolerance + 0.5))
-    return f"{value_str}{prefix}{unit_str} +/-{tolerance_str}%"
+    if tolerance > 0.0:
+        tolerance_str = str(int(tolerance + 0.5))
+        return f"{value_str}{prefix}{unit_str} +/-{tolerance_str}%"
+    else:
+        return f"{value_str}{prefix}{unit_str}"
 
 # Toleranced units
 Time = record(
     value=float,
     unit=field(Seconds, Seconds("s")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Current = record(
     value=float,
     unit=field(Amperes, Amperes("A")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Voltage = record(
     value=float,
     unit=field(Volts, Volts("V")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Capacitance = record(
     value=float,
     unit=field(Farads, Farads("F")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Resistance = record(
     value=float,
     unit=field(Ohms, Ohms("Ohms")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Inductance = record(
     value=float,
     unit=field(Henries, Henries("H")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Frequency = record(
     value=float,
     unit=field(Hertz, Hertz("Hz")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 Temperature = record(
     value=float,
     unit=field(Kelvin, Kelvin("K")),
-    tolerance=field(float, 0.1),
+    tolerance=field(float, 0.0),
     __str__=field(typing.Callable, _unit_to_str),
 )
 
@@ -165,7 +168,14 @@ def _check_prefix(unit: str, unit_type: str) -> float:
 
     # Normalize the unit by removing plural form if present
     normalized_unit = unit.rstrip("s") if len(unit) > 1 else unit
-    prefix = normalized_unit.lower().replace(unit_type.lower(), "")
+
+    # Find the position where the unit_type (case-insensitive) appears in normalized_unit
+    unit_type_lower = unit_type.lower()
+    normalized_unit_lower = normalized_unit.lower()
+    idx = normalized_unit_lower.find(unit_type_lower)
+    if idx == -1:
+        error(f"Unit type '{unit_type}' not found in '{unit}'")
+    prefix = normalized_unit[:idx]
 
     if prefix not in multipliers:
         allowed = list(multipliers.keys())
@@ -198,7 +208,7 @@ def unit(spec, type):
     parts = [p for p in str(spec).strip().split(" ") if p]
 
     # 1. Extract tolerance if provided (last token ending with "%")
-    tolerance = 0.1
+    tolerance = 0.0
     last = parts[-1]
     if last.endswith("%"):
         digits = last.rstrip("%")

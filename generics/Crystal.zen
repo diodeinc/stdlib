@@ -1,5 +1,6 @@
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Capacitance", "Frequency")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -35,9 +36,8 @@ load_capacitance = config_unit("load_capacitance", Capacitance, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount": mount,
+    "value": format_value(frequency, load_capacitance),
     "package": package,
-    "value": f"frequency: {frequency}, load capacitance: {load_capacitance}",
     "frequency": frequency,
     "load_capacitance": load_capacitance,
 })

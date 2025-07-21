@@ -1,5 +1,6 @@
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Current", "Frequency", "Resistance")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -23,9 +24,8 @@ current = config_unit("current", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "mount": mount,
+    "value": format_value(resistance, current, frequency),
     "package": package,
-    "value": f"{resistance}@{frequency}@{package}",
     "resistance": resistance,
     "frequency": frequency,
     "current": current,

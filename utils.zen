@@ -1,0 +1,12 @@
+"""General utilities for Zen."""
+
+def format_value(*args):
+    strings = []
+    for arg in args:
+        if hasattr(arg, "__str__"):
+            strings.append(arg.__str__(arg))
+        elif hasattr(arg, "value"):
+            strings.append(str(arg.value))
+        elif arg != None:
+            strings.append(str(arg))
+    return " ".join(strings)
