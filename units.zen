@@ -73,7 +73,7 @@ def _unit_to_str(self):
     unit_str = self.unit.value
 
     # Patch resitance values
-    if unit_str == "Ohms":
+    if unit_str in ["Ohms", "Ohm"]:
         unit_str = ""
 
     # Return formatted string with value, prefix, unit and tolerance
