@@ -72,11 +72,15 @@ def _unit_to_str(self):
     # Get the unit string and remove quotes
     unit_str = self.unit.value
 
+    # Patch resitance values
+    if unit_str == "Ohms":
+        unit_str = ""
+
     # Return formatted string with value, prefix, unit and tolerance
     # Format tolerance as integer by rounding
     if tolerance > 0.0:
         tolerance_str = str(int(tolerance + 0.5))
-        return f"{value_str}{prefix}{unit_str} +/-{tolerance_str}%"
+        return f"{value_str}{prefix}{unit_str} {tolerance_str}%".strip()
     else:
         return f"{value_str}{prefix}{unit_str}"
 
