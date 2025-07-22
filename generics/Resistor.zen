@@ -9,7 +9,7 @@ load("../utils.zen", "format_value")
 
 Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512")
 Mount = enum("SMD")
-SymbolType = enum("R", "R_US", "Thermistor_NTC", "Thermistor_NTC_US")
+SymbolType = enum("R", "Thermistor_NTC")
 
 # -----------------------------------------------------------------------------
 # Component parameters
@@ -18,11 +18,12 @@ SymbolType = enum("R", "R_US", "Thermistor_NTC", "Thermistor_NTC_US")
 # Required
 package = config("package", Package, default = Package("0603"))
 value = config_unit("value", Resistance)
-symbol_type = config("symbol_type", SymbolType, default = SymbolType("R"), optional = True)
 
 # Optional
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
 voltage = config_unit("voltage", Voltage, optional = True)
+symbol_type = config("symbol_type", SymbolType, default = SymbolType("R"), optional = True)
+use_us_symbols = config("use_us_symbols", bool, default = False, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -43,14 +44,19 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _symbol(mount: Mount, package: Package, symbol_type: SymbolType):
+def _symbol(mount: Mount, package: Package, symbol_type: SymbolType, use_us_symbols: bool):
     name = "R"
+
     if symbol_type == SymbolType("Thermistor_NTC"):
-        name = "Thermistor_NTC"
-    if symbol_type == SymbolType("Thermistor_NTC_US"):
-        name = "Thermistor_NTC_US"
-    elif symbol_type == SymbolType("R_US"):
-        name = "R_US"
+        if use_us_symbols:
+            name = "Thermistor_NTC_US"
+        else:
+            name = "Thermistor_NTC"
+    else: 
+        if use_us_symbols:
+            name = "R_US"
+        else:
+            name = "R"
 
     return {
         "library": "@kicad-symbols/Device.kicad_sym",
@@ -80,7 +86,7 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "R",
-    symbol = Symbol(**_symbol(mount, package, symbol_type)),
+    symbol = Symbol(**_symbol(mount, package, symbol_type, use_us_symbols)),
     footprint = File(_footprint(mount, package)),
     prefix = "R",
     pin_defs = {
