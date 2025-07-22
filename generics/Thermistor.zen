@@ -23,7 +23,7 @@ value = config_unit("value", Resistance)
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
 voltage = config_unit("voltage", Voltage, optional = True)
 temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, default = TemperatureCoefficient("Unspecified"), optional = True)
-use_us_symbols = config("use_us_symbols", bool, default = False, optional = True)
+use_us_symbol = config("use_us_symbol", bool, default = False, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
@@ -44,7 +44,7 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _symbol(mount: Mount, package: Package, temperature_coefficient: TemperatureCoefficient, use_us_symbols: bool):
+def _symbol(mount: Mount, package: Package, temperature_coefficient: TemperatureCoefficient, use_us_symbol: bool):
     name = ""
 
     if temperature_coefficient == TemperatureCoefficient("PTC"):
@@ -54,7 +54,7 @@ def _symbol(mount: Mount, package: Package, temperature_coefficient: Temperature
     else:
         name = "Thermistor"
 
-    if use_us_symbols:
+    if use_us_symbol:
         name = name + "_US"
 
     return {
@@ -81,7 +81,7 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "TH",
-    symbol = Symbol(**_symbol(mount, package, temperature_coefficient, use_us_symbols)),
+    symbol = Symbol(**_symbol(mount, package, temperature_coefficient, use_us_symbol)),
     footprint = File(_footprint(mount, package)),
     prefix = "TH",
     pin_defs = {

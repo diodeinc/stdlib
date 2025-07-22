@@ -22,8 +22,8 @@ Resistor(
     value = "10kOhm",
     voltage = "50V",
     package = "0603",
-    use_us_symbols = True,
-    P1 = Net(name + "_P1"),
+    use_us_symbol = True,
+    P1 = Net(name + "_P1"), 
     P2 = Net(name + "_P2"),
 )
 
