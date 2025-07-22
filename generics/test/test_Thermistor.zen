@@ -34,7 +34,7 @@ for temp_coefficient in Thermistor.TemperatureCoefficient.values():
         voltage = "50V",
         package = "0603",
         temperature_coefficient = temp_coefficient,
-        use_us_symbols = True,
+        use_us_symbol = True,
         P1 = Net(name + "_P1"),
         P2 = Net(name + "_P2"),
     )
