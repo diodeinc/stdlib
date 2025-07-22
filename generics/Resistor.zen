@@ -7,7 +7,6 @@ load("../utils.zen", "format_value")
 # Component types
 # -----------------------------------------------------------------------------
 
-# TODO: Add through-hole support
 Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512")
 Mount = enum("SMD")
 
