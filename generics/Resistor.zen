@@ -9,6 +9,7 @@ load("../utils.zen", "format_value")
 
 Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512")
 Mount = enum("SMD")
+SymbolType = enum("R", "R_US", "Thermistor_NTC", "Thermistor_NTC_US")
 
 # -----------------------------------------------------------------------------
 # Component parameters
@@ -17,6 +18,7 @@ Mount = enum("SMD")
 # Required
 package = config("package", Package, default = Package("0603"))
 value = config_unit("value", Resistance)
+symbol_type = config("symbol_type", SymbolType, default = SymbolType("R"), optional = True)
 
 # Optional
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
@@ -41,10 +43,18 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-def _symbol(mount: Mount, package: Package):
+def _symbol(mount: Mount, package: Package, symbol_type: SymbolType):
+    name = "R"
+    if symbol_type == SymbolType("Thermistor_NTC"):
+        name = "Thermistor_NTC"
+    if symbol_type == SymbolType("Thermistor_NTC_US"):
+        name = "Thermistor_NTC_US"
+    elif symbol_type == SymbolType("R_US"):
+        name = "R_US"
+
     return {
         "library": "@kicad-symbols/Device.kicad_sym",
-        "name": "R",
+        "name": name,
     }
 
 def _footprint(mount: Mount, package: Package):
@@ -70,7 +80,7 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name = "R",
-    symbol = Symbol(**_symbol(mount, package)),
+    symbol = Symbol(**_symbol(mount, package, symbol_type)),
     footprint = File(_footprint(mount, package)),
     prefix = "R",
     pin_defs = {
