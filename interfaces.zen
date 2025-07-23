@@ -77,6 +77,28 @@ Ethernet = interface(
     RX_N = Net(),
 )
 
+Ethernet_Phy = interface(
+    TR0_P = Net(),
+    TR0_N = Net(),
+    TR1_P = Net(),
+    TR1_N = Net(),
+    TR2_P = Net(),
+    TR2_N = Net(),
+    TR3_P = Net(),
+    TR3_N = Net(),
+)
+
+Ethernet_1000BaseT = interface(
+    BI_DA_P = Net(),
+    BI_DA_N = Net(),
+    BI_DB_P = Net(),
+    BI_DB_N = Net(),
+    BI_DC_P = Net(),
+    BI_DC_N = Net(),
+    BI_DD_P = Net(),
+    BI_DD_N = Net(),
+)
+
 Gpio = interface(
     NET = Net(),
 )
