@@ -357,12 +357,30 @@ Uart = interface(
     RX = Net(),
 )
 
+Usart = interface(
+    TX = Net(),
+    RX = Net(),
+    CK = Net(),
+    RTS = Net(),
+    CTS = Net(),
+)
+
 def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
     txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
     rxa_txb = Net(name_a + "_RX/" + name_b + "_TX")
     uart_a = Uart(name = name_a, tx = txa_rxb, rx = rxa_txb)
     uart_b = Uart(name = name_b, tx = rxa_txb, rx = txa_rxb)
     return (uart_a, uart_b)
+
+def UsartPair(name_a: str, name_b: str) -> (Usart, Usart):
+    txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
+    rxa_txb = Net(name_a + "_RX/" + name_b + "_TX")
+    rtsa_ctsb = Net(name_a + "_RTS/" + name_b + "_CTS")
+    ctsa_rtsb = Net(name_a + "_CTS/" + name_b + "_RTS")
+    ck = Net(name_a + "_CK/" + name_b + "_CK")
+    usart_a = Usart(name = name_a, tx = txa_rxb, rx = rxa_txb, ck = ck, rts = rtsa_ctsb, cts = ctsa_rtsb)
+    usart_b = Usart(name = name_b, tx = rxa_txb, rx = txa_rxb, ck = ck, rts = ctsa_rtsb, cts = rtsa_ctsb)
+    return (usart_a, usart_b)
 
 Ufs = interface(
     REFCLK = Net(),
