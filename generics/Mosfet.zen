@@ -26,7 +26,7 @@ id_max = config_unit("id_max", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "value": format_value(vgs_max, vds_max, id_max),
+    "value": format_value(channel, "TYPE"),
     "package": package,
     "channel": channel,
     "vgs_max": vgs_max,
