@@ -63,7 +63,7 @@ def _footprint(package: Package) -> str:
 def _symbol(_package: Package):
     return {
         "library": "@kicad-symbols/Device.kicad_sym",
-        "name": "LED",
+        "name": "LED_Small_Filled",
     }
 
 def _value(color: Color, package: Package) -> str:

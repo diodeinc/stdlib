@@ -4,6 +4,8 @@ load("../../properties.zen", "Layout")
 
 Led = Module("../Led.zen")
 
+GND = Net("GND")
+
 # Test all combinations of Package and Color
 for package in Led.Package.values():
     for color in Led.Color.values():
@@ -15,7 +17,7 @@ for package in Led.Package.values():
             forward_voltage = "3.3V",
             forward_current = "20mA",
             A = Net(name + "_A"),
-            K = Net(name + "_K"),
+            K = GND,
         )
 
 Layout(
