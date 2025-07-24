@@ -1,5 +1,6 @@
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Current", "Voltage")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -24,7 +25,8 @@ forward_current = config_unit("forward_current", Current, optional = True)
 
 # Properties – combined and normalized
 properties = config_properties({
-    "package": "{} {}".format(package.value, color.value),
+    "value": format_value("LED", color.value.upper()),
+    "package": package,
     "color": color,
     "forward_voltage": forward_voltage,
     "forward_current": forward_current,
