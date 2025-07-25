@@ -127,8 +127,6 @@ I2c = interface(
     SCL = Net(),
 )
 
-SmBus = I2c
-
 I2s = interface(
     BCLK = Net(),
     LRCLK = Net(),
@@ -194,6 +192,17 @@ Lvds = interface(
 Mdio = interface(
     MDC = Net(),
     MDIO = Net(),
+)
+
+Mdi = interface(
+    A_P = Net(),
+    A_N = Net(),
+    B_P = Net(),
+    B_N = Net(),
+    C_P = Net(),
+    C_N = Net(),
+    D_P = Net(),
+    D_N = Net(),
 )
 
 Mii = interface(
@@ -387,6 +396,8 @@ Sdmmc = interface(
     DAT6 = Net(),
     DAT7 = Net(),
 )
+
+SmBus = I2c
 
 Spi = interface(
     CS = Net(),
