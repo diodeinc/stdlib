@@ -194,6 +194,17 @@ Mdio = interface(
     MDIO = Net(),
 )
 
+Mdi = interface(
+    A_P = Net(),
+    A_N = Net(),
+    B_P = Net(),
+    B_N = Net(),
+    C_P = Net(),
+    C_N = Net(),
+    D_P = Net(),
+    D_N = Net(),
+)
+
 Mii = interface(
     TXD0 = Net(),
     TXD1 = Net(),
@@ -385,6 +396,8 @@ Sdmmc = interface(
     DAT6 = Net(),
     DAT7 = Net(),
 )
+
+SmBus = I2c
 
 Spi = interface(
     CS = Net(),
