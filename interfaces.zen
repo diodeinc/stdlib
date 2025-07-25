@@ -348,6 +348,30 @@ Rmii = interface(
     REF_CLK = Net(),
 )
 
+Rs232 = interface(
+    TX = Net("TX"),
+    RX = Net("RX"),
+    RTS = Net("RTS"),
+    CTS = Net("CTS"),
+    DTR = Net("DTR"),
+    DSR = Net("DSR"),
+    DCD = Net("DCD"),
+    RI = Net("RI"),
+)
+
+Rs422 = interface(
+    TX_P = Net("TX_P"),
+    TX_N = Net("TX_N"),
+    RX_P = Net("RX_P"),
+    RX_N = Net("RX_N"),
+    RTS_P = Net("RTS_P"),
+    RTS_N = Net("RTS_N"),
+    CTS_P = Net("CTS_P"),
+    CTS_N = Net("CTS_N"),
+)
+
+Rs485 = Rs422
+
 Sata = interface(
     TX_P = Net(),
     TX_N = Net(),
