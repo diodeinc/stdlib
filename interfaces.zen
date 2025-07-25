@@ -70,6 +70,21 @@ Edp = interface(
     TX3_N = Net(),
 )
 
+Emmc = interface(
+    CLK = Net(),
+    CMD = Net(),
+    DAT0 = Net(),
+    DAT1 = Net(),
+    DAT2 = Net(),
+    DAT3 = Net(),
+    DAT4 = Net(),
+    DAT5 = Net(),
+    DAT6 = Net(),
+    DAT7 = Net(),
+    DS = Net(),
+    RST_N = Net(),
+)
+
 Ethernet = interface(
     TX_P = Net(),
     TX_N = Net(),
