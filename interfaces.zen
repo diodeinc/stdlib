@@ -127,6 +127,8 @@ I2c = interface(
     SCL = Net(),
 )
 
+SmBus = I2c
+
 I2s = interface(
     BCLK = Net(),
     LRCLK = Net(),
