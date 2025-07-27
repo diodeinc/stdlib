@@ -110,6 +110,12 @@ def _footprint(variant):
         Variant("Pad_D2.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.5mm.kicad_mod",
         Variant("Pad_D3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D3.0mm.kicad_mod",
         Variant("Pad_D4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D4.0mm.kicad_mod",
+        Variant("Pad_1.0x1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_1.0x1.0mm.kicad_mod",
+        Variant("Pad_1.5x1.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_1.5x1.5mm.kicad_mod",
+        Variant("Pad_2.0x2.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_2.0x2.0mm.kicad_mod",
+        Variant("Pad_2.5x2.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_2.5x2.5mm.kicad_mod",
+        Variant("Pad_3.0x3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_3.0x3.0mm.kicad_mod",
+        Variant("Pad_4.0x4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_4.0x4.0mm.kicad_mod",
         # THT variants
         Variant("THTPad_D1.0mm_Drill0.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod",
         Variant("THTPad_D1.5mm_Drill0.7mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod",

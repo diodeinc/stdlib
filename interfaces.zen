@@ -356,6 +356,7 @@ Rmii = interface(
     RXD0 = Net(),
     RXD1 = Net(),
     CRS_DV = Net(),
+    RX_ER = Net(),
     REF_CLK = Net(),
 )
 
