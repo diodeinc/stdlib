@@ -5,7 +5,7 @@ load("../units.zen", "Current", "Inductance")
 # Component types
 # -----------------------------------------------------------------------------
 
-Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512")
+Package = enum("0201", "0402", "0603", "0805", "1206", "1210", "2010", "2512", "KICAD")
 Mount = enum("SMD")
 
 # -----------------------------------------------------------------------------
@@ -15,6 +15,9 @@ Mount = enum("SMD")
 # Required
 package = config("package", Package)
 value = config_unit("value", Inductance)
+if package == Package("KICAD"):
+    kicad_library = config("kicad_library", str)
+    kicad_package = config("kicad_package", str)
 
 # Optional
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
@@ -70,7 +73,7 @@ def _footprint(package: Package) -> str:
 Component(
     name = "L",
     symbol = Symbol(**_symbol(package)),
-    footprint = File(_footprint(package)),
+    footprint = File(_footprint(package)) if package != Package("KICAD") else File(f"@kicad-footprints/{kicad_library}.pretty/{kicad_package}.kicad_mod"),
     prefix = "L",
     pins = {
         "1": P1,
