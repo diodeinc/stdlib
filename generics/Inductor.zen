@@ -16,8 +16,8 @@ Mount = enum("SMD")
 package = config("package", Package)
 value = config_unit("value", Inductance)
 if package == Package("KICAD"):
-    kicad_library = config("kicad_library", str)
-    kicad_package = config("kicad_package", str)
+    kicad_library = config("kicad_library", str, default = "Inductor_SMD")
+    kicad_package = config("kicad_package", str, default = "L_0603_1608Metric")
 
 # Optional
 mount = config("mount", Mount, default = Mount("SMD"), optional = True)
