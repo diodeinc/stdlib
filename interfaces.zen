@@ -26,8 +26,8 @@ Csi = interface(
 )
 
 DiffPair = interface(
-    P = Net(),
-    N = Net(),
+    P = Net("_P"),
+    N = Net("_N"),
 )
 
 DisplayPort = interface(
