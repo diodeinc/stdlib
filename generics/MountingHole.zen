@@ -107,7 +107,7 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
 Component(
     name = "MH",
     symbol = Symbol(**_symbol(diameter, standard, plating)),
-    footprint = _footprint(diameter, standard, plating),
+    footprint = File(_footprint(diameter, standard, plating)),
     prefix = "H",
     pins = {
         "1": P1,
