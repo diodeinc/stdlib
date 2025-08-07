@@ -3,23 +3,26 @@ load("../../properties.zen", "Layout")
 Resistor = Module("../Resistor.zen")
 Capacitor = Module("../Capacitor.zen")
 
+P1 = Net("P1")
+P2 = Net("P2")
+
 # test no tolerance
-Resistor(name = "R1", value = "1kOhm", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
+Resistor(name = "R1", value = "1kOhm", package = "0603", P1 = P1, P2 = P2)
 
 # Test prefix
-Resistor(name = "R2", value = "1000Ohm", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
+Resistor(name = "R2", value = "1000Ohm", package = "0603", P1 = P1, P2 = P2)
 
 # Test tolerance
-Resistor(name = "R3", value = "1kOhm 1%", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
+Resistor(name = "R3", value = "1kOhm 1%", package = "0603", P1 = P1, P2 = P2)
 
 # Test voltage
-Resistor(name = "R4", value = "1kOhm 1%", package = "0603", voltage = "10V", P1 = Net("P1"), P2 = Net("P2"))
+Resistor(name = "R4", value = "1kOhm 1%", package = "0603", voltage = "10V", P1 = P1, P2 = P2)
 
 # Test multiple parameters
-Capacitor(name = "C1", value = "1nF 10%", package = "0603", dielectric = "X7R", P1 = Net("P1"), P2 = Net("P2"))
+Capacitor(name = "C1", value = "1nF 10%", package = "0603", dielectric = "X7R", P1 = P1, P2 = P2)
 
 # Test multiple parameters with prefix
-Capacitor(name = "C2", value = "100nF 10%", package = "0603", P1 = Net("P1"), P2 = Net("P2"))
+Capacitor(name = "C2", value = "100nF 10%", package = "0603", P1 = P1, P2 = P2)
 
 # Layout
 Layout(name = "preview", path = "build/Value")

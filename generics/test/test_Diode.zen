@@ -4,7 +4,13 @@ Diode = Module("../Diode.zen")
 
 for package in Diode.Package.values():
     for variant in Diode.Variant.values():
-        Diode(name = "D_{}_{}".format(package, variant), package = package, variant = variant, A = Net("A"), K = Net("K"))
+        Diode(
+            name = "D_{}_{}".format(package, variant),
+            package = package,
+            variant = variant,
+            A = Net("A_{}_{}".format(package, variant)),
+            K = Net("K_{}_{}".format(package, variant)),
+        )
 
 Layout(
     name = "Diode",

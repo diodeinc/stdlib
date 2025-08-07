@@ -23,9 +23,9 @@ NetTie(
     mount_type = "SMD",
     pad_size = "0.5mm",
     pin_count = 3,
-    P1 = Net("P1"),
-    P2 = Net("P2"),
-    P3 = Net("P3"),
+    P1 = Net("P1_legacy"),
+    P2 = Net("P2_legacy"),
+    P3 = Net("P3_legacy"),
 )
 
 NetTie(
@@ -33,8 +33,8 @@ NetTie(
     mount_type = "SMD_THT",
     pad_size = "0.3mm",
     pin_count = 2,
-    P1 = Net("P1"),
-    P2 = Net("P2"),
+    P1 = Net("P1_legacy_2"),
+    P2 = Net("P2_legacy_2"),
 )
 
 Layout(

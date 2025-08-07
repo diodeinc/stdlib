@@ -9,7 +9,15 @@ for package in Bjt.Package.values():
     for bjt_type in Bjt.BjtType.values():
         for mount in Bjt.Mount.values():
             name = "Q_" + str(package) + "_" + str(bjt_type) + "_" + str(mount)
-            Bjt(name = name, package = package, bjt_type = bjt_type, mount = mount, C = Net("C"), B = Net("B"), E = Net("E"))
+            Bjt(
+                name = name,
+                package = package,
+                bjt_type = bjt_type,
+                mount = mount,
+                C = Net("C_{}_{}_{}".format(package, bjt_type, mount)),
+                B = Net("B_{}_{}_{}".format(package, bjt_type, mount)),
+                E = Net("E_{}_{}_{}".format(package, bjt_type, mount)),
+            )
 
 Layout(
     name = "preview",
