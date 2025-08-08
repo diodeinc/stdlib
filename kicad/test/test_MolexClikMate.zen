@@ -1,0 +1,13 @@
+load("../../properties.zen", "Layout")
+
+MolexClikMate = Module("../MolexClikMate.zen")
+
+for n, variant in enumerate(MolexClikMate.Variant):
+    name = "MolexClikMate_" + variant.value + "_" + str(n)
+    pins = {f"Pin_{i}": Net(f"Pin_{i}") for i in range(1, MolexClikMate.PinCount(variant) + 1)}
+    MolexClikMate(name = name, variant = variant.value, **pins)
+
+Layout(
+    name = "preview",
+    path = "build/MolexClikMate",
+)

@@ -1,0 +1,13 @@
+load("../../properties.zen", "Layout")
+
+MolexMicroLatch = Module("../MolexMicroLatch.zen")
+
+for n, variant in enumerate(MolexMicroLatch.Variant):
+    name = "MolexMicroLatch_" + variant.value + "_" + str(n)
+    pins = {f"Pin_{i}": Net(f"Pin_{i}") for i in range(1, MolexMicroLatch.PinCount(variant) + 1)}
+    MolexMicroLatch(name = name, variant = variant.value, **pins)
+
+Layout(
+    name = "preview",
+    path = "build/MolexMicroLatch",
+)

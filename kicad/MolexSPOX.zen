@@ -1,0 +1,146 @@
+load("../properties.zen", "Properties")
+
+# -----------------------------------------------------------------------------
+# Component types
+# -----------------------------------------------------------------------------
+
+Variant = enum(
+    # Vertical variants
+    "5267-02A_1x02_P2.50mm_Vertical",
+    "5267-03A_1x03_P2.50mm_Vertical",
+    "5267-04A_1x04_P2.50mm_Vertical",
+    "5267-05A_1x05_P2.50mm_Vertical",
+    "5267-06A_1x06_P2.50mm_Vertical",
+    "5267-07A_1x07_P2.50mm_Vertical",
+    "5267-08A_1x08_P2.50mm_Vertical",
+    "5267-09A_1x09_P2.50mm_Vertical",
+    "5267-10A_1x10_P2.50mm_Vertical",
+    "5267-11A_1x11_P2.50mm_Vertical",
+    "5267-12A_1x12_P2.50mm_Vertical",
+    "5267-13A_1x13_P2.50mm_Vertical",
+    "5267-14A_1x14_P2.50mm_Vertical",
+    "5267-15A_1x15_P2.50mm_Vertical",
+
+    # Horizontal variants
+    "5268-02A_1x02_P2.50mm_Horizontal",
+    "5268-03A_1x03_P2.50mm_Horizontal",
+    "5268-04A_1x04_P2.50mm_Horizontal",
+    "5268-05A_1x05_P2.50mm_Horizontal",
+    "5268-06A_1x06_P2.50mm_Horizontal",
+    "5268-07A_1x07_P2.50mm_Horizontal",
+    "5268-08A_1x08_P2.50mm_Horizontal",
+    "5268-09A_1x09_P2.50mm_Horizontal",
+    "5268-10A_1x10_P2.50mm_Horizontal",
+    "5268-11A_1x11_P2.50mm_Horizontal",
+    "5268-12A_1x12_P2.50mm_Horizontal",
+    "5268-13A_1x13_P2.50mm_Horizontal",
+    "5268-14A_1x14_P2.50mm_Horizontal",
+    "5268-15A_1x15_P2.50mm_Horizontal",
+)
+
+# -----------------------------------------------------------------------------
+# Component parameters
+# -----------------------------------------------------------------------------
+
+variant = config("variant", Variant, convert = Variant)
+properties = config("properties", dict, optional = True)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def PinCount(variant: Variant) -> int:
+    # Extract pin count from variant string, e.g. "1x02" or "1x15"
+    s = str(variant)
+    idx = s.find("1x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(s)):
+            if not s[i].isdigit():
+                break
+            end = i + 1
+        return int(s[start:end])
+    error("Cannot determine pin count from variant: " + str(variant))
+
+# -----------------------------------------------------------------------------
+# IO ports (up to 15 pins)
+# -----------------------------------------------------------------------------
+
+pins = {}
+for pin in range(1, PinCount(variant) + 1):
+    pins["Pin_{}".format(pin)] = io("Pin_{}".format(pin), Net)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def _footprint(variant: Variant):
+    # Map variants to their corresponding footprints
+    footprint_map = {
+        # Vertical variants
+        Variant("5267-02A_1x02_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-02A_1x02_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-03A_1x03_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-03A_1x03_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-04A_1x04_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-04A_1x04_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-05A_1x05_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-05A_1x05_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-06A_1x06_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-06A_1x06_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-07A_1x07_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-07A_1x07_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-08A_1x08_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-08A_1x08_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-09A_1x09_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-09A_1x09_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-10A_1x10_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-10A_1x10_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-11A_1x11_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-11A_1x11_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-12A_1x12_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-12A_1x12_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-13A_1x13_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-13A_1x13_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-14A_1x14_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-14A_1x14_P2.50mm_Vertical.kicad_mod",
+        Variant("5267-15A_1x15_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5267-15A_1x15_P2.50mm_Vertical.kicad_mod",
+
+        # Horizontal variants
+        Variant("5268-02A_1x02_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-02A_1x02_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-03A_1x03_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-03A_1x03_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-04A_1x04_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-04A_1x04_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-05A_1x05_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-05A_1x05_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-06A_1x06_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-06A_1x06_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-07A_1x07_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-07A_1x07_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-08A_1x08_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-08A_1x08_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-09A_1x09_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-09A_1x09_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-10A_1x10_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-10A_1x10_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-11A_1x11_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-11A_1x11_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-12A_1x12_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-12A_1x12_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-13A_1x13_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-13A_1x13_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-14A_1x14_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-14A_1x14_P2.50mm_Horizontal.kicad_mod",
+        Variant("5268-15A_1x15_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_SPOX_5268-15A_1x15_P2.50mm_Horizontal.kicad_mod",
+    }
+
+    if variant in footprint_map:
+        return footprint_map[variant]
+    else:
+        error("No footprint found for variant: " + str(variant))
+
+def _symbol(variant: Variant):
+    """Get the appropriate symbol based on pin count."""
+    pin_count = PinCount(variant)
+    pin_str = str(pin_count) if pin_count >= 10 else "0" + str(pin_count)
+    return "@kicad-symbols/Connector_Generic.kicad_sym:Conn_01x" + pin_str
+
+def _mpn(variant: Variant) -> str:
+    return variant.value.split("_")[0]
+
+# -----------------------------------------------------------------------------
+# Component definition
+# -----------------------------------------------------------------------------
+
+Component(
+    name = "MSPOX",
+    type = "molex_spox",
+    symbol = Symbol(_symbol(variant)),
+    footprint = File(_footprint(variant)),
+    prefix = "J",
+    pins = pins,
+    properties = Properties(
+        properties,
+        {
+            "value": _mpn(variant),
+            "mpn": _mpn(variant),
+        },
+    ),
+)
