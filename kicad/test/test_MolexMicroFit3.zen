@@ -1,0 +1,13 @@
+load("../../properties.zen", "Layout")
+
+MolexMicroFit3 = Module("../MolexMicroFit3.zen")
+
+for n, variant in enumerate(MolexMicroFit3.Variant):
+    name = "MolexMicroFit3_" + variant.value + "_" + str(n)
+    pins = {f"Pin_{i}": Net(f"Pin_{i}") for i in range(1, MolexMicroFit3.PinCount(variant) + 1)}
+    MolexMicroFit3(name = name, variant = variant.value, **pins)
+
+Layout(
+    name = "preview",
+    path = "build/MolexMicroFit3",
+)

@@ -1,0 +1,216 @@
+load("../properties.zen", "Properties")
+
+# -----------------------------------------------------------------------------
+# Component types
+# -----------------------------------------------------------------------------
+
+Variant = enum(
+    # Single row connectors - Horizontal
+    "43650-0200_1x02_P3.00mm_Horizontal",
+    "43650-0300_1x03_P3.00mm_Horizontal",
+    "43650-0400_1x04_P3.00mm_Horizontal",
+    "43650-0500_1x05_P3.00mm_Horizontal",
+    "43650-0600_1x06_P3.00mm_Horizontal",
+    "43650-0700_1x07_P3.00mm_Horizontal",
+    "43650-0800_1x08_P3.00mm_Horizontal",
+    "43650-0900_1x09_P3.00mm_Horizontal",
+    "43650-1000_1x10_P3.00mm_Horizontal",
+    "43650-1100_1x11_P3.00mm_Horizontal",
+    "43650-1200_1x12_P3.00mm_Horizontal",
+
+    # Single row connectors - Vertical
+    "43650-0215_1x02_P3.00mm_Vertical",
+    "43650-0315_1x03_P3.00mm_Vertical",
+    "43650-0415_1x04_P3.00mm_Vertical",
+    "43650-0515_1x05_P3.00mm_Vertical",
+    "43650-0615_1x06_P3.00mm_Vertical",
+    "43650-0715_1x07_P3.00mm_Vertical",
+    "43650-0815_1x08_P3.00mm_Vertical",
+    "43650-0915_1x09_P3.00mm_Vertical",
+    "43650-1015_1x10_P3.00mm_Vertical",
+    "43650-1115_1x11_P3.00mm_Vertical",
+    "43650-1215_1x12_P3.00mm_Vertical",
+
+    # Double row connectors - Horizontal
+    "43045-0200_2x01_P3.00mm_Horizontal",
+    "43045-0400_2x02_P3.00mm_Horizontal",
+    "43045-0600_2x03_P3.00mm_Horizontal",
+    "43045-0800_2x04_P3.00mm_Horizontal",
+    "43045-1000_2x05_P3.00mm_Horizontal",
+    "43045-1200_2x06_P3.00mm_Horizontal",
+    "43045-1400_2x07_P3.00mm_Horizontal",
+    "43045-1600_2x08_P3.00mm_Horizontal",
+    "43045-1800_2x09_P3.00mm_Horizontal",
+    "43045-2000_2x10_P3.00mm_Horizontal",
+    "43045-2200_2x11_P3.00mm_Horizontal",
+    "43045-2400_2x12_P3.00mm_Horizontal",
+
+    # Double row connectors - Vertical
+    "43045-0212_2x01_P3.00mm_Vertical",
+    "43045-0412_2x02_P3.00mm_Vertical",
+    "43045-0612_2x03_P3.00mm_Vertical",
+    "43045-0812_2x04_P3.00mm_Vertical",
+    "43045-1012_2x05_P3.00mm_Vertical",
+    "43045-1212_2x06_P3.00mm_Vertical",
+    "43045-1412_2x07_P3.00mm_Vertical",
+    "43045-1612_2x08_P3.00mm_Vertical",
+    "43045-1812_2x09_P3.00mm_Vertical",
+    "43045-2012_2x10_P3.00mm_Vertical",
+    "43045-2212_2x11_P3.00mm_Vertical",
+    "43045-2412_2x12_P3.00mm_Vertical",
+)
+
+# -----------------------------------------------------------------------------
+# Component parameters
+# -----------------------------------------------------------------------------
+
+variant = config("variant", Variant, convert = Variant)
+properties = config("properties", dict, optional = True)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def PinCount(variant: Variant) -> int:
+    # Extract pin count from variant string
+    s = str(variant)
+
+    # Look for 1xNN pattern for single row
+    idx = s.find("1x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(s)):
+            if not s[i].isdigit():
+                break
+            end = i + 1
+        return int(s[start:end])
+
+    # Look for 2xNN pattern for double row
+    idx = s.find("2x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(s)):
+            if not s[i].isdigit():
+                break
+            end = i + 1
+        return int(s[start:end]) * 2  # Multiply by 2 for double row
+
+    error("Cannot determine pin count from variant: " + str(variant))
+
+def IsDoubleRow(variant: Variant) -> bool:
+    return "2x" in str(variant)
+
+# -----------------------------------------------------------------------------
+# IO ports (up to 24 pins for 2x12)
+# -----------------------------------------------------------------------------
+
+pins = {}
+for pin in range(1, PinCount(variant) + 1):
+    pins["Pin_{}".format(pin)] = io("Pin_{}".format(pin), Net)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def _footprint(variant: Variant):
+    # Map variants to their corresponding footprints
+    footprint_map = {
+        # Single row horizontal
+        Variant("43650-0200_1x02_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0300_1x03_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0300_1x03_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0400_1x04_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0400_1x04_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0500_1x05_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0500_1x05_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0600_1x06_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0600_1x06_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0700_1x07_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0700_1x07_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0800_1x08_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0800_1x08_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-0900_1x09_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0900_1x09_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-1000_1x10_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1000_1x10_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-1100_1x11_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1100_1x11_P3.00mm_Horizontal.kicad_mod",
+        Variant("43650-1200_1x12_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1200_1x12_P3.00mm_Horizontal.kicad_mod",
+
+        # Single row vertical
+        Variant("43650-0215_1x02_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0215_1x02_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0315_1x03_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0315_1x03_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0415_1x04_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0415_1x04_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0515_1x05_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0515_1x05_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0615_1x06_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0615_1x06_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0715_1x07_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0715_1x07_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0815_1x08_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0815_1x08_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-0915_1x09_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-0915_1x09_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-1015_1x10_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1015_1x10_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-1115_1x11_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1115_1x11_P3.00mm_Vertical.kicad_mod",
+        Variant("43650-1215_1x12_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43650-1215_1x12_P3.00mm_Vertical.kicad_mod",
+
+        # Double row horizontal
+        Variant("43045-0200_2x01_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0200_2x01_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-0400_2x02_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0400_2x02_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-0600_2x03_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0600_2x03_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-0800_2x04_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0800_2x04_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-1000_2x05_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1000_2x05_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-1200_2x06_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1200_2x06_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-1400_2x07_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1400_2x07_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-1600_2x08_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1600_2x08_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-1800_2x09_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1800_2x09_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-2000_2x10_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2000_2x10_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-2200_2x11_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2200_2x11_P3.00mm_Horizontal.kicad_mod",
+        Variant("43045-2400_2x12_P3.00mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2400_2x12_P3.00mm_Horizontal.kicad_mod",
+
+        # Double row vertical
+        Variant("43045-0212_2x01_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0212_2x01_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-0412_2x02_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0412_2x02_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-0612_2x03_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0612_2x03_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-0812_2x04_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-0812_2x04_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-1012_2x05_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1012_2x05_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-1212_2x06_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1212_2x06_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-1412_2x07_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1412_2x07_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-1612_2x08_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1612_2x08_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-1812_2x09_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-1812_2x09_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-2012_2x10_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2012_2x10_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-2212_2x11_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2212_2x11_P3.00mm_Vertical.kicad_mod",
+        Variant("43045-2412_2x12_P3.00mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Micro-Fit_3.0_43045-2412_2x12_P3.00mm_Vertical.kicad_mod",
+    }
+
+    if variant in footprint_map:
+        return File(footprint_map[variant])
+    else:
+        error("No footprint found for variant: " + str(variant))
+
+def _symbol(variant: Variant):
+    """Get the appropriate symbol based on pin count and row configuration."""
+    pin_count = PinCount(variant)
+
+    if IsDoubleRow(variant):
+        # For double row, we need the per-row count
+        rows = pin_count // 2
+        row_str = str(rows) if rows >= 10 else "0" + str(rows)
+        orientation = "_Top_Bottom" if pin_count > 2 else ""
+        return "@kicad-symbols/Connector_Generic.kicad_sym:Conn_02x" + row_str + orientation
+    else:
+        # Single row
+        pin_str = str(pin_count) if pin_count >= 10 else "0" + str(pin_count)
+        return "@kicad-symbols/Connector_Generic.kicad_sym:Conn_01x" + pin_str
+
+def _mpn(variant: Variant) -> str:
+    return variant.value.split("_")[0]
+
+# -----------------------------------------------------------------------------
+# Component definition
+# -----------------------------------------------------------------------------
+
+Component(
+    name = "MMF3",
+    type = "molex_micro_fit_3",
+    symbol = Symbol(_symbol(variant)),
+    footprint = File(_footprint(variant)),
+    prefix = "J",
+    pins = pins,
+    properties = Properties(
+        properties,
+        {
+            "value": _mpn(variant),
+            "mpn": _mpn(variant),
+        },
+    ),
+)

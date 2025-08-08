@@ -1,0 +1,181 @@
+load("../properties.zen", "Properties")
+
+# -----------------------------------------------------------------------------
+# Component types
+# -----------------------------------------------------------------------------
+
+Variant = enum(
+    # Single row vertical
+    "105309-xx02_1x02_P2.50mm_Vertical",
+    "105309-xx03_1x03_P2.50mm_Vertical",
+    "105309-xx04_1x04_P2.50mm_Vertical",
+    "105309-xx05_1x05_P2.50mm_Vertical",
+    "105309-xx06_1x06_P2.50mm_Vertical",
+    "105309-xx07_1x07_P2.50mm_Vertical",
+    "105309-xx08_1x08_P2.50mm_Vertical",
+
+    # Single row horizontal
+    "105313-xx02_1x02_P2.50mm_Horizontal",
+    "105313-xx03_1x03_P2.50mm_Horizontal",
+    "105313-xx04_1x04_P2.50mm_Horizontal",
+    "105313-xx05_1x05_P2.50mm_Horizontal",
+    "105313-xx06_1x06_P2.50mm_Horizontal",
+    "105313-xx07_1x07_P2.50mm_Horizontal",
+    "105313-xx08_1x08_P2.50mm_Horizontal",
+
+    # Double row vertical
+    "105310-xx04_2x02_P2.50mm_Vertical",
+    "105310-xx06_2x03_P2.50mm_Vertical",
+    "105310-xx08_2x04_P2.50mm_Vertical",
+    "105310-xx10_2x05_P2.50mm_Vertical",
+    "105310-xx12_2x06_P2.50mm_Vertical",
+    "105310-xx14_2x07_P2.50mm_Vertical",
+    "105310-xx16_2x08_P2.50mm_Vertical",
+
+    # Double row horizontal
+    "105314-xx04_2x02_P2.50mm_Horizontal",
+    "105314-xx06_2x03_P2.50mm_Horizontal",
+    "105314-xx08_2x04_P2.50mm_Horizontal",
+    "105314-xx10_2x05_P2.50mm_Horizontal",
+    "105314-xx12_2x06_P2.50mm_Horizontal",
+    "105314-xx14_2x07_P2.50mm_Horizontal",
+    "105314-xx16_2x08_P2.50mm_Horizontal",
+)
+
+# -----------------------------------------------------------------------------
+# Component parameters
+# -----------------------------------------------------------------------------
+
+variant = config("variant", Variant, convert = Variant)
+properties = config("properties", dict, optional = True)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def PinCount(variant: Variant) -> int:
+    # Extract pin count from variant string
+    s = str(variant)
+
+    # Look for 1xNN pattern for single row
+    idx = s.find("1x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(s)):
+            if not s[i].isdigit():
+                break
+            end = i + 1
+        return int(s[start:end])
+
+    # Look for 2xNN pattern for double row
+    idx = s.find("2x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(s)):
+            if not s[i].isdigit():
+                break
+            end = i + 1
+        return int(s[start:end]) * 2  # Multiply by 2 for double row
+
+    error("Cannot determine pin count from variant: " + str(variant))
+
+def IsDoubleRow(variant: Variant) -> bool:
+    return "2x" in str(variant)
+
+# -----------------------------------------------------------------------------
+# IO ports (up to 16 pins for 2x8)
+# -----------------------------------------------------------------------------
+
+pins = {}
+for pin in range(1, PinCount(variant) + 1):
+    pins["Pin_{}".format(pin)] = io("Pin_{}".format(pin), Net)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+def _footprint(variant: Variant):
+    # Map variants to their corresponding footprints
+    footprint_map = {
+        # Single row vertical
+        Variant("105309-xx02_1x02_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx02_1x02_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx03_1x03_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx03_1x03_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx04_1x04_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx04_1x04_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx05_1x05_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx05_1x05_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx06_1x06_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx06_1x06_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx07_1x07_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx07_1x07_P2.50mm_Vertical.kicad_mod",
+        Variant("105309-xx08_1x08_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105309-xx08_1x08_P2.50mm_Vertical.kicad_mod",
+
+        # Single row horizontal
+        Variant("105313-xx02_1x02_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx02_1x02_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx03_1x03_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx03_1x03_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx04_1x04_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx04_1x04_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx05_1x05_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx05_1x05_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx06_1x06_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx06_1x06_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx07_1x07_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx07_1x07_P2.50mm_Horizontal.kicad_mod",
+        Variant("105313-xx08_1x08_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105313-xx08_1x08_P2.50mm_Horizontal.kicad_mod",
+
+        # Double row vertical
+        Variant("105310-xx04_2x02_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx04_2x02_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx06_2x03_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx06_2x03_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx08_2x04_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx08_2x04_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx10_2x05_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx10_2x05_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx12_2x06_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx12_2x06_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx14_2x07_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx14_2x07_P2.50mm_Vertical.kicad_mod",
+        Variant("105310-xx16_2x08_P2.50mm_Vertical"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105310-xx16_2x08_P2.50mm_Vertical.kicad_mod",
+
+        # Double row horizontal
+        Variant("105314-xx04_2x02_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx04_2x02_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx06_2x03_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx06_2x03_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx08_2x04_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx08_2x04_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx10_2x05_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx10_2x05_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx12_2x06_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx12_2x06_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx14_2x07_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx14_2x07_P2.50mm_Horizontal.kicad_mod",
+        Variant("105314-xx16_2x08_P2.50mm_Horizontal"): "@kicad-footprints/Connector_Molex.pretty/Molex_Nano-Fit_105314-xx16_2x08_P2.50mm_Horizontal.kicad_mod",
+    }
+
+    if variant in footprint_map:
+        return footprint_map[variant]
+    else:
+        error("No footprint found for variant: " + str(variant))
+
+def _symbol(variant: Variant):
+    """Get the appropriate symbol based on pin count and row configuration."""
+    pin_count = PinCount(variant)
+
+    if IsDoubleRow(variant):
+        # For double row, we need the per-row count
+        rows = pin_count // 2
+        row_str = str(rows) if rows >= 10 else "0" + str(rows)
+        orientation = "_Top_Bottom" if pin_count > 2 else ""
+        return "@kicad-symbols/Connector_Generic.kicad_sym:Conn_02x" + row_str + orientation
+    else:
+        # Single row
+        pin_str = str(pin_count) if pin_count >= 10 else "0" + str(pin_count)
+        return "@kicad-symbols/Connector_Generic.kicad_sym:Conn_01x" + pin_str
+
+def _mpn(variant: Variant) -> str:
+    # Note: xx in part number represents color code
+    return variant.value.split("_")[0]
+
+# -----------------------------------------------------------------------------
+# Component definition
+# -----------------------------------------------------------------------------
+
+Component(
+    name = "MNF",
+    type = "molex_nano_fit",
+    symbol = Symbol(_symbol(variant)),
+    footprint = File(_footprint(variant)),
+    prefix = "J",
+    pins = pins,
+    properties = Properties(
+        properties,
+        {
+            "value": _mpn(variant),
+            "mpn": _mpn(variant),
+        },
+    ),
+)

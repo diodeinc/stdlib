@@ -1,0 +1,13 @@
+load("../../properties.zen", "Layout")
+
+MolexKK254 = Module("../MolexKK254.zen")
+
+for n, variant in enumerate(MolexKK254.Variant):
+    name = "MolexKK254_" + variant.value + "_" + str(n)
+    pins = {f"Pin_{i}": Net(f"Pin_{i}") for i in range(1, MolexKK254.PinCount(variant) + 1)}
+    MolexKK254(name = name, variant = variant.value, **pins)
+
+Layout(
+    name = "preview",
+    path = "build/MolexKK254",
+)
