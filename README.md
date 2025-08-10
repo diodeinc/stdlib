@@ -4,6 +4,10 @@
   </a>
 </p>
 
-# Zener standard library
+# Zener Standard Library
 
-Reusable files to make writing zener more enjoyable and easier, versions packaged with [`pcb`](https://github.com/diodeinc/pcb)
+Reusable files to make writing Zener more enjoyable and easier, versions packaged with [`pcb`](https://github.com/diodeinc/pcb).
+
+# Zener Nightly
+
+Check out `origin/nightly` for the latest features not yet stabilized in mainstream releases.
