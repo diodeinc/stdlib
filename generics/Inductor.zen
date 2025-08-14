@@ -29,6 +29,7 @@ properties = config_properties({
     "package": package,
     "inductance": value,
     "current": current,
+    "type": "inductor",
 })
 
 # -----------------------------------------------------------------------------

@@ -30,6 +30,7 @@ properties = config_properties({
     "color": color,
     "forward_voltage": forward_voltage,
     "forward_current": forward_current,
+    "type": "led",
 })
 
 # -----------------------------------------------------------------------------

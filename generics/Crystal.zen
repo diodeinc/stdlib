@@ -40,6 +40,7 @@ properties = config_properties({
     "package": package,
     "frequency": frequency,
     "load_capacitance": load_capacitance,
+    "type": "crystal",
 })
 
 # -----------------------------------------------------------------------------
