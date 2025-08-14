@@ -89,7 +89,7 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
     # If Value is not set, generate it from the other properties
     if not result.get("Value", None):
         # Metadata keys to exclude from Value generation
-        META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value"]
+        META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value", "Alternatives"]
         value_parts = []
         for k, v in result.items():
             if k not in META_KEYS and not k.startswith("__") and v:
