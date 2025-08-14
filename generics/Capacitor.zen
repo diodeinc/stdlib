@@ -35,6 +35,7 @@ properties = config_properties({
     "voltage": voltage,
     "dielectric": dielectric,
     "esr": esr,
+    "type": "capacitor",
 })
 
 # -----------------------------------------------------------------------------

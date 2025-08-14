@@ -53,6 +53,9 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
             return
         key = format_value(key).lower().capitalize()
         result[key] = format_value(value)
+        # For lists/arrays or records, add structured versions for tooling
+        if type(value) == "list" or type(value) == "record":
+            result["__" + key.lower() + "__"] = value
 
     # Get configuration values
     user_properties = config("user_properties", dict, default = {}, optional = True)
@@ -87,7 +90,10 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
     if not result.get("Value", None):
         # Metadata keys to exclude from Value generation
         META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value"]
-        value_parts = [v for k, v in result.items() if k not in META_KEYS and v]
+        value_parts = []
+        for k, v in result.items():
+            if k not in META_KEYS and not k.startswith("__") and v:
+                value_parts.append(v)
         result["Value"] = " ".join(value_parts)
 
     return result
