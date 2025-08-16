@@ -47,3 +47,9 @@ def Layout(name: str, path: str | None = None, hints: list | None = None) -> Non
         add_property("layout_path", path)
     if hints:
         add_property("layout_hints", hints)
+
+def Schematics(name: str, collapse: bool | None = None) -> None:
+    """Helper function to create a schematics object"""
+
+    if collapse:
+        add_property("collapse", collapse)
