@@ -12,62 +12,42 @@ CanTtl = interface(
     RX=Net(),
 )
 
-Csi = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    D0_P=Net(),
-    D0_N=Net(),
-    D1_P=Net(),
-    D1_N=Net(),
-    D2_P=Net(),
-    D2_N=Net(),
-    D3_P=Net(),
-    D3_N=Net(),
-)
-
 DiffPair = interface(
     P=Net("_P"),
     N=Net("_N"),
 )
 
+Csi = interface(
+    CLK=DiffPair(),
+    D0=DiffPair(),
+    D1=DiffPair(),
+    D2=DiffPair(),
+    D3=DiffPair(),
+)
+
 DisplayPort = interface(
-    AUX_P=Net(),
-    AUX_N=Net(),
-    ML0_P=Net(),
-    ML0_N=Net(),
-    ML1_P=Net(),
-    ML1_N=Net(),
-    ML2_P=Net(),
-    ML2_N=Net(),
-    ML3_P=Net(),
-    ML3_N=Net(),
+    AUX=DiffPair(),
+    ML0=DiffPair(),
+    ML1=DiffPair(),
+    ML2=DiffPair(),
+    ML3=DiffPair(),
     HPD=Net(),
 )
 
 Dsi = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    D0_P=Net(),
-    D0_N=Net(),
-    D1_P=Net(),
-    D1_N=Net(),
-    D2_P=Net(),
-    D2_N=Net(),
-    D3_P=Net(),
-    D3_N=Net(),
+    CLK=DiffPair(),
+    D0=DiffPair(),
+    D1=DiffPair(),
+    D2=DiffPair(),
+    D3=DiffPair(),
 )
 
 Edp = interface(
-    AUX_P=Net(),
-    AUX_N=Net(),
-    TX0_P=Net(),
-    TX0_N=Net(),
-    TX1_P=Net(),
-    TX1_N=Net(),
-    TX2_P=Net(),
-    TX2_N=Net(),
-    TX3_P=Net(),
-    TX3_N=Net(),
+    AUX=DiffPair(),
+    TX0=DiffPair(),
+    TX1=DiffPair(),
+    TX2=DiffPair(),
+    TX3=DiffPair(),
 )
 
 Emmc = interface(
@@ -86,32 +66,22 @@ Emmc = interface(
 )
 
 Ethernet = interface(
-    TX_P=Net(),
-    TX_N=Net(),
-    RX_P=Net(),
-    RX_N=Net(),
+    TX=DiffPair(),
+    RX=DiffPair(),
 )
 
 Ethernet_Phy = interface(
-    TR0_P=Net(),
-    TR0_N=Net(),
-    TR1_P=Net(),
-    TR1_N=Net(),
-    TR2_P=Net(),
-    TR2_N=Net(),
-    TR3_P=Net(),
-    TR3_N=Net(),
+    TR0=DiffPair(),
+    TR1=DiffPair(),
+    TR2=DiffPair(),
+    TR3=DiffPair(),
 )
 
 Ethernet_1000BaseT = interface(
-    BI_DA_P=Net(),
-    BI_DA_N=Net(),
-    BI_DB_P=Net(),
-    BI_DB_N=Net(),
-    BI_DC_P=Net(),
-    BI_DC_N=Net(),
-    BI_DD_P=Net(),
-    BI_DD_N=Net(),
+    BI_DA=DiffPair(),
+    BI_DB=DiffPair(),
+    BI_DC=DiffPair(),
+    BI_DD=DiffPair(),
 )
 
 Gpio = interface(
@@ -123,14 +93,11 @@ Ground = interface(
 )
 
 Hdmi = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    D0_P=Net(),
-    D0_N=Net(),
-    D1_P=Net(),
-    D1_N=Net(),
-    D2_P=Net(),
-    D2_N=Net(),
+    CLK=DiffPair(),
+    D0=DiffPair(),
+    D1=DiffPair(),
+    D2=DiffPair(),
+    D3=DiffPair(),
     CEC=Net(),
     SCL=Net(),
     SDA=Net(),
@@ -194,14 +161,11 @@ Lcd = interface(
 )
 
 Lvds = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    DATA0_P=Net(),
-    DATA0_N=Net(),
-    DATA1_P=Net(),
-    DATA1_N=Net(),
-    DATA2_P=Net(),
-    DATA2_N=Net(),
+    CLK=DiffPair(),
+    DATA0=DiffPair(),
+    DATA1=DiffPair(),
+    DATA2=DiffPair(),
+    DATA3=DiffPair(),
 )
 
 Mdio = interface(
@@ -210,14 +174,10 @@ Mdio = interface(
 )
 
 Mdi = interface(
-    A_P=Net(),
-    A_N=Net(),
-    B_P=Net(),
-    B_N=Net(),
-    C_P=Net(),
-    C_N=Net(),
-    D_P=Net(),
-    D_N=Net(),
+    A=DiffPair(),
+    B=DiffPair(),
+    C=DiffPair(),
+    D=DiffPair(),
 )
 
 Mii = interface(
@@ -239,16 +199,11 @@ Mii = interface(
 )
 
 Mipi = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    DATA0_P=Net(),
-    DATA0_N=Net(),
-    DATA1_P=Net(),
-    DATA1_N=Net(),
-    DATA2_P=Net(),
-    DATA2_N=Net(),
-    DATA3_P=Net(),
-    DATA3_N=Net(),
+    CLK=DiffPair(),
+    DATA0=DiffPair(),
+    DATA1=DiffPair(),
+    DATA2=DiffPair(),
+    DATA3=DiffPair(),
 )
 
 
@@ -271,43 +226,46 @@ OscPair = interface(
     XOUT=Net(),
 )
 
-Pcie = interface(
-    TX_P=Net(),
-    TX_N=Net(),
-    RX_P=Net(),
-    RX_N=Net(),
-    REFCLK_P=Net(),
-    REFCLK_N=Net(),
+PcieLane = interface(
+    TX=DiffPair(),
+    RX=DiffPair(),
+)
+
+PcieControl = interface(
+    REFCLK=DiffPair(),
     PERST=Net(),
-    WAKE=Net(),
+    WAKE_N=Net(),
 )
 
-PcieGen3x1Lane = interface(
-    TX_P=Net(),
-    TX_N=Net(),
-    RX_P=Net(),
-    RX_N=Net(),
-    REFCLK_P=Net(),
-    REFCLK_N=Net(),
-    RESET_N=Net(),
+Pcie3Control = interface(
+    REFCLK=DiffPair(),
+    PERST=Net(),
     WAKE_N=Net(),
     CLK_REQ_N=Net(),
 )
 
-PcieGen3x2Lane = interface(
-    TX0_P=Net(),
-    TX0_N=Net(),
-    RX0_P=Net(),
-    RX0_N=Net(),
-    TX1_P=Net(),
-    TX1_N=Net(),
-    RX1_P=Net(),
-    RX1_N=Net(),
-    REFCLK_P=Net(),
-    REFCLK_N=Net(),
-    RESET_N=Net(),
-    WAKE_N=Net(),
-    CLK_REQ_N=Net(),
+Pcie = interface(
+    CONTROL=PcieControl(),
+    L0=PcieLane(),
+)
+
+PcieGen3 = interface(
+    CONTROL=Pcie3Control(),
+    L0=PcieLane(),
+)
+
+PcieGen3x2 = interface(
+    CONTROL=Pcie3Control(),
+    L0=PcieLane(),
+    L1=PcieLane(),
+)
+
+PcieGen3x4 = interface(
+    CONTROL=Pcie3Control(),
+    L0=PcieLane(),
+    L1=PcieLane(),
+    L2=PcieLane(),
+    L3=PcieLane(),
 )
 
 Power = interface(
@@ -319,18 +277,12 @@ Pwm = interface(
 )
 
 QLink = interface(
-    CLK_P=Net(),
-    CLK_N=Net(),
-    L0_P=Net(),
-    L0_N=Net(),
-    L1_P=Net(),
-    L1_N=Net(),
-    L2_P=Net(),
-    L2_N=Net(),
-    L3_P=Net(),
-    L3_N=Net(),
-    L4_P=Net(),
-    L4_N=Net(),
+    CLK=DiffPair(),
+    L0=DiffPair(),
+    L1=DiffPair(),
+    L2=DiffPair(),
+    L3=DiffPair(),
+    L4=DiffPair(),
 )
 
 Qspi = interface(
@@ -380,23 +332,17 @@ Rs232 = interface(
 )
 
 Rs422 = interface(
-    TX_P=Net("TX_P"),
-    TX_N=Net("TX_N"),
-    RX_P=Net("RX_P"),
-    RX_N=Net("RX_N"),
-    RTS_P=Net("RTS_P"),
-    RTS_N=Net("RTS_N"),
-    CTS_P=Net("CTS_P"),
-    CTS_N=Net("CTS_N"),
+    TX=DiffPair(),
+    RX=DiffPair(),
+    RTS=DiffPair(),
+    CTS=DiffPair(),
 )
 
 Rs485 = Rs422
 
 Sata = interface(
-    TX_P=Net(),
-    TX_N=Net(),
-    RX_P=Net(),
-    RX_N=Net(),
+    TX=DiffPair(),
+    RX=DiffPair(),
 )
 
 Sdio = interface(
@@ -441,8 +387,7 @@ Uart = interface(
 )
 
 Usart = interface(
-    TX=Net(),
-    RX=Net(),
+    UART=using(Uart()),
     CK=Net(),
     RTS=Net(),
     CTS=Net(),
@@ -452,8 +397,8 @@ Usart = interface(
 def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
     txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
     rxa_txb = Net(name_a + "_RX/" + name_b + "_TX")
-    uart_a = Uart(name=name_a, tx=txa_rxb, rx=rxa_txb)
-    uart_b = Uart(name=name_b, tx=rxa_txb, rx=txa_rxb)
+    uart_a = Uart(name=name_a, TX=txa_rxb, RX=rxa_txb)
+    uart_b = Uart(name=name_b, TX=rxa_txb, RX=txa_rxb)
     return (uart_a, uart_b)
 
 
@@ -463,49 +408,41 @@ def UsartPair(name_a: str, name_b: str) -> (Usart, Usart):
     rtsa_ctsb = Net(name_a + "_RTS/" + name_b + "_CTS")
     ctsa_rtsb = Net(name_a + "_CTS/" + name_b + "_RTS")
     ck = Net(name_a + "_CK/" + name_b + "_CK")
-    usart_a = Usart(name=name_a, tx=txa_rxb, rx=rxa_txb, ck=ck, rts=rtsa_ctsb, cts=ctsa_rtsb)
-    usart_b = Usart(name=name_b, tx=rxa_txb, rx=txa_rxb, ck=ck, rts=ctsa_rtsb, cts=rtsa_ctsb)
+    usart_a = Usart(name=name_a, UART=Uart(TX=txa_rxb, RX=rxa_txb), CK=ck, RTS=rtsa_ctsb, CTS=ctsa_rtsb)
+    usart_b = Usart(name=name_b, UART=Uart(TX=rxa_txb, RX=txa_rxb), CK=ck, RTS=ctsa_rtsb, CTS=rtsa_ctsb)
     return (usart_a, usart_b)
 
 
 Ufs = interface(
     REFCLK=Net(),
     RESET_N=Net(),
-    L0_RX_P=Net(),
-    L0_RX_N=Net(),
-    L0_TX_P=Net(),
-    L0_TX_N=Net(),
-    L1_RX_P=Net(),
-    L1_RX_N=Net(),
-    L1_TX_P=Net(),
-    L1_TX_N=Net(),
+    L0_RX=DiffPair(),
+    L0_TX=DiffPair(),
+    L1_RX=DiffPair(),
+    L1_TX=DiffPair(),
 )
 
 Usb2 = interface(
-    DP=Net("D_P"),
-    DM=Net("D_N"),
+    D=DiffPair(),
+)
+
+UsbSsLane = interface(
+    TX=DiffPair(),
+    RX=DiffPair(),
 )
 
 Usb3 = interface(
-    DP=Net(),
-    DM=Net(),
-    SSTX_N=Net(),
-    SSTX_P=Net(),
-    SSRX_N=Net(),
-    SSRX_P=Net(),
+    USB2=using(Usb2()),
+    SS0=using(UsbSsLane()),
+)
+
+Usb3x2 = interface(
+    USB3=using(Usb3()),
+    SS1=UsbSsLane(),
 )
 
 UsbTypeC = interface(
-    DP=Net("D_P"),
-    DM=Net("D_N"),
-    SSTX0_P=Net(),
-    SSTX0_N=Net(),
-    SSRX0_P=Net(),
-    SSRX0_N=Net(),
-    SSTX1_P=Net(),
-    SSTX1_N=Net(),
-    SSRX1_P=Net(),
-    SSRX1_N=Net(),
+    USB=using(Usb3x2()),
     SBU1=Net(),
     SBU2=Net(),
     CC1=Net(),
