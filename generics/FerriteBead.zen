@@ -29,6 +29,7 @@ properties = config_properties({
     "resistance": resistance,
     "frequency": frequency,
     "current": current,
+    "type": "ferrite_bead",
 })
 
 # -----------------------------------------------------------------------------

@@ -55,22 +55,39 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
     - Footprint path string
     """
 
-    # For simplicity, we'll use basic mounting hole footprints
-    # The full parametric mapping would require too many combinations
-    basic_footprints = {
-        Diameter("M2"): "@kicad-footprints/MountingHole.pretty/MountingHole_2.2mm_M2.kicad_mod",
-        Diameter("M2.5"): "@kicad-footprints/MountingHole.pretty/MountingHole_2.7mm_M2.5.kicad_mod",
-        Diameter("M3"): "@kicad-footprints/MountingHole.pretty/MountingHole_3.2mm_M3.kicad_mod",
-        Diameter("M4"): "@kicad-footprints/MountingHole.pretty/MountingHole_4.3mm_M4.kicad_mod",
-        Diameter("M5"): "@kicad-footprints/MountingHole.pretty/MountingHole_5.3mm_M5.kicad_mod",
-        Diameter("M6"): "@kicad-footprints/MountingHole.pretty/MountingHole_6.4mm_M6.kicad_mod",
-        Diameter("M8"): "@kicad-footprints/MountingHole.pretty/MountingHole_8.4mm_M8.kicad_mod",
-    }
-
-    if diameter not in basic_footprints:
+    size = "0"
+    if diameter == Diameter("M2"):
+        size = "2.2mm"
+    elif diameter == Diameter("M2.5"):
+        size = "2.7mm"
+    elif diameter == Diameter("M3"):
+        size = "3.2mm"
+    elif diameter == Diameter("M4"):
+        size = "4.3mm"
+    elif diameter == Diameter("M5"):
+        size = "5.3mm"
+    elif diameter == Diameter("M6"):
+        size = "6.4mm"
+    elif diameter == Diameter("M8"):
+        size = "8.4mm"
+    else:
         error("Invalid diameter: " + str(diameter))
 
-    return basic_footprints[diameter]
+    plating_str = ""
+    if plating == Plating("TopBottom"):
+        plating_str = "_Pad_TopBottom"
+    elif plating == Plating("TopOnly"):
+        plating_str = "_Pad_TopOnly"
+    elif plating == Plating("Via"):
+        plating_str = ""
+    else:
+        error("Invalid plating: " + str(plating))
+
+    if diameter == Diameter("M6") or diameter == Diameter("M8"):
+        footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + plating_str + ".kicad_mod"
+    else:
+        footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + "_" +  str(standard.value) + plating_str + ".kicad_mod"
+    return File(footprint_str)
 
 # -----------------------------------------------------------------------------
 # Component definition
@@ -79,7 +96,7 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
 Component(
     name = "MH",
     symbol = Symbol(**_symbol(diameter, standard, plating)),
-    footprint = _footprint(diameter, standard, plating),
+    footprint = File(_footprint(diameter, standard, plating)),
     prefix = "H",
     pins = {
         "1": P1,

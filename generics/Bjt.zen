@@ -36,6 +36,7 @@ properties = config_properties({
     "vcbo": vcbo,
     "ic_max": ic_max,
     "ft": ft,
+    "type": "bjt",
 })
 
 # -----------------------------------------------------------------------------

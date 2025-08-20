@@ -32,6 +32,7 @@ properties = config_properties({
     "vgs_max": vgs_max,
     "vds_max": vds_max,
     "id_max": id_max,
+    "type": "mosfet",
 })
 
 # -----------------------------------------------------------------------------

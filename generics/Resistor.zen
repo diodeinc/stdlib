@@ -29,6 +29,7 @@ properties = config_properties({
     "package": package,
     "resistance": value,
     "voltage": voltage,
+    "type": "resistor",
 })
 
 # -----------------------------------------------------------------------------

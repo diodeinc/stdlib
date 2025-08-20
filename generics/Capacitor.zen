@@ -1,4 +1,3 @@
-load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
 load("../utils.zen", "format_value")
@@ -7,7 +6,7 @@ load("../utils.zen", "format_value")
 # Component types
 # -----------------------------------------------------------------------------
 
-Package = enum("0201", "0402", "0603", "0805", "1206", "1210")
+Package = enum("01005", "0201", "0402", "0603", "0805", "1206", "1210", "1812", "1825", "2220", "2225", "3640")
 Mount = enum("SMD")
 Dielectric = enum("C0G", "NP0", "X5R", "X7R", "X7S", "X7T", "Y5V", "Z5U")
 
@@ -35,6 +34,7 @@ properties = config_properties({
     "voltage": voltage,
     "dielectric": dielectric,
     "esr": esr,
+    "type": "capacitor",
 })
 
 # -----------------------------------------------------------------------------
@@ -56,12 +56,18 @@ def _symbol(mount: Mount, package: Package):
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
+        (Mount("SMD"), Package("01005")): "@kicad-footprints/Capacitor_SMD.pretty/C_01005_0402Metric.kicad_mod",
         (Mount("SMD"), Package("0201")): "@kicad-footprints/Capacitor_SMD.pretty/C_0201_0603Metric.kicad_mod",
         (Mount("SMD"), Package("0402")): "@kicad-footprints/Capacitor_SMD.pretty/C_0402_1005Metric.kicad_mod",
         (Mount("SMD"), Package("0603")): "@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod",
         (Mount("SMD"), Package("0805")): "@kicad-footprints/Capacitor_SMD.pretty/C_0805_2012Metric.kicad_mod",
         (Mount("SMD"), Package("1206")): "@kicad-footprints/Capacitor_SMD.pretty/C_1206_3216Metric.kicad_mod",
         (Mount("SMD"), Package("1210")): "@kicad-footprints/Capacitor_SMD.pretty/C_1210_3225Metric.kicad_mod",
+        (Mount("SMD"), Package("1812")): "@kicad-footprints/Capacitor_SMD.pretty/C_1812_4532Metric.kicad_mod",
+        (Mount("SMD"), Package("1825")): "@kicad-footprints/Capacitor_SMD.pretty/C_1825_4564Metric.kicad_mod",
+        (Mount("SMD"), Package("2220")): "@kicad-footprints/Capacitor_SMD.pretty/C_2220_5750Metric.kicad_mod",
+        (Mount("SMD"), Package("2225")): "@kicad-footprints/Capacitor_SMD.pretty/C_2225_5664Metric.kicad_mod",
+        (Mount("SMD"), Package("3640")): "@kicad-footprints/Capacitor_SMD.pretty/C_3640_9110Metric.kicad_mod",
     }
 
     if (mount, package) not in kicad_footprints:
