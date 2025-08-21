@@ -31,30 +31,3 @@ Layout(
     name = "preview",
     path = "build/JstGh",
 )
-
-# pcb:sch JstGh_BM02B_GHS_TBT_1x02_Vertical.JGH x=202.2000 y=-623.3000 rot=0
-# pcb:sch JstGh_BM03B_GHS_TBT_1x03_Vertical.JGH x=418.1000 y=-623.3000 rot=0
-# pcb:sch JstGh_BM04B_GHS_TBT_1x04_Vertical.JGH x=634.0000 y=-623.3000 rot=0
-# pcb:sch JstGh_BM05B_GHS_TBT_1x05_Vertical.JGH x=849.9000 y=-623.3000 rot=0
-# pcb:sch JstGh_BM06B_GHS_TBT_1x06_Vertical.JGH x=1065.8000 y=-623.3000 rot=0
-# pcb:sch JstGh_BM07B_GHS_TBT_1x07_Vertical.JGH x=202.2000 y=-255.0000 rot=0
-# pcb:sch JstGh_BM08B_GHS_TBT_1x08_Vertical.JGH x=418.1000 y=-229.6000 rot=0
-# pcb:sch JstGh_BM09B_GHS_TBT_1x09_Vertical.JGH x=634.0000 y=-204.2000 rot=0
-# pcb:sch JstGh_BM10B_GHS_TBT_1x10_Vertical.JGH x=849.9000 y=-178.8000 rot=0
-# pcb:sch JstGh_BM11B_GHS_TBT_1x11_Vertical.JGH x=1065.8000 y=-153.4000 rot=0
-# pcb:sch JstGh_BM12B_GHS_TBT_1x12_Vertical.JGH x=202.2000 y=367.3000 rot=0
-# pcb:sch JstGh_BM13B_GHS_TBT_1x13_Vertical.JGH x=418.1000 y=418.1000 rot=0
-# pcb:sch JstGh_BM14B_GHS_TBT_1x14_Vertical.JGH x=634.0000 y=468.9000 rot=0
-# pcb:sch JstGh_SM02B_GHS_TB_1x02_Horizontal.JGH x=849.9000 y=-140.7000 rot=0
-# pcb:sch JstGh_SM03B_GHS_TB_1x03_Horizontal.JGH x=1065.8000 y=-89.9000 rot=0
-# pcb:sch JstGh_SM04B_GHS_TB_1x04_Horizontal.JGH x=202.2000 y=253.0000 rot=0
-# pcb:sch JstGh_SM05B_GHS_TB_1x05_Horizontal.JGH x=418.1000 y=329.2000 rot=0
-# pcb:sch JstGh_SM06B_GHS_TB_1x06_Horizontal.JGH x=634.0000 y=405.4000 rot=0
-# pcb:sch JstGh_SM07B_GHS_TB_1x07_Horizontal.JGH x=849.9000 y=481.6000 rot=0
-# pcb:sch JstGh_SM08B_GHS_TB_1x08_Horizontal.JGH x=1065.8000 y=557.8000 rot=0
-# pcb:sch JstGh_SM09B_GHS_TB_1x09_Horizontal.JGH x=202.2000 y=1053.1000 rot=0
-# pcb:sch JstGh_SM10B_GHS_TB_1x10_Horizontal.JGH x=418.1000 y=1154.7000 rot=0
-# pcb:sch JstGh_SM11B_GHS_TB_1x11_Horizontal.JGH x=634.0000 y=1256.3000 rot=0
-# pcb:sch JstGh_SM12B_GHS_TB_1x12_Horizontal.JGH x=849.9000 y=1357.9000 rot=0
-# pcb:sch JstGh_SM13B_GHS_TB_1x13_Horizontal.JGH x=1065.8000 y=1459.5000 rot=0
-# pcb:sch JstGh_SM14B_GHS_TB_1x14_Horizontal.JGH x=202.2000 y=1459.5000 rot=0
