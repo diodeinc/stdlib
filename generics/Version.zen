@@ -1,0 +1,6 @@
+Component(
+    name = "Version",
+    symbol = Symbol("./footprints/version-symbol.kicad_sym"),
+    footprint = File("./footprints/version-footprint.kicad_mod"),
+    pins = {},
+)
