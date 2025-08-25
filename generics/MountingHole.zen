@@ -87,7 +87,7 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
         footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + plating_str + ".kicad_mod"
     else:
         footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + "_" +  str(standard.value) + plating_str + ".kicad_mod"
-    return File(footprint_str)
+    return footprint_str
 
 # -----------------------------------------------------------------------------
 # Component definition
