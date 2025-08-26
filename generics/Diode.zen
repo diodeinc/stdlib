@@ -60,7 +60,7 @@ def _symbol(variant: Variant):
         "name": symbols[variant].split(":")[1],
     }
 
-def _footprint(mount: Mount, package: Package):
+def _footprint(mount: Mount, package: Package) -> str:
     kicad_footprints = {
         (Mount("SMD"), Package("SOD-123")): "@kicad-footprints/Diode_SMD.pretty/D_SOD-123.kicad_mod",
         (Mount("SMD"), Package("SOD-323")): "@kicad-footprints/Diode_SMD.pretty/D_SOD-323.kicad_mod",
@@ -74,7 +74,7 @@ def _footprint(mount: Mount, package: Package):
     if (mount, package) not in kicad_footprints:
         error("Invalid footprint: " + str(mount) + " " + str(package))
 
-    return File(kicad_footprints[(mount, package)])
+    return kicad_footprints[(mount, package)]
 
 # -----------------------------------------------------------------------------
 # Component definition
