@@ -258,6 +258,12 @@ OneWire = interface(
     DQ = Net(),
 )
 
+Opamp = interface(
+    IN_P = Net(),
+    IN_N = Net(),
+    OUT = Net(),
+)
+
 OscPair = interface(
     XIN = Net(),
     XOUT = Net(),
