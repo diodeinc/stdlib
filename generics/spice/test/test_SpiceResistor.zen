@@ -1,0 +1,23 @@
+load("../../../interfaces.zen", "Ground", "Power")
+
+Resistor = Module("../../Resistor.zen")
+
+VCC = Power()
+PROBE = Net("PROBE")
+GND = Ground()
+
+Resistor(
+    name = "R1",
+    value = "100ohms",
+    package = "0402",
+    P1 = VCC,
+    P2 = PROBE,
+)
+
+Resistor(
+    name = "R2",
+    value = "200ohms",
+    package = "0402",
+    P1 = PROBE,
+    P2 = GND,
+)
