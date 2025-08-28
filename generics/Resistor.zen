@@ -87,6 +87,12 @@ Component(
         "P1": P1,
         "P2": P2,
     },
+    spice_model = SpiceModel(
+        "spice/Resistor.lib",
+        "R",
+        nets=[P1, P2],
+        args={"RVAL": str(value.value)},
+    ),
     properties = properties,
     type = "resistor",
 )
