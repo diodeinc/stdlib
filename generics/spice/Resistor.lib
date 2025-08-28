@@ -1,0 +1,13 @@
+* Resistor SPICE subcircuit
+* Generic resistor model
+*
+* Parameters:
+*   RVAL - Resistance value in ohms
+*
+* Nodes:
+*   1 - Terminal 1
+*   2 - Terminal 2
+
+.SUBCKT R 1 2 PARAMS: RVAL=0
+R1 1 2 {RVAL}
+.ENDS R

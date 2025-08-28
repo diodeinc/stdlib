@@ -1,0 +1,6 @@
+V1 VCC GND SIN(0 5 1000)
+
+.control
+  tran 0.01m 5m
+  plot v(VCC) v(PROBE)
+.endc
