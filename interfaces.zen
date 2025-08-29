@@ -476,8 +476,8 @@ Usb2 = interface(
 )
 
 Usb3 = interface(
-    DP = Net(),
-    DM = Net(),
+    DP = Net("D_P"),
+    DM = Net("D_N"),
     SSTX_N = Net(),
     SSTX_P = Net(),
     SSRX_N = Net(),
