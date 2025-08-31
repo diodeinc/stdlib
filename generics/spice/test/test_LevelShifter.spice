@@ -1,0 +1,18 @@
+V1 VP_VCC GND DC 12V 
+V2 VN_VCC GND DC -12V
+
+V3 INPUT GND DC 1 SIN(0 1V 1000)
+
+.control
+  * Time domain analysis - show 5 cycles of 1kHz signal
+  tran 10u 5m
+  
+  * Save output as SVG
+  set hcopydevtype = svg
+  
+  * Time domain plot of input and output
+  hardcopy build/levelshifter_time.svg v(INPUT) v(PROBE) title "Level Shifter - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+  
+  * Time domain plot - zoomed to first few cycles
+  hardcopy build/levelshifter_time_zoom.svg v(INPUT) v(PROBE) xlimit 0 5m title "Level Shifter - Time Domain (Zoomed)" xlabel "Time (s)" ylabel "Voltage (V)" 
+.endc
