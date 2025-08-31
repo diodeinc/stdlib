@@ -1,5 +1,5 @@
 load("interfaces.zen", "DiffPair", "Ground", "Opamp")
-load("units.zen", "Frequency", "Resistance", "unit")
+load("units.zen", "Capacitance", "Frequency", "Resistance", "unit")
 
 Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
@@ -83,7 +83,7 @@ def sallen_key_lowpass(name, frequency: Frequency | str, GND: Ground, IN: Net, O
 
     Resistor(name = name + "_R1", value = R1_str, package = package, P1 = IN, P2 = NODE)
     Resistor(name = name + "_R2", value = R1_str, package = package, P1 = NODE, P2 = IN_P)
-    Capacitor(name = name + "_C1", value = C1_str, package = package, P1 = IN_P, P2 = OUT)
+    Capacitor(name = name + "_C1", value = C1_str, package = package, P1 = NODE, P2 = OUT)
     Capacitor(name = name + "_C2", value = C2_str, package = package, P1 = IN_P, P2 = GND)
 
     return Opamp(

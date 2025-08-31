@@ -1,0 +1,21 @@
+V1 VP_VCC GND DC 12V 
+V2 VN_VCC GND DC -12V
+
+V3 INPUT GND DC 1V AC 1V
+
+.control
+  * Time domain analysis
+  tran 0.000001m 1m
+  
+  * Frequency domain analysis
+  ac dec 100 1 1g
+  
+  * Save output as SVG
+  set hcopydevtype = svg
+  
+  * Amplitude response plot  
+  hardcopy build/opa_amplitude.svg mag(PROBE) title "Sallen Key 1M - Amplitude Response" ylabel V
+  
+  * Phase response plot
+  hardcopy build/opa_phase.svg vp(PROBE) title "Sallen Key 1M - Phase Response" ylabel rad 
+.endc
