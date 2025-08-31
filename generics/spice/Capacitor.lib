@@ -1,0 +1,13 @@
+* Capacitor SPICE subcircuit
+* Generic capacitor model
+*
+* Parameters:
+*   CVAL - Resistance value in farads
+*
+* Nodes:
+*   1 - Terminal 1
+*   2 - Terminal 2
+
+.SUBCKT C 1 2 PARAMS: CVAL=0
+C1 1 2 {CVAL}
+.ENDS C

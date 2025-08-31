@@ -1,4 +1,4 @@
-V1 VCC GND SIN(0 5 1000)
+V1 VCC GND SIN(0 5V 1kHz)
 
 .control
   tran 0.01m 5m
