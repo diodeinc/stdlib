@@ -1,3 +1,10 @@
+"""Test for Spice model of Resistor.
+
+pcb sim generics/spice/test/test_SpiceResistor.zen \
+    --setup generics/spice/test/test_SpiceResistor.spice \
+    -o - | ngspice -i
+"""
+
 load("../../../interfaces.zen", "Ground", "Power")
 
 Resistor = Module("../../Resistor.zen")
