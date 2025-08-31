@@ -7,7 +7,7 @@ load("../utils.zen", "format_value")
 # Component types
 # -----------------------------------------------------------------------------
 
-Variant = enum("Single", "Dual", "Quad")
+Variant = enum("Single")
 Package = enum("SOIC8")
 
 # -----------------------------------------------------------------------------
@@ -33,11 +33,6 @@ properties = config_properties({
 VP = io("VP", Net)
 VN = io("VN", Net)
 OPA1 = io("OPA1", Opamp)
-if variant == Variant("Dual"):
-    OPA2 = io("OPA2", Opamp)
-if variant == Variant("Quad"):
-    OPA3 = io("OPA3", Opamp)
-    OPA4 = io("OPA4", Opamp)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -46,8 +41,6 @@ if variant == Variant("Quad"):
 def _symbol(variant: Variant):
     """Returns the symbol for a specific variant."""
     return {
-        Variant("Quad"): "@kicad-symbols/Simulation_SPICE.kicad_sym:Opamp_Quad",
-        Variant("Dual"): "@kicad-symbols/Simulation_SPICE.kicad_sym:Opamp_Dual",
         Variant("Single"): "@kicad-symbols/Simulation_SPICE.kicad_sym:OPAMP",
     }[variant]
 
