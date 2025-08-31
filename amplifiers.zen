@@ -48,6 +48,24 @@ def inverting_sum(name, INPUTS: list[Net], OUT: Net, GND: Ground, gain: float = 
         Opamp(name = name, IN_P = GND.NET, IN_N = IN_N, OUT = OUT)
     )
 
+def noninverting_sum(name, INPUTS: list[Net], OUT: Net, GND: Ground, gain: float = 1.0, package: str = "0603") -> (Opamp):
+    """Noninverting summing amplifier, Vout = (1 + RA/RB) * ((V1 + V2) / 2)"""
+
+    RB = "1k Ohms"
+    RA = str((gain * 2 - 1) * 1) + "k Ohms"
+    IN_P = Net(name + "_IN_P")
+    IN_N = Net(name + "_IN_N")    
+    
+    for i, IN in enumerate(INPUTS):
+        Resistor(name = name + "_RI" + str(i), value = "1k Ohms", package = package, P1 = IN, P2 = IN_P)
+
+    Resistor(name = name + "_RA", value = RA, package = package, P1 = IN_N, P2 = OUT)
+    Resistor(name = name + "_RB", value = RB, package = package, P1 = IN_N, P2 = GND)
+
+    return (
+        Opamp(name = name, IN_P = IN_P, IN_N = IN_N, OUT = OUT)
+    )
+
 def level_shifter(name, IN: Net, VOFFSET: Net, OUT: Net, GND: Ground, gain: float = 1.0, package: str = "0603") -> (Opamp, Opamp):
     """Level shifter with an inverting sum amplifier"""
 
@@ -55,7 +73,7 @@ def level_shifter(name, IN: Net, VOFFSET: Net, OUT: Net, GND: Ground, gain: floa
 
     return (
         voltage_follower(name = name + "_V_OFFSET_P", IN = VOFFSET, OUT = BUFFER),
-        inverting_sum(name = name + "_SUM", INPUTS = [BUFFER, IN], OUT = OUT, GND = GND, gain = gain, package = package),
+        noninverting_sum(name = name + "_SUM", INPUTS = [BUFFER, IN], OUT = OUT, GND = GND, gain = gain, package = package),
     )
 
 def sallen_key_lowpass(name, frequency: Frequency | str, GND: Ground, IN: Net, OUT: Net, R = "100k Ohms", package: str = "0603") -> Opamp:
