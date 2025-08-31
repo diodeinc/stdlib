@@ -5,6 +5,8 @@ Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
 
 def single_to_differential(name, IN: Net, VCM: Net, OUT: DiffPair, package: str = "0603") -> (Opamp, Opamp):
+    """Single-ended to differential converter"""
+
     IN1_P = IN
     IN1_N = Net(name + "_IN2_N")
     OUT1 = IN1_N
