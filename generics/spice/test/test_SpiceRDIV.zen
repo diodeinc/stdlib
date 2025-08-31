@@ -1,7 +1,7 @@
 """Test for Spice model of Resistor.
 
-pcb sim generics/spice/test/test_SpiceResistor.zen \
-    --setup generics/spice/test/test_SpiceResistor.spice \
+pcb sim generics/spice/test/test_SpiceRDIV.zen \
+    --setup generics/spice/test/test_SpiceRDIV.spice \
     -o - | ngspice -i
 """
 
