@@ -1,5 +1,6 @@
-load("..", "PinSocket")
 load("../../properties.zen", "Layout")
+
+PinSocket = Module("../PinSocket.zen")
 
 for orientation in PinSocket.Orientation:
     for pitch in PinSocket.Pitch:
