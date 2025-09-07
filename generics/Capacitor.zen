@@ -85,6 +85,7 @@ Component(
     symbol = Symbol(**_symbol(mount, package)),
     footprint = File(_footprint(mount, package)),
     properties = properties,
+    type = "capacitor",
     pin_defs = {
         "P1": "1",
         "P2": "2",

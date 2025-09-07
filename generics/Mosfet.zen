@@ -91,4 +91,5 @@ Component(
         "S": S,
     },
     properties = properties,
+    type = "mosfet",
 )
