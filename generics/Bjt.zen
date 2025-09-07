@@ -91,4 +91,5 @@ Component(
         "E": E,
     },
     properties = properties,
+    type = "bjt",
 )

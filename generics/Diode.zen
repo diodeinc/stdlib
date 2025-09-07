@@ -86,6 +86,7 @@ Component(
     symbol = Symbol(**_symbol(variant)),
     footprint = File(_footprint(mount, package)),
     properties = properties,
+    type = "diode",
     pins = {
         "A": A,
         "K": K,

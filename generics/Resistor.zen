@@ -88,4 +88,5 @@ Component(
         "P2": P2,
     },
     properties = properties,
+    type = "resistor",
 )

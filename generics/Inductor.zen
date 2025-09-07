@@ -81,4 +81,5 @@ Component(
         "2": P2,
     },
     properties = properties,
+    type = "inductor",
 )
