@@ -1,0 +1,33 @@
+load("../../properties.zen", "Layout")
+JstGh = Module("../JstGh.zen")
+
+# Helper function to extract pin count from variant string
+def get_pin_count(variant_str):
+    idx = variant_str.find("1x")
+    if idx != -1:
+        start = idx + 2
+        end = start
+        for i in range(start, len(variant_str)):
+            if not variant_str[i].isdigit():
+                break
+            end = i + 1
+        return int(variant_str[start:end])
+    return 0
+
+# Generate all JST GH connector variants
+for variant in JstGh.JstGhVariant.values():
+    # Get pin count for this variant
+    pin_count = get_pin_count(variant)
+    
+    # Create pin connections - using generic Net names
+    pins = {"Pin_{}".format(n): Net("Pin_{}".format(n)) for n in range(1, pin_count + 1)}
+    pins["MountPin"] = Net("MountPin")
+    
+    # Create the component
+    name = "JstGh_" + variant.replace("-", "_").replace("1MP_", "")
+    JstGh(name = name, variant = variant, **pins)
+
+Layout(
+    name = "preview",
+    path = "build/JstGh",
+)
