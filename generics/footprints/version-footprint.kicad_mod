@@ -1,0 +1,78 @@
+(footprint "version-footprint"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "629b081d-c1c3-42b8-a858-9a46cfffd8a6")
+		(effects
+			(font (size 1 1) (thickness 0.1))
+		)
+	)
+	(property "Value" "Untitled_4"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "74d02c48-58b3-497c-a7a7-d6fe903139d5")
+		(effects
+			(font (size 1 1) (thickness 0.15))
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ee229edd-9206-45c3-892e-e722d582e78f")
+		(effects
+			(font (size 1 1) (thickness 0.15))
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6d51dd09-dcfe-4e0e-8187-bb030849cb1a")
+		(effects
+			(font (size 1 1) (thickness 0.15))
+		)
+	)
+	(attr smd)
+	(fp_text user "${PCB_NAME} "
+		(at 0 -4 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "7f60b426-e657-45f1-b355-9f78b3fe2e8f")
+		(effects
+			(font (size 1 1) (thickness 0.153))
+			(justify bottom)
+		)
+	)
+	(fp_text user "REV ${PCB_VERSION} "
+		(at 0 -2.25 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "aca56ce9-8a6b-4d26-ada4-5a1d3f782923")
+		(effects
+			(font (size 1 1) (thickness 0.153))
+			(justify bottom)
+		)
+	)
+	(fp_text user "HASH ${PCB_GIT_HASH} "
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "b22dcc82-ae99-460a-b345-ab9fa9010c55")
+		(effects
+			(font (size 1 1) (thickness 0.153))
+			(justify bottom)
+		)
+	)
+	(embedded_fonts no)
+)

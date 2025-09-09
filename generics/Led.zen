@@ -86,4 +86,5 @@ Component(
         "A": A,
     },
     properties = properties,
+    type = "led",
 )

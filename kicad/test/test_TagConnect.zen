@@ -1,5 +1,6 @@
-load("..", "TagConnect")
 load("../../properties.zen", "Layout")
+
+TagConnect = Module("../TagConnect.zen")
 
 for tag_type in TagConnect.TagConnectType:
     name = "TagConnect_" + tag_type.value
@@ -8,5 +9,5 @@ for tag_type in TagConnect.TagConnectType:
 
 Layout(
     name = "preview",
-    path = "build/SolderWire",
+    path = "build/TagConnect",
 )

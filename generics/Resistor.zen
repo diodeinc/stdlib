@@ -1,4 +1,3 @@
-load("./SolderJumper.zen", "pin_defs")
 load("../config.zen", "config_properties", "config_unit")
 load("../units.zen", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
@@ -89,4 +88,5 @@ Component(
         "P2": P2,
     },
     properties = properties,
+    type = "resistor",
 )

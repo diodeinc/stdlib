@@ -44,7 +44,7 @@ def Layout(name: str, path: str | None = None, hints: list | None = None) -> Non
     """Helper function to create a layout object"""
 
     if path:
-        add_property("layout_path", path)
+        add_property("layout_path", Path(path, allow_not_exist=True))
     if hints:
         add_property("layout_hints", hints)
 

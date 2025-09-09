@@ -1,5 +1,6 @@
-load("..", "SolderWire")
 load("../../properties.zen", "Layout")
+
+SolderWire = Module("../SolderWire.zen")
 
 for wire_size in SolderWire.Size:
     name = "SolderWire_" + wire_size.value

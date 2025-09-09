@@ -1,5 +1,5 @@
 Analog = interface(
-    NET = Net(),
+    NET = using(Net()),
 )
 
 Can = interface(
@@ -115,11 +115,11 @@ Ethernet_1000BaseT = interface(
 )
 
 Gpio = interface(
-    NET = Net(),
+    NET = using(Net()),
 )
 
 Ground = interface(
-    NET = Net("GND", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "GND")),
+    NET = using(Net("GND", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "GND"))),
 )
 
 Hdmi = interface(
@@ -258,6 +258,12 @@ OneWire = interface(
     DQ = Net(),
 )
 
+Opamp = interface(
+    IN_P = Net(),
+    IN_N = Net(),
+    OUT = Net(),
+)
+
 OscPair = interface(
     XIN = Net(),
     XOUT = Net(),
@@ -303,11 +309,11 @@ PcieGen3x2Lane = interface(
 )
 
 Power = interface(
-    NET = Net("VCC", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "VCC")),
+    NET = using(Net("VCC", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "VCC"))),
 )
 
 Pwm = interface(
-    NET = Net(),
+    NET = using(Net()),
 )
 
 QLink = interface(

@@ -57,6 +57,7 @@ properties = config_properties({
     "pad_size": pad_size if not variant else None,
     "pin_count": pin_count,
     "exclude_from_bom": True,
+    "do_not_populate": True,
 })
 
 # -----------------------------------------------------------------------------

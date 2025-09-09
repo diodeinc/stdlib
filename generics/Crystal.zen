@@ -116,4 +116,5 @@ Component(
     footprint = File(_footprint(package)),
     pins = _pins(package, XIN, XOUT, GND),
     properties = properties,
+    type = "crystal",
 )

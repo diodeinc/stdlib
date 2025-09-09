@@ -13,6 +13,8 @@ Modules = [
     "test_SolderJumper",
     "test_TestPoint",
     "test_Thermistor",
+    "test_Value",
+    "test_Version",
 ]
 
 for mod in Modules:
