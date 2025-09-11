@@ -14,35 +14,39 @@ Plating = enum("TopBottom", "TopOnly", "Via")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-diameter = config("diameter", Diameter, convert = Diameter)
-standard = config("standard", Standard, default = Standard("DIN965"), convert = Standard, optional = True)
-plating = config("plating", Plating, default = Plating("TopBottom"), convert = Plating, optional = True)
+diameter = config("diameter", Diameter, convert=Diameter)
+standard = config("standard", Standard, default=Standard("DIN965"), convert=Standard, optional=True)
+plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": format_value(diameter, standard, plating),
-    "diameter": diameter,
-    "standard": standard,
-    "plating": plating,
-    "do_not_populate": True,
-    "exclude_from_bom": True,
-})
+properties = config_properties(
+    {
+        "value": format_value(diameter, standard, plating),
+        "diameter": diameter,
+        "standard": standard,
+        "plating": plating,
+        "do_not_populate": True,
+        "exclude_from_bom": True,
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------
 
-P1 = io("P1", Net, optional = True)
+P1 = io("P1", Net, optional=True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _symbol(diameter: Diameter, standard: Standard | None = None, plating: Plating | None = None) -> dict:
     return {
         "library": "@kicad-symbols/Mechanical.kicad_sym",
         "name": "MountingHole_Pad",
     }
+
 
 def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Plating | None = None) -> str:
     """
@@ -86,22 +90,39 @@ def _footprint(diameter: Diameter, standard: Standard | None = None, plating: Pl
         error("Invalid plating: " + str(plating))
 
     if diameter == Diameter("M6") or diameter == Diameter("M8"):
-        footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + plating_str + ".kicad_mod"
+        footprint_str = (
+            "@kicad-footprints/MountingHole.pretty/MountingHole_"
+            + size
+            + "_"
+            + str(diameter.value)
+            + plating_str
+            + ".kicad_mod"
+        )
     else:
-        footprint_str = "@kicad-footprints/MountingHole.pretty/MountingHole_" + size + "_" + str(diameter.value) + "_" +  str(standard.value) + plating_str + ".kicad_mod"
+        footprint_str = (
+            "@kicad-footprints/MountingHole.pretty/MountingHole_"
+            + size
+            + "_"
+            + str(diameter.value)
+            + "_"
+            + str(standard.value)
+            + plating_str
+            + ".kicad_mod"
+        )
     return footprint_str
+
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "MH",
-    symbol = Symbol(**_symbol(diameter, standard, plating)),
-    footprint = File(_footprint(diameter, standard, plating)),
-    prefix = "H",
-    pins = {
+    name="MH",
+    symbol=Symbol(**_symbol(diameter, standard, plating)),
+    footprint=File(_footprint(diameter, standard, plating)),
+    prefix="H",
+    pins={
         "1": P1,
     },
-    properties = properties,
+    properties=properties,
 )

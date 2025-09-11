@@ -11,11 +11,16 @@ for package in Led.Package.values():
     for color in Led.Color.values():
         name = "D_" + str(package) + "_" + str(color)
         Led(
-            name = name,
-            package = package,
-            color = color,
-            forward_voltage = "3.3V",
-            forward_current = "20mA",
-            A = Net(name + "_A"),
-            K = GND,
+            name=name,
+            package=package,
+            color=color,
+            forward_voltage="3.3V",
+            forward_current="20mA",
+            A=Net(name + "_A"),
+            K=GND,
         )
+
+Layout(
+    name="preview",
+    path="build/Led",
+)

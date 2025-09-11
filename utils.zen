@@ -1,5 +1,6 @@
 """General utilities for Zen."""
 
+
 def format_value(*args):
     strings = []
     for arg in args:

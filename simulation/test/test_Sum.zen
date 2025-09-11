@@ -15,18 +15,18 @@ GND = Ground()
 VOFFSET = Net("VOFFSET")
 
 OPA1 = noninverting_sum(
-    name = "OPAMP",
-    GND = GND,
-    INPUTS = [INPUT_SIGNAL, INPUT_OFFSET],
-    OUT = PROBE,
-    gain = 1.0,
+    name="OPAMP",
+    GND=GND,
+    INPUTS=[INPUT_SIGNAL, INPUT_OFFSET],
+    OUT=PROBE,
+    gain=1.0,
 )
 
 OperationalAmplifier(
-    name = "SUM",
-    VP = VP,
-    VN = VN,
-    OPA1 = OPA1,
+    name="SUM",
+    VP=VP,
+    VN=VN,
+    OPA1=OPA1,
 )
 
 # pcb:sch SUM.U x=-204.2000 y=227.6000 rot=0
