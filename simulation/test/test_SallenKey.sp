@@ -1,21 +1,22 @@
+* Ground node
+
+* Positive and negative rails
 V1 VP_VCC GND DC 12V 
 V2 VN_VCC GND DC -12V
 
-V3 INPUT GND DC 1V AC 1V
+* Input stimulus for AC analysis. 0V - 1.8V (centered at 0.9V, 0.9V peak AC)
+V3 INPUT GND DC 0.9 AC 0.9
 
 .control
-  * Time domain analysis
-  tran 0.000001m 1m
-  
-  * Frequency domain analysis
-  ac dec 100 1 1g
+  * AC analysis from 1Hz to 10kHz with 10 points per decade
+  ac dec 200 1 10g
   
   * Save output as SVG
   set hcopydevtype = svg
   
-  * Amplitude response plot  
-  hardcopy simulation/test/output/sallenkey_amplitude.svg mag(PROBE) title "Sallen Key 1M - Amplitude Response" ylabel V
+  * AC magnitude response plot
+  hardcopy simulation/test/output/sallenkey_magnitude.svg vdb(PROBE) title "Sallen Key AC Response" xlabel Frequency ylabel "Magnitude (dB)"
   
-  * Phase response plot
-  hardcopy simulation/test/output/sallenkey_phase.svg vp(PROBE) title "Sallen Key 1M - Phase Response" ylabel rad 
+  * AC phase response plot
+  hardcopy simulation/test/output/sallenkey_phase.svg vp(PROBE) title "Sallen Key Phase Response" xlabel Frequency ylabel "Phase (degrees)"
 .endc
