@@ -1,5 +1,5 @@
-* Capacitor SPICE subcircuit
-* Generic Inducto model
+* Inductor SPICE subcircuit
+* Generic Inductor model
 *
 * Parameters:
 *   LVAL - Inductance value in henrys
