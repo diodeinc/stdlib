@@ -54,7 +54,7 @@ def _footprint(package: Package):
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "R",
+    name = "U",
     symbol = Symbol(_symbol(variant)),
     footprint = File(_footprint(package)),
     prefix = "OPA",
