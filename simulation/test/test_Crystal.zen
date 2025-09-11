@@ -1,0 +1,65 @@
+"""Test for SPICE model of Crystal - demonstrates resonance behavior."""
+
+load("../../interfaces.zen", "Ground", "Power")
+
+Crystal = Module("../../generics/Crystal.zen")
+Capacitor = Module("../../generics/Capacitor.zen")
+Resistor = Module("../../generics/Resistor.zen")
+
+VIN = Power("VIN")
+XIN = Net("XIN")
+XOUT = Net("XOUT")
+GND = Ground()
+
+# 16MHz crystal oscillator circuit
+Crystal(
+    name="Y1",
+    package="3215_2Pin",
+    frequency="16MHz",
+    load_capacitance="12pF",
+    XIN=XIN,
+    XOUT=XOUT,
+)
+
+# Load capacitors (typical Pierce oscillator configuration)
+Capacitor(
+    name="C1",
+    value="22pF",
+    package="0402",
+    P1=XIN,
+    P2=GND,
+)
+
+Capacitor(
+    name="C2",
+    value="22pF",
+    package="0402",
+    P1=XOUT,
+    P2=GND,
+)
+
+# Drive resistor for AC analysis (lower value for better signal transfer)
+Resistor(
+    name="R1",
+    value="1kohm",
+    package="0402",
+    P1=VIN,
+    P2=XIN,
+)
+
+# Feedback resistor (typical in Pierce oscillator)
+Resistor(
+    name="R2",
+    value="1Mohm",
+    package="0402",
+    P1=XIN,
+    P2=XOUT,
+)
+
+# pcb:sch C1.C x=296.1800 y=-1.0000 rot=0
+# pcb:sch C2.C x=397.7800 y=-1.0000 rot=0
+# pcb:sch R1.R x=306.3400 y=-255.0000 rot=0
+# pcb:sch R2.R x=357.1400 y=-191.5000 rot=270
+# pcb:sch Y1.Y x=329.2000 y=-64.5000 rot=0
+# pcb:sch GND.1 x=354.6000 y=113.3000 rot=0
+# pcb:sch VIN_VCC.1 x=308.8800 y=-305.8000 rot=0
