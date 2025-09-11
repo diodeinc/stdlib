@@ -1,7 +1,8 @@
 load("units.zen", "unit")
 load("utils.zen", "format_value")
 
-def config_unit(name, UnitType, optional = False, default = None, **kwargs):
+
+def config_unit(name, UnitType, optional=False, default=None, **kwargs):
     """Helper function to create a config value for a unit type.
 
     Args:
@@ -15,16 +16,19 @@ def config_unit(name, UnitType, optional = False, default = None, **kwargs):
         config: The configuration value.
     """
     unit_type = UnitType | None if optional else UnitType
-    default = default or (None if optional else UnitType(value = 0.0))
+    default = default or (None if optional else UnitType(value=0.0))
 
     def convert_unit(x):
         if x == None:
             return None
         return unit(x, UnitType)
 
-    return config(name, unit_type, default = default, convert = convert_unit, optional = optional, **kwargs)
+    return config(name, unit_type, default=default, convert=convert_unit, optional=optional, **kwargs)
 
-def config_properties(properties: dict | None, exclude_from_bom: bool | None = None, do_not_populate: bool | None = None) -> dict:
+
+def config_properties(
+    properties: dict | None, exclude_from_bom: bool | None = None, do_not_populate: bool | None = None
+) -> dict:
     """Generate component properties with automatic Value field generation.
 
     This function merges component-specific properties with generic properties
@@ -58,10 +62,10 @@ def config_properties(properties: dict | None, exclude_from_bom: bool | None = N
             result["__" + key.lower() + "__"] = value
 
     # Get configuration values
-    user_properties = config("user_properties", dict, default = {}, optional = True)
-    mpn = config("mpn", str, optional = True)
-    do_not_populate = do_not_populate or config("do_not_populate", bool, optional = True)
-    exclude_from_bom = exclude_from_bom or config("exclude_from_bom", bool, optional = True)
+    user_properties = config("user_properties", dict, default={}, optional=True)
+    mpn = config("mpn", str, optional=True)
+    do_not_populate = do_not_populate or config("do_not_populate", bool, optional=True)
+    exclude_from_bom = exclude_from_bom or config("exclude_from_bom", bool, optional=True)
 
     # Build result dictionary
     result = {}

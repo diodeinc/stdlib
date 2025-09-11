@@ -1,9 +1,4 @@
-"""Test for Spice model of Resistor.
-
-pcb sim generics/spice/test/test_LevelShifter.zen \
-    --setup generics/spice/test/test_LevelShifter.spice \
-    -o - | ngspice
-"""
+"""Test for Spice model of Resistor."""
 
 load("//amplifiers.zen", "inverting_sum", "sallen_key_lowpass")
 load("//interfaces.zen", "Ground", "Opamp", "Power")
@@ -21,18 +16,18 @@ GND = Ground()
 VOFFSET = Net("VOFFSET")
 
 OPA1 = inverting_sum(
-    name = "OPAMP",
-    GND = GND,
-    INPUTS = [INPUT_SIGNAL, INPUT_OFFSET],
-    OUT = INVERTING_SUM,
-    gain = 1.0,
+    name="OPAMP",
+    GND=GND,
+    INPUTS=[INPUT_SIGNAL, INPUT_OFFSET],
+    OUT=INVERTING_SUM,
+    gain=1.0,
 )
 
 OperationalAmplifier(
-    name = "INVERTING_SUM",
-    VP = VP,
-    VN = VN,
-    OPA1 = OPA1,
+    name="INVERTING_SUM",
+    VP=VP,
+    VN=VN,
+    OPA1=OPA1,
 )
 
 # pcb:sch BUFFER.U x=-204.2000 y=227.6000 rot=0

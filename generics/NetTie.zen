@@ -19,13 +19,11 @@ Variant = enum(
     "2_THT_1.0mm",
     "2_SMD_THT_0.3mm",
     "2_SMD_THT_1.0mm",
-
     # 3-pin variants
     "3_SMD_0.5mm",
     "3_SMD_2.0mm",
     "3_THT_0.3mm",
     "3_THT_1.0mm",
-
     # 4-pin variants
     "4_SMD_0.5mm",
     "4_SMD_2.0mm",
@@ -38,27 +36,29 @@ Variant = enum(
 # -----------------------------------------------------------------------------
 
 # New variant-based approach (preferred)
-variant = config("variant", Variant, optional = True)
+variant = config("variant", Variant, optional=True)
 
 # Legacy parameters (deprecated)
-mount_type = config("mount_type", MountType, default = MountType("SMD"), optional = True)
-pad_size = config("pad_size", PadSize, default = PadSize("0.5mm"), optional = True)
-pin_count_legacy = config("pin_count", int, default = 2, optional = True)
-use_jumper_footprint = config("use_jumper_footprint", bool, default = False, optional = True)
+mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=True)
+pad_size = config("pad_size", PadSize, default=PadSize("0.5mm"), optional=True)
+pin_count_legacy = config("pin_count", int, default=2, optional=True)
+use_jumper_footprint = config("use_jumper_footprint", bool, default=False, optional=True)
 
 # Determine actual pin count from variant or legacy parameter
 pin_count = int(variant.value.split("_")[0]) if variant else pin_count_legacy
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": " ",
-    "variant": variant if variant else None,
-    "mount_type": mount_type if not variant else None,
-    "pad_size": pad_size if not variant else None,
-    "pin_count": pin_count,
-    "exclude_from_bom": True,
-    "do_not_populate": True,
-})
+properties = config_properties(
+    {
+        "value": " ",
+        "variant": variant if variant else None,
+        "mount_type": mount_type if not variant else None,
+        "pad_size": pad_size if not variant else None,
+        "pin_count": pin_count,
+        "exclude_from_bom": True,
+        "do_not_populate": True,
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -69,6 +69,7 @@ P = [io("P{}".format(i), Net) for i in range(1, pin_count + 1)]
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _variant_footprint(variant):
     """Returns the footprint for a specific variant."""
@@ -83,13 +84,11 @@ def _variant_footprint(variant):
         "2_THT_1.0mm": "@kicad-footprints/NetTie.pretty/NetTie-2_THT_Pad1.0mm.kicad_mod",
         "2_SMD_THT_0.3mm": "footprints/NetTie-2_SMD_THT_Pad0.3mm.kicad_mod",
         "2_SMD_THT_1.0mm": "footprints/NetTie-2_SMD_THT_Pad1.0mm.kicad_mod",
-
         # 3-pin variants
         "3_SMD_0.5mm": "@kicad-footprints/NetTie.pretty/NetTie-3_SMD_Pad0.5mm.kicad_mod",
         "3_SMD_2.0mm": "@kicad-footprints/NetTie.pretty/NetTie-3_SMD_Pad2.0mm.kicad_mod",
         "3_THT_0.3mm": "@kicad-footprints/NetTie.pretty/NetTie-3_THT_Pad0.3mm.kicad_mod",
         "3_THT_1.0mm": "@kicad-footprints/NetTie.pretty/NetTie-3_THT_Pad1.0mm.kicad_mod",
-
         # 4-pin variants
         "4_SMD_0.5mm": "@kicad-footprints/NetTie.pretty/NetTie-4_SMD_Pad0.5mm.kicad_mod",
         "4_SMD_2.0mm": "@kicad-footprints/NetTie.pretty/NetTie-4_SMD_Pad2.0mm.kicad_mod",
@@ -98,6 +97,7 @@ def _variant_footprint(variant):
     }
 
     return variant_footprints.get(variant.value, None)
+
 
 def _legacy_footprint(pin_count, mount_type, pad_size):
     """Return the appropriate net tie footprint."""
@@ -119,6 +119,7 @@ def _legacy_footprint(pin_count, mount_type, pad_size):
     else:
         return "@kicad-footprints/NetTie.pretty/NetTie-{}_{}_Pad{}.kicad_mod".format(pin_count, mount, pad)
 
+
 def _footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant):
     """Returns the appropriate net tie footprint."""
 
@@ -137,6 +138,7 @@ def _footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant):
         return _variant_footprint(variant)
     else:
         return _legacy_footprint(pin_count, mount_type, pad_size)
+
 
 def _symbol(pin_count):
     """Returns the appropriate net tie symbol based on pin count."""
@@ -158,6 +160,7 @@ def _symbol(pin_count):
     else:
         error("Unsupported pin count: {}".format(pin_count))
 
+
 def _pins(P):
     """Get both the pin specifications and connection mappings based on pin count."""
     pins = {
@@ -173,15 +176,16 @@ def _pins(P):
 
     return pins
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "NT",
-    symbol = Symbol(**_symbol(pin_count)),
-    footprint = File(_footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant)),
-    prefix = "NT",
-    pins = _pins(P),
-    properties = properties,
+    name="NT",
+    symbol=Symbol(**_symbol(pin_count)),
+    footprint=File(_footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant)),
+    prefix="NT",
+    pins=_pins(P),
+    properties=properties,
 )

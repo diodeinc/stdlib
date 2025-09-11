@@ -9,22 +9,25 @@ for diameter in MountingHole.Diameter.values():
     for standard in MountingHole.Standard.values():
         for plating in MountingHole.Plating.values():
             name = "MH_" + str(diameter) + "_" + str(standard) + "_" + str(plating)
-            # replace "." with "_" in name:
-            name = name.replace(".", "_")
 
             # Only add P1 net for plated holes
             if str(plating) != "Via":
                 MountingHole(
-                    name = name,
-                    diameter = diameter,
-                    standard = standard,
-                    plating = plating,
-                    P1 = Net(name + "_P1"),
+                    name=name,
+                    diameter=diameter,
+                    standard=standard,
+                    plating=plating,
+                    P1=Net(name + "_P1"),
                 )
             else:
                 MountingHole(
-                    name = name,
-                    diameter = diameter,
-                    standard = standard,
-                    plating = plating,
+                    name=name,
+                    diameter=diameter,
+                    standard=standard,
+                    plating=plating,
                 )
+
+Layout(
+    name="preview",
+    path="build/MountingHole",
+)
