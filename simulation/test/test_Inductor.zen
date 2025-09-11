@@ -1,0 +1,34 @@
+"""Test for Spice model of Inductor with switching voltage to demonstrate inductor effects."""
+
+load("../../interfaces.zen", "Ground", "Power")
+
+Inductor = Module("../../generics/Inductor.zen")
+Resistor = Module("../../generics/Resistor.zen")
+
+VCC = Power()
+PROBE = Net("PROBE")
+GND = Ground()
+
+# Create an RL circuit to demonstrate inductor behavior with switching voltage
+# The inductor will oppose changes in current, creating exponential rise/fall
+
+Resistor(
+    name="R1",
+    value="1kOhm",
+    package="0603",
+    P1=VCC,
+    P2=PROBE,
+)
+
+Inductor(
+    name="L1",
+    value="1mH",  # 1 millihenry
+    package="0603",
+    P1=PROBE,
+    P2=GND,
+)
+
+# pcb:sch L1.L x=202.1991 y=-1.0000 rot=0
+# pcb:sch R1.R x=192.0400 y=-89.9000 rot=0
+# pcb:sch GND.1 x=189.5000 y=113.3000 rot=0
+# pcb:sch VCC.1 x=194.5800 y=-153.4000 rot=0

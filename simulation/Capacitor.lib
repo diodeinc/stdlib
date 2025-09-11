@@ -2,7 +2,7 @@
 * Generic capacitor model
 *
 * Parameters:
-*   CVAL - Resistance value in farads
+*   CVAL - Capacitance value in farads
 *
 * Nodes:
 *   1 - Terminal 1

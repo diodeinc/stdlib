@@ -5,3 +5,4 @@ sim:
     pcb sim simulation/test/test_LevelShifter.zen --setup simulation/test/test_LevelShifter.sp -o - | ngspice
     pcb sim simulation/test/test_SallenKey.zen --setup simulation/test/test_SallenKey.sp -o - | ngspice
     pcb sim simulation/test/test_Sum.zen --setup simulation/test/test_Sum.sp -o - | ngspice
+    pcb sim simulation/test/test_Inductor.zen --setup simulation/test/test_Inductor.sp -o - | ngspice
