@@ -12,5 +12,5 @@ V4 INPUT_2 GND DC 2
   set hcopydevtype = svg
   
   * Time domain plot of input and output
-  hardcopy build/sum.svg v(INPUT_1) v(INPUT_2) v(PROBE) title "Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy simulation/test/output/sum.svg v(INPUT_1) v(INPUT_2) v(PROBE) title "Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc
