@@ -12,18 +12,18 @@ PROBE = Net("PROBE")
 GND = Ground()
 
 OPAMP = sallen_key_lowpass(
-    name = "OPAMP",
-    frequency = "1MHz",
-    GND = GND,
-    IN = INPUT,
-    OUT = PROBE,
+    name="OPAMP",
+    frequency="1MHz",
+    GND=GND,
+    IN=INPUT,
+    OUT=PROBE,
 )
 
 OperationalAmplifier(
-    name = "OPAMP",
-    VP = VP,
-    VN = VN,
-    OPA1 = OPAMP,
+    name="OPAMP",
+    VP=VP,
+    VN=VN,
+    OPA1=OPAMP,
 )
 
 

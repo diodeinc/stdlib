@@ -1,457 +1,461 @@
 Analog = interface(
-    NET = using(Net()),
+    NET=using(Net()),
 )
 
 Can = interface(
-    CAN_H = Net(),
-    CAN_L = Net(),
+    CAN_H=Net(),
+    CAN_L=Net(),
 )
 
 CanTtl = interface(
-    TX = Net(),
-    RX = Net(),
+    TX=Net(),
+    RX=Net(),
 )
 
 Csi = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    D0_P = Net(),
-    D0_N = Net(),
-    D1_P = Net(),
-    D1_N = Net(),
-    D2_P = Net(),
-    D2_N = Net(),
-    D3_P = Net(),
-    D3_N = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    D0_P=Net(),
+    D0_N=Net(),
+    D1_P=Net(),
+    D1_N=Net(),
+    D2_P=Net(),
+    D2_N=Net(),
+    D3_P=Net(),
+    D3_N=Net(),
 )
 
 DiffPair = interface(
-    P = Net("_P"),
-    N = Net("_N"),
+    P=Net("_P"),
+    N=Net("_N"),
 )
 
 DisplayPort = interface(
-    AUX_P = Net(),
-    AUX_N = Net(),
-    ML0_P = Net(),
-    ML0_N = Net(),
-    ML1_P = Net(),
-    ML1_N = Net(),
-    ML2_P = Net(),
-    ML2_N = Net(),
-    ML3_P = Net(),
-    ML3_N = Net(),
-    HPD = Net(),
+    AUX_P=Net(),
+    AUX_N=Net(),
+    ML0_P=Net(),
+    ML0_N=Net(),
+    ML1_P=Net(),
+    ML1_N=Net(),
+    ML2_P=Net(),
+    ML2_N=Net(),
+    ML3_P=Net(),
+    ML3_N=Net(),
+    HPD=Net(),
 )
 
 Dsi = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    D0_P = Net(),
-    D0_N = Net(),
-    D1_P = Net(),
-    D1_N = Net(),
-    D2_P = Net(),
-    D2_N = Net(),
-    D3_P = Net(),
-    D3_N = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    D0_P=Net(),
+    D0_N=Net(),
+    D1_P=Net(),
+    D1_N=Net(),
+    D2_P=Net(),
+    D2_N=Net(),
+    D3_P=Net(),
+    D3_N=Net(),
 )
 
 Edp = interface(
-    AUX_P = Net(),
-    AUX_N = Net(),
-    TX0_P = Net(),
-    TX0_N = Net(),
-    TX1_P = Net(),
-    TX1_N = Net(),
-    TX2_P = Net(),
-    TX2_N = Net(),
-    TX3_P = Net(),
-    TX3_N = Net(),
+    AUX_P=Net(),
+    AUX_N=Net(),
+    TX0_P=Net(),
+    TX0_N=Net(),
+    TX1_P=Net(),
+    TX1_N=Net(),
+    TX2_P=Net(),
+    TX2_N=Net(),
+    TX3_P=Net(),
+    TX3_N=Net(),
 )
 
 Emmc = interface(
-    CLK = Net(),
-    CMD = Net(),
-    DAT0 = Net(),
-    DAT1 = Net(),
-    DAT2 = Net(),
-    DAT3 = Net(),
-    DAT4 = Net(),
-    DAT5 = Net(),
-    DAT6 = Net(),
-    DAT7 = Net(),
-    DS = Net(),
-    RST_N = Net(),
+    CLK=Net(),
+    CMD=Net(),
+    DAT0=Net(),
+    DAT1=Net(),
+    DAT2=Net(),
+    DAT3=Net(),
+    DAT4=Net(),
+    DAT5=Net(),
+    DAT6=Net(),
+    DAT7=Net(),
+    DS=Net(),
+    RST_N=Net(),
 )
 
 Ethernet = interface(
-    TX_P = Net(),
-    TX_N = Net(),
-    RX_P = Net(),
-    RX_N = Net(),
+    TX_P=Net(),
+    TX_N=Net(),
+    RX_P=Net(),
+    RX_N=Net(),
 )
 
 Ethernet_Phy = interface(
-    TR0_P = Net(),
-    TR0_N = Net(),
-    TR1_P = Net(),
-    TR1_N = Net(),
-    TR2_P = Net(),
-    TR2_N = Net(),
-    TR3_P = Net(),
-    TR3_N = Net(),
+    TR0_P=Net(),
+    TR0_N=Net(),
+    TR1_P=Net(),
+    TR1_N=Net(),
+    TR2_P=Net(),
+    TR2_N=Net(),
+    TR3_P=Net(),
+    TR3_N=Net(),
 )
 
 Ethernet_1000BaseT = interface(
-    BI_DA_P = Net(),
-    BI_DA_N = Net(),
-    BI_DB_P = Net(),
-    BI_DB_N = Net(),
-    BI_DC_P = Net(),
-    BI_DC_N = Net(),
-    BI_DD_P = Net(),
-    BI_DD_N = Net(),
+    BI_DA_P=Net(),
+    BI_DA_N=Net(),
+    BI_DB_P=Net(),
+    BI_DB_N=Net(),
+    BI_DC_P=Net(),
+    BI_DC_N=Net(),
+    BI_DD_P=Net(),
+    BI_DD_N=Net(),
 )
 
 Gpio = interface(
-    NET = using(Net()),
+    NET=using(Net()),
 )
 
 Ground = interface(
-    NET = using(Net("GND", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "GND"))),
+    NET=using(Net("GND", symbol=Symbol(library="@kicad-symbols/power.kicad_sym", name="GND"))),
 )
 
 Hdmi = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    D0_P = Net(),
-    D0_N = Net(),
-    D1_P = Net(),
-    D1_N = Net(),
-    D2_P = Net(),
-    D2_N = Net(),
-    CEC = Net(),
-    SCL = Net(),
-    SDA = Net(),
-    HPD = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    D0_P=Net(),
+    D0_N=Net(),
+    D1_P=Net(),
+    D1_N=Net(),
+    D2_P=Net(),
+    D2_N=Net(),
+    CEC=Net(),
+    SCL=Net(),
+    SDA=Net(),
+    HPD=Net(),
 )
 
 I2c = interface(
-    SDA = Net(),
-    SCL = Net(),
+    SDA=Net(),
+    SCL=Net(),
 )
 
 I2s = interface(
-    BCLK = Net(),
-    LRCLK = Net(),
-    SDATA = Net(),
-    MCLK = Net(),
+    BCLK=Net(),
+    LRCLK=Net(),
+    SDATA=Net(),
+    MCLK=Net(),
 )
 
 I3c = interface(
-    SDA = Net(),
-    SCL = Net(),
+    SDA=Net(),
+    SCL=Net(),
 )
 
 Jtag = interface(
-    TDI = Net(),
-    TDO = Net(),
-    TCK = Net(),
-    TMS = Net(),
-    TRST = Net(),
+    TDI=Net(),
+    TDO=Net(),
+    TCK=Net(),
+    TMS=Net(),
+    TRST=Net(),
 )
 
 Lcd = interface(
-    VSYNC = Net(),
-    HSYNC = Net(),
-    DE = Net(),
-    CLK = Net(),
-    R0 = Net(),
-    R1 = Net(),
-    R2 = Net(),
-    R3 = Net(),
-    R4 = Net(),
-    R5 = Net(),
-    R6 = Net(),
-    R7 = Net(),
-    G0 = Net(),
-    G1 = Net(),
-    G2 = Net(),
-    G3 = Net(),
-    G4 = Net(),
-    G5 = Net(),
-    G6 = Net(),
-    G7 = Net(),
-    B0 = Net(),
-    B1 = Net(),
-    B2 = Net(),
-    B3 = Net(),
-    B4 = Net(),
-    B5 = Net(),
-    B6 = Net(),
-    B7 = Net(),
+    VSYNC=Net(),
+    HSYNC=Net(),
+    DE=Net(),
+    CLK=Net(),
+    R0=Net(),
+    R1=Net(),
+    R2=Net(),
+    R3=Net(),
+    R4=Net(),
+    R5=Net(),
+    R6=Net(),
+    R7=Net(),
+    G0=Net(),
+    G1=Net(),
+    G2=Net(),
+    G3=Net(),
+    G4=Net(),
+    G5=Net(),
+    G6=Net(),
+    G7=Net(),
+    B0=Net(),
+    B1=Net(),
+    B2=Net(),
+    B3=Net(),
+    B4=Net(),
+    B5=Net(),
+    B6=Net(),
+    B7=Net(),
 )
 
 Lvds = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    DATA0_P = Net(),
-    DATA0_N = Net(),
-    DATA1_P = Net(),
-    DATA1_N = Net(),
-    DATA2_P = Net(),
-    DATA2_N = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    DATA0_P=Net(),
+    DATA0_N=Net(),
+    DATA1_P=Net(),
+    DATA1_N=Net(),
+    DATA2_P=Net(),
+    DATA2_N=Net(),
 )
 
 Mdio = interface(
-    MDC = Net(),
-    MDIO = Net(),
+    MDC=Net(),
+    MDIO=Net(),
 )
 
 Mdi = interface(
-    A_P = Net(),
-    A_N = Net(),
-    B_P = Net(),
-    B_N = Net(),
-    C_P = Net(),
-    C_N = Net(),
-    D_P = Net(),
-    D_N = Net(),
+    A_P=Net(),
+    A_N=Net(),
+    B_P=Net(),
+    B_N=Net(),
+    C_P=Net(),
+    C_N=Net(),
+    D_P=Net(),
+    D_N=Net(),
 )
 
 Mii = interface(
-    TXD0 = Net(),
-    TXD1 = Net(),
-    TXD2 = Net(),
-    TXD3 = Net(),
-    TX_EN = Net(),
-    TX_CLK = Net(),
-    RXD0 = Net(),
-    RXD1 = Net(),
-    RXD2 = Net(),
-    RXD3 = Net(),
-    RX_DV = Net(),
-    RX_CLK = Net(),
-    RX_ER = Net(),
-    COL = Net(),
-    CRS = Net(),
+    TXD0=Net(),
+    TXD1=Net(),
+    TXD2=Net(),
+    TXD3=Net(),
+    TX_EN=Net(),
+    TX_CLK=Net(),
+    RXD0=Net(),
+    RXD1=Net(),
+    RXD2=Net(),
+    RXD3=Net(),
+    RX_DV=Net(),
+    RX_CLK=Net(),
+    RX_ER=Net(),
+    COL=Net(),
+    CRS=Net(),
 )
 
 Mipi = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    DATA0_P = Net(),
-    DATA0_N = Net(),
-    DATA1_P = Net(),
-    DATA1_N = Net(),
-    DATA2_P = Net(),
-    DATA2_N = Net(),
-    DATA3_P = Net(),
-    DATA3_N = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    DATA0_P=Net(),
+    DATA0_N=Net(),
+    DATA1_P=Net(),
+    DATA1_N=Net(),
+    DATA2_P=Net(),
+    DATA2_N=Net(),
+    DATA3_P=Net(),
+    DATA3_N=Net(),
 )
+
 
 def NotConnected(name: str = "NC") -> Net:
     return Net(name)
 
+
 OneWire = interface(
-    DQ = Net(),
+    DQ=Net(),
 )
 
 Opamp = interface(
-    IN_P = Net(),
-    IN_N = Net(),
-    OUT = Net(),
+    IN_P=Net(),
+    IN_N=Net(),
+    OUT=Net(),
 )
 
 OscPair = interface(
-    XIN = Net(),
-    XOUT = Net(),
+    XIN=Net(),
+    XOUT=Net(),
 )
 
 Pcie = interface(
-    TX_P = Net(),
-    TX_N = Net(),
-    RX_P = Net(),
-    RX_N = Net(),
-    REFCLK_P = Net(),
-    REFCLK_N = Net(),
-    PERST = Net(),
-    WAKE = Net(),
+    TX_P=Net(),
+    TX_N=Net(),
+    RX_P=Net(),
+    RX_N=Net(),
+    REFCLK_P=Net(),
+    REFCLK_N=Net(),
+    PERST=Net(),
+    WAKE=Net(),
 )
 
 PcieGen3x1Lane = interface(
-    TX_P = Net(),
-    TX_N = Net(),
-    RX_P = Net(),
-    RX_N = Net(),
-    REFCLK_P = Net(),
-    REFCLK_N = Net(),
-    RESET_N = Net(),
-    WAKE_N = Net(),
-    CLK_REQ_N = Net(),
+    TX_P=Net(),
+    TX_N=Net(),
+    RX_P=Net(),
+    RX_N=Net(),
+    REFCLK_P=Net(),
+    REFCLK_N=Net(),
+    RESET_N=Net(),
+    WAKE_N=Net(),
+    CLK_REQ_N=Net(),
 )
 
 PcieGen3x2Lane = interface(
-    TX0_P = Net(),
-    TX0_N = Net(),
-    RX0_P = Net(),
-    RX0_N = Net(),
-    TX1_P = Net(),
-    TX1_N = Net(),
-    RX1_P = Net(),
-    RX1_N = Net(),
-    REFCLK_P = Net(),
-    REFCLK_N = Net(),
-    RESET_N = Net(),
-    WAKE_N = Net(),
-    CLK_REQ_N = Net(),
+    TX0_P=Net(),
+    TX0_N=Net(),
+    RX0_P=Net(),
+    RX0_N=Net(),
+    TX1_P=Net(),
+    TX1_N=Net(),
+    RX1_P=Net(),
+    RX1_N=Net(),
+    REFCLK_P=Net(),
+    REFCLK_N=Net(),
+    RESET_N=Net(),
+    WAKE_N=Net(),
+    CLK_REQ_N=Net(),
 )
 
 Power = interface(
-    NET = using(Net("VCC", symbol = Symbol(library = "@kicad-symbols/power.kicad_sym", name = "VCC"))),
+    NET=using(Net("VCC", symbol=Symbol(library="@kicad-symbols/power.kicad_sym", name="VCC"))),
 )
 
 Pwm = interface(
-    NET = using(Net()),
+    NET=using(Net()),
 )
 
 QLink = interface(
-    CLK_P = Net(),
-    CLK_N = Net(),
-    L0_P = Net(),
-    L0_N = Net(),
-    L1_P = Net(),
-    L1_N = Net(),
-    L2_P = Net(),
-    L2_N = Net(),
-    L3_P = Net(),
-    L3_N = Net(),
-    L4_P = Net(),
-    L4_N = Net(),
+    CLK_P=Net(),
+    CLK_N=Net(),
+    L0_P=Net(),
+    L0_N=Net(),
+    L1_P=Net(),
+    L1_N=Net(),
+    L2_P=Net(),
+    L2_N=Net(),
+    L3_P=Net(),
+    L3_N=Net(),
+    L4_P=Net(),
+    L4_N=Net(),
 )
 
 Qspi = interface(
-    CS = Net(),
-    CLK = Net(),
-    IO0 = Net(),
-    IO1 = Net(),
-    IO2 = Net(),
-    IO3 = Net(),
+    CS=Net(),
+    CLK=Net(),
+    IO0=Net(),
+    IO1=Net(),
+    IO2=Net(),
+    IO3=Net(),
 )
 
 Rgmii = interface(
-    TXD0 = Net(),
-    TXD1 = Net(),
-    TXD2 = Net(),
-    TXD3 = Net(),
-    TX_CTL = Net(),
-    TXC = Net(),
-    RXD0 = Net(),
-    RXD1 = Net(),
-    RXD2 = Net(),
-    RXD3 = Net(),
-    RX_CTL = Net(),
-    RXC = Net(),
+    TXD0=Net(),
+    TXD1=Net(),
+    TXD2=Net(),
+    TXD3=Net(),
+    TX_CTL=Net(),
+    TXC=Net(),
+    RXD0=Net(),
+    RXD1=Net(),
+    RXD2=Net(),
+    RXD3=Net(),
+    RX_CTL=Net(),
+    RXC=Net(),
 )
 
 Rmii = interface(
-    TXD0 = Net(),
-    TXD1 = Net(),
-    TX_EN = Net(),
-    RXD0 = Net(),
-    RXD1 = Net(),
-    CRS_DV = Net(),
-    RX_ER = Net(),
-    REF_CLK = Net(),
+    TXD0=Net(),
+    TXD1=Net(),
+    TX_EN=Net(),
+    RXD0=Net(),
+    RXD1=Net(),
+    CRS_DV=Net(),
+    RX_ER=Net(),
+    REF_CLK=Net(),
 )
 
 Rs232 = interface(
-    TX = Net("TX"),
-    RX = Net("RX"),
-    RTS = Net("RTS"),
-    CTS = Net("CTS"),
-    DTR = Net("DTR"),
-    DSR = Net("DSR"),
-    DCD = Net("DCD"),
-    RI = Net("RI"),
+    TX=Net("TX"),
+    RX=Net("RX"),
+    RTS=Net("RTS"),
+    CTS=Net("CTS"),
+    DTR=Net("DTR"),
+    DSR=Net("DSR"),
+    DCD=Net("DCD"),
+    RI=Net("RI"),
 )
 
 Rs422 = interface(
-    TX_P = Net("TX_P"),
-    TX_N = Net("TX_N"),
-    RX_P = Net("RX_P"),
-    RX_N = Net("RX_N"),
-    RTS_P = Net("RTS_P"),
-    RTS_N = Net("RTS_N"),
-    CTS_P = Net("CTS_P"),
-    CTS_N = Net("CTS_N"),
+    TX_P=Net("TX_P"),
+    TX_N=Net("TX_N"),
+    RX_P=Net("RX_P"),
+    RX_N=Net("RX_N"),
+    RTS_P=Net("RTS_P"),
+    RTS_N=Net("RTS_N"),
+    CTS_P=Net("CTS_P"),
+    CTS_N=Net("CTS_N"),
 )
 
 Rs485 = Rs422
 
 Sata = interface(
-    TX_P = Net(),
-    TX_N = Net(),
-    RX_P = Net(),
-    RX_N = Net(),
+    TX_P=Net(),
+    TX_N=Net(),
+    RX_P=Net(),
+    RX_N=Net(),
 )
 
 Sdio = interface(
-    CLK = Net(),
-    CMD = Net(),
-    DAT0 = Net(),
-    DAT1 = Net(),
-    DAT2 = Net(),
-    DAT3 = Net(),
+    CLK=Net(),
+    CMD=Net(),
+    DAT0=Net(),
+    DAT1=Net(),
+    DAT2=Net(),
+    DAT3=Net(),
 )
 
 Sdmmc = interface(
-    CLK = Net(),
-    CMD = Net(),
-    DAT0 = Net(),
-    DAT1 = Net(),
-    DAT2 = Net(),
-    DAT3 = Net(),
-    DAT4 = Net(),
-    DAT5 = Net(),
-    DAT6 = Net(),
-    DAT7 = Net(),
+    CLK=Net(),
+    CMD=Net(),
+    DAT0=Net(),
+    DAT1=Net(),
+    DAT2=Net(),
+    DAT3=Net(),
+    DAT4=Net(),
+    DAT5=Net(),
+    DAT6=Net(),
+    DAT7=Net(),
 )
 
 SmBus = I2c
 
 Spi = interface(
-    CS = Net(),
-    MISO = Net(),
-    MOSI = Net(),
-    CLK = Net(),
+    CS=Net(),
+    MISO=Net(),
+    MOSI=Net(),
+    CLK=Net(),
 )
 
 Swd = interface(
-    SWDIO = Net(),
-    SWCLK = Net(),
+    SWDIO=Net(),
+    SWCLK=Net(),
 )
 
 Uart = interface(
-    TX = Net(),
-    RX = Net(),
+    TX=Net(),
+    RX=Net(),
 )
 
 Usart = interface(
-    TX = Net(),
-    RX = Net(),
-    CK = Net(),
-    RTS = Net(),
-    CTS = Net(),
+    TX=Net(),
+    RX=Net(),
+    CK=Net(),
+    RTS=Net(),
+    CTS=Net(),
 )
+
 
 def UartPair(name_a: str, name_b: str) -> (Uart, Uart):
     txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
     rxa_txb = Net(name_a + "_RX/" + name_b + "_TX")
-    uart_a = Uart(name = name_a, tx = txa_rxb, rx = rxa_txb)
-    uart_b = Uart(name = name_b, tx = rxa_txb, rx = txa_rxb)
+    uart_a = Uart(name=name_a, tx=txa_rxb, rx=rxa_txb)
+    uart_b = Uart(name=name_b, tx=rxa_txb, rx=txa_rxb)
     return (uart_a, uart_b)
+
 
 def UsartPair(name_a: str, name_b: str) -> (Usart, Usart):
     txa_rxb = Net(name_a + "_TX/" + name_b + "_RX")
@@ -459,50 +463,51 @@ def UsartPair(name_a: str, name_b: str) -> (Usart, Usart):
     rtsa_ctsb = Net(name_a + "_RTS/" + name_b + "_CTS")
     ctsa_rtsb = Net(name_a + "_CTS/" + name_b + "_RTS")
     ck = Net(name_a + "_CK/" + name_b + "_CK")
-    usart_a = Usart(name = name_a, tx = txa_rxb, rx = rxa_txb, ck = ck, rts = rtsa_ctsb, cts = ctsa_rtsb)
-    usart_b = Usart(name = name_b, tx = rxa_txb, rx = txa_rxb, ck = ck, rts = ctsa_rtsb, cts = rtsa_ctsb)
+    usart_a = Usart(name=name_a, tx=txa_rxb, rx=rxa_txb, ck=ck, rts=rtsa_ctsb, cts=ctsa_rtsb)
+    usart_b = Usart(name=name_b, tx=rxa_txb, rx=txa_rxb, ck=ck, rts=ctsa_rtsb, cts=rtsa_ctsb)
     return (usart_a, usart_b)
 
+
 Ufs = interface(
-    REFCLK = Net(),
-    RESET_N = Net(),
-    L0_RX_P = Net(),
-    L0_RX_N = Net(),
-    L0_TX_P = Net(),
-    L0_TX_N = Net(),
-    L1_RX_P = Net(),
-    L1_RX_N = Net(),
-    L1_TX_P = Net(),
-    L1_TX_N = Net(),
+    REFCLK=Net(),
+    RESET_N=Net(),
+    L0_RX_P=Net(),
+    L0_RX_N=Net(),
+    L0_TX_P=Net(),
+    L0_TX_N=Net(),
+    L1_RX_P=Net(),
+    L1_RX_N=Net(),
+    L1_TX_P=Net(),
+    L1_TX_N=Net(),
 )
 
 Usb2 = interface(
-    DP = Net("D_P"),
-    DM = Net("D_N"),
+    DP=Net("D_P"),
+    DM=Net("D_N"),
 )
 
 Usb3 = interface(
-    DP = Net(),
-    DM = Net(),
-    SSTX_N = Net(),
-    SSTX_P = Net(),
-    SSRX_N = Net(),
-    SSRX_P = Net(),
+    DP=Net(),
+    DM=Net(),
+    SSTX_N=Net(),
+    SSTX_P=Net(),
+    SSRX_N=Net(),
+    SSRX_P=Net(),
 )
 
 UsbTypeC = interface(
-    DP = Net("D_P"),
-    DM = Net("D_N"),
-    SSTX0_P = Net(),
-    SSTX0_N = Net(),
-    SSRX0_P = Net(),
-    SSRX0_N = Net(),
-    SSTX1_P = Net(),
-    SSTX1_N = Net(),
-    SSRX1_P = Net(),
-    SSRX1_N = Net(),
-    SBU1 = Net(),
-    SBU2 = Net(),
-    CC1 = Net(),
-    CC2 = Net(),
+    DP=Net("D_P"),
+    DM=Net("D_N"),
+    SSTX0_P=Net(),
+    SSTX0_N=Net(),
+    SSRX0_P=Net(),
+    SSRX0_N=Net(),
+    SSTX1_P=Net(),
+    SSTX1_N=Net(),
+    SSRX1_P=Net(),
+    SSRX1_N=Net(),
+    SBU1=Net(),
+    SBU2=Net(),
+    CC1=Net(),
+    CC2=Net(),
 )

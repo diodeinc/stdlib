@@ -16,9 +16,9 @@ for orientation in PinSocket.Orientation:
                     # Vertical_SMD with 1 pin is not a valid footprint
                     continue
 
-                PinSocket(name = name, pins = positions, rows = rows, orientation = orientation_str, pitch = pitch_str, **pins)
+                PinSocket(name=name, pins=positions, rows=rows, orientation=orientation_str, pitch=pitch_str, **pins)
 
 Layout(
-    name = "preview",
-    path = "build/PinSocket",
+    name="preview",
+    path="build/PinSocket",
 )

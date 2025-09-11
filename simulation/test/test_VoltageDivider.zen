@@ -1,9 +1,4 @@
-"""Test for Spice model of Resistor.
-
-pcb sim simulation/test/test_VoltageDivider.zen \
-    --setup simulation/test/test_VoltageDivider.spice \
-    -o - | ngspice -i
-"""
+"""Test for Spice model of Resistor."""
 
 load("../../interfaces.zen", "Ground", "Power")
 
@@ -14,17 +9,17 @@ PROBE = Net("PROBE")
 GND = Ground()
 
 Resistor(
-    name = "R1",
-    value = "100ohms",
-    package = "0402",
-    P1 = VCC,
-    P2 = PROBE,
+    name="R1",
+    value="100ohms",
+    package="0402",
+    P1=VCC,
+    P2=PROBE,
 )
 
 Resistor(
-    name = "R2",
-    value = "200ohms",
-    package = "0402",
-    P1 = PROBE,
-    P2 = GND,
+    name="R2",
+    value="200ohms",
+    package="0402",
+    P1=PROBE,
+    P2=GND,
 )

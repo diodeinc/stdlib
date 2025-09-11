@@ -9,9 +9,9 @@ for orientation in PinHeader.Orientation.values():
                 name = "PinHeader_" + orientation + "_" + pitch + "_" + str(positions) + "_" + str(rows)
 
                 # All combinations are valid for PinHeader
-                PinHeader(name = name, pins = positions, rows = rows, orientation = orientation, pitch = pitch, **pins)
+                PinHeader(name=name, pins=positions, rows=rows, orientation=orientation, pitch=pitch, **pins)
 
 Layout(
-    name = "preview",
-    path = "build/PinHeader",
-) 
+    name="preview",
+    path="build/PinHeader",
+)

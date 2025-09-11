@@ -16,23 +16,27 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, default = Package("0603"))
+package = config("package", Package, default=Package("0603"))
 value = config_unit("value", Resistance)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-voltage = config_unit("voltage", Voltage, optional = True)
-temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, default = TemperatureCoefficient("Unspecified"), optional = True)
-use_us_symbol = config("use_us_symbol", bool, default = False, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+voltage = config_unit("voltage", Voltage, optional=True)
+temperature_coefficient = config(
+    "temperature_coefficient", TemperatureCoefficient, default=TemperatureCoefficient("Unspecified"), optional=True
+)
+use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": format_value(value, voltage),
-    "package": package,
-    "resistance": value,
-    "voltage": voltage,
-    "type": "thermistor",
-})
+properties = config_properties(
+    {
+        "value": format_value(value, voltage),
+        "package": package,
+        "resistance": value,
+        "voltage": voltage,
+        "type": "thermistor",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -44,6 +48,7 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _symbol(mount: Mount, package: Package, temperature_coefficient: TemperatureCoefficient, use_us_symbol: bool):
     name = ""
@@ -63,6 +68,7 @@ def _symbol(mount: Mount, package: Package, temperature_coefficient: Temperature
         "name": name,
     }
 
+
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
         Package("0201"): "@kicad-footprints/Resistor_SMD.pretty/R_0201_0603Metric.kicad_mod",
@@ -76,23 +82,24 @@ def _footprint(mount: Mount, package: Package):
 
     return kicad_footprints[package]
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "TH",
-    symbol = Symbol(**_symbol(mount, package, temperature_coefficient, use_us_symbol)),
-    footprint = File(_footprint(mount, package)),
-    prefix = "TH",
-    pin_defs = {
+    name="TH",
+    symbol=Symbol(**_symbol(mount, package, temperature_coefficient, use_us_symbol)),
+    footprint=File(_footprint(mount, package)),
+    prefix="TH",
+    pin_defs={
         "P1": "1",
         "P2": "2",
     },
-    pins = {
+    pins={
         "P1": P1,
         "P2": P2,
     },
-    properties = properties,
-    type = "thermistor",
+    properties=properties,
+    type="thermistor",
 )
