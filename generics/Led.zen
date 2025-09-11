@@ -80,6 +80,55 @@ def _value(color: Color, package: Package) -> str:
     return "LED {} {}".format(package, color)
 
 
+def _spice_subcircuit_name(color: Color):
+    """Returns the appropriate SPICE subcircuit name based on LED color."""
+    subcircuits = {
+        Color("red"): "LED_Red",
+        Color("green"): "LED_Green", 
+        Color("blue"): "LED_Blue",
+        Color("yellow"): "LED_Yellow",
+        Color("white"): "LED_White",
+        Color("amber"): "LED_Amber",
+        Color("orange"): "LED_Orange",
+        Color("pink"): "LED_Pink",
+        Color("uv"): "LED_UV",
+        Color("rgb"): "LED_RGB",
+        Color("other"): "LED_Other",
+    }
+    return subcircuits[color]
+
+
+def _spice_args(color: Color, forward_voltage, forward_current):
+    """Returns SPICE arguments based on LED parameters."""
+    # Set default IS values to achieve desired forward voltages
+    # Lower IS = higher forward voltage
+    color_is_values = {
+        Color("red"): "1e-16",      # ~1.8V
+        Color("green"): "1e-18",    # ~2.2V
+        Color("blue"): "1e-20",     # ~3.2V
+        Color("yellow"): "1e-17",   # ~2.0V
+        Color("white"): "1e-20",    # ~3.2V
+        Color("amber"): "5e-18",    # ~2.1V
+        Color("orange"): "1e-17",   # ~2.0V
+        Color("pink"): "1e-19",     # ~2.8V
+        Color("uv"): "1e-21",       # ~3.5V
+        Color("rgb"): "1e-20",      # ~3.2V
+        Color("other"): "1e-17",    # ~2.0V
+    }
+    
+    args = {
+        "IS": color_is_values.get(color, "1e-17"),
+        "N": "2.0",     # Ideality factor for LEDs
+        "RS": "1",      # Series resistance
+        "CJO": "10p",   # Junction capacitance
+    }
+    
+    # Note: forward_voltage and forward_current are for documentation/BOM only
+    # SPICE uses IS and N to determine the I-V characteristics
+        
+    return args
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -89,6 +138,12 @@ Component(
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     prefix="D",
+    spice_model=SpiceModel(
+        "//simulation/Led.lib",
+        _spice_subcircuit_name(color),
+        nets=[A, K],
+        args=_spice_args(color, forward_voltage, forward_current),
+    ),
     pins={
         "K": K,
         "A": A,
