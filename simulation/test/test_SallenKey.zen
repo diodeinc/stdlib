@@ -27,7 +27,7 @@ OperationalAmplifier(
 )
 
 
-# pcb:sch OPAMP.R x=392.7000 y=62.5000 rot=0
+# pcb:sch OPAMP.U x=392.7000 y=62.5000 rot=0
 # pcb:sch OPAMP_C1.C x=435.8800 y=-64.5000 rot=270
 # pcb:sch OPAMP_C2.C x=270.7800 y=240.3000 rot=0
 # pcb:sch OPAMP_R1.R x=103.1400 y=75.2000 rot=270
