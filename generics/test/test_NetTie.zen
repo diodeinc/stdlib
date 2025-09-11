@@ -7,6 +7,8 @@ NetTie = Module("../NetTie.zen")
 # Test combinations of MountType, PadSize, and pin_count
 for variant in NetTie.Variant.values():
     name = "NT_" + str(variant)
+    # replace "." with "_" in name:
+    name = name.replace(".", "_")
 
     NetTie(
         name = name,
