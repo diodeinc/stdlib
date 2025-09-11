@@ -87,6 +87,12 @@ Component(
         "1": P1,
         "2": P2,
     },
+    spice_model=SpiceModel(
+        "//simulation/Inductor.lib",
+        "L",
+        nets=[P1, P2],
+        args={"LVAL": str(value.value)},
+    ),
     properties=properties,
     type="inductor",
 )
