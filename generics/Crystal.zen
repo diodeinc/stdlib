@@ -111,6 +111,46 @@ def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     return pins
 
 
+def _spice_subcircuit_name(package: Package):
+    """Returns the appropriate SPICE subcircuit name based on package."""
+    if "4Pin" in str(package):
+        return "XTAL_4PIN"
+    else:
+        return "XTAL_2PIN"
+
+
+def _spice_nets(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
+    """Returns the nets list for SPICE model based on package."""
+    if "4Pin" in str(package):
+        if not GND:
+            error("GND is required for 4-pin crystal SPICE model")
+        return [XIN, XOUT, GND]
+    else:
+        return [XIN, XOUT]
+
+
+def _spice_args(frequency, load_capacitance, package):
+    """Returns SPICE arguments based on crystal parameters."""
+    args = {
+        "FREQ": str(frequency.value),  # Frequency in Hz
+        "Cm": "10f",   # Motional capacitance (typical 10fF)
+        "Rm": "50",    # ESR/motional resistance (typical 50 ohms)
+        "Cp": "3p",    # Parallel capacitance (typical 3pF)
+    }
+    
+    # Add case capacitance for 4-pin crystals
+    if "4Pin" in str(package):
+        args["Ccase"] = "1p"  # Case capacitance to ground (typical 1pF)
+    
+    # If load capacitance is specified, adjust Cp accordingly
+    # The parallel capacitance contributes to the load capacitance
+    if load_capacitance:
+        # Cp is typically much smaller than CL
+        args["Cp"] = str(load_capacitance.value / 5)  # Rough approximation
+        
+    return args
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -120,6 +160,12 @@ Component(
     prefix="Y",
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
+    spice_model=SpiceModel(
+        "//simulation/Crystal.lib",
+        _spice_subcircuit_name(package),
+        nets=_spice_nets(package, XIN, XOUT, GND),
+        args=_spice_args(frequency, load_capacitance, package),
+    ),
     pins=_pins(package, XIN, XOUT, GND),
     properties=properties,
     type="crystal",
