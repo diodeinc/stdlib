@@ -24,6 +24,8 @@ properties = config_properties({
     "diameter": diameter,
     "standard": standard,
     "plating": plating,
+    "do_not_populate": True,
+    "exclude_from_bom": True,
 })
 
 # -----------------------------------------------------------------------------
