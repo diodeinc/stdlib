@@ -1,3 +1,6 @@
 
-simulation:
+sim:
     pcb sim simulation/test/test_VoltageDivider.zen --setup simulation/test/test_VoltageDivider.sp -o - | ngspice
+    pcb sim simulation/test/test_InvertingSum.zen --setup simulation/test/test_InvertingSum.sp -o - | ngspice
+    pcb sim simulation/test/test_LevelShifter.zen --setup simulation/test/test_LevelShifter.sp -o - | ngspice
+    pcb sim simulation/test/test_SallenKey.zen --setup simulation/test/test_SallenKey.sp -o - | ngspice

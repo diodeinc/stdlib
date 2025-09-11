@@ -11,8 +11,5 @@ V3 INPUT GND DC 1 SIN(0 1V 1000)
   set hcopydevtype = svg
   
   * Time domain plot of input and output
-  hardcopy simulation/test/output/levelshifter_time.svg v(INPUT) v(PROBE) title "Level Shifter - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
-  
-  * Time domain plot - zoomed to first few cycles
-  hardcopy simulation/test/output/levelshifter_time_zoom.svg v(INPUT) v(PROBE) xlimit 0 5m title "Level Shifter - Time Domain (Zoomed)" xlabel "Time (s)" ylabel "Voltage (V)" 
+  hardcopy simulation/test/output/levelshifter.svg v(INPUT) v(VOFFSET) v(PROBE) title "Level Shifter - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc

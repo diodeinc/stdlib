@@ -5,11 +5,11 @@ pcb sim generics/spice/test/test_LevelShifter.zen \
     -o - | ngspice
 """
 
-load("../../../amplifiers.zen", "level_shifter", "sallen_key_lowpass")
-load("../../../interfaces.zen", "Ground", "Opamp", "Power")
+load("//amplifiers.zen", "level_shifter", "sallen_key_lowpass")
+load("//interfaces.zen", "Ground", "Opamp", "Power")
 
-OperationalAmplifier = Module("../../OperationalAmplifier.zen")
-Resistor = Module("../../Resistor.zen")
+OperationalAmplifier = Module("//generics/OperationalAmplifier.zen")
+Resistor = Module("//generics/Resistor.zen")
 
 VP = Power("VP")
 VN = Power("VN")

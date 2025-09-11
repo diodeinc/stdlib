@@ -5,18 +5,18 @@ pcb sim generics/spice/test/test_LevelShifter.zen \
     -o - | ngspice
 """
 
-load("../../../amplifiers.zen", "inverting_sum", "sallen_key_lowpass")
-load("../../../interfaces.zen", "Ground", "Opamp", "Power")
+load("//amplifiers.zen", "inverting_sum", "sallen_key_lowpass")
+load("//interfaces.zen", "Ground", "Opamp", "Power")
 
 OperationalAmplifier = Module("//generics/OperationalAmplifier.zen")
 Resistor = Module("//generics/Resistor.zen")
 
 VP = Power("VP")
 VN = Power("VN")
-INPUT_SIGNAL = Net("INPUT_1")
-INPUT_OFFSET = Net("INPUT_2")
+INPUT_SIGNAL = Net("INPUT_SIGNAL")
+INPUT_OFFSET = Net("INPUT_OFFSET")
 STAGE = Net("STAGE")
-PROBE = Net("PROBE")
+INVERTING_SUM = Net("INVERTING_SUM")
 GND = Ground()
 VOFFSET = Net("VOFFSET")
 
@@ -24,42 +24,22 @@ OPA1 = inverting_sum(
     name = "OPAMP",
     GND = GND,
     INPUTS = [INPUT_SIGNAL, INPUT_OFFSET],
-    OUT = STAGE,
+    OUT = INVERTING_SUM,
     gain = 1.0,
 )
 
-OPA2 = sallen_key_lowpass(
-    name = "OPAMP",
-    GND = GND,
-    IN = PROBE,
-    OUT = PROBE,
-    frequency = "500Hz",
-)
-
 OperationalAmplifier(
-    name = "BUFFER",
+    name = "INVERTING_SUM",
     VP = VP,
     VN = VN,
     OPA1 = OPA1,
 )
 
-OperationalAmplifier(
-    name = "LOWPASS",
-    VP = VP,
-    VN = VN,
-    OPA1 = OPA2,
-)
-
-
-# pcb:sch OPAMP_RA.R x=-87.3600 y=443.5000 rot=270
-# pcb:sch OPAMP_RB.R x=-239.7600 y=494.3000 rot=0
-# pcb:sch OPAMP_RI0.R x=-392.1600 y=240.3000 rot=270
-# pcb:sch OPAMP_RI1.R x=-392.1600 y=316.5000 rot=270
-
 # pcb:sch BUFFER.R x=-204.2000 y=227.6000 rot=0
-# pcb:sch OPAMP_R_F.R x=-138.1600 y=468.9000 rot=270
-# pcb:sch OPAMP_R_I0.R x=-417.5600 y=354.6000 rot=270
+# pcb:sch INVERTING_SUM.R x=-102.6000 y=227.6000 rot=0
+# pcb:sch OPAMP_R_F.R x=-49.2600 y=443.5000 rot=270
+# pcb:sch OPAMP_R_I0.R x=-417.5600 y=380.0000 rot=270
 # pcb:sch OPAMP_R_I1.R x=-417.5600 y=291.1000 rot=270
-# pcb:sch GND.1 x=-255.0000 y=214.9000 rot=0
-# pcb:sch VN_VCC.1 x=-161.0200 y=367.3000 rot=180
-# pcb:sch VP_VCC.1 x=-161.0200 y=202.2000 rot=0
+# pcb:sch GND.1 x=-255.0000 y=253.0000 rot=0
+# pcb:sch VN_VCC.1 x=-59.4200 y=367.3000 rot=180
+# pcb:sch VP_VCC.1 x=-59.4200 y=176.8000 rot=0

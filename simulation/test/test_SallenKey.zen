@@ -1,18 +1,13 @@
-"""Test for Spice model of Resistor.
+"""Test for Spice model of Resistor."""
 
-pcb sim generics/spice/test/test_SpiceOpamp.zen \
-    --setup generics/spice/test/test_SpiceOpamp.spice \
-    -o - | ngspice -i
-"""
+load("//amplifiers.zen", "sallen_key_lowpass", "voltage_follower")
+load("//interfaces.zen", "Ground", "Opamp", "Power")
 
-load("../../../amplifiers.zen", "sallen_key_lowpass", "voltage_follower")
-load("../../../interfaces.zen", "Ground", "Opamp", "Power")
-
-OperationalAmplifier = Module("../../OperationalAmplifier.zen")
+OperationalAmplifier = Module("//generics/OperationalAmplifier.zen")
 
 VP = Power("VP")
 VN = Power("VN")
-INPUT_SIGNAL = Net("INPUT")
+INPUT = Net("INPUT")
 PROBE = Net("PROBE")
 GND = Ground()
 
@@ -20,7 +15,7 @@ OPAMP = sallen_key_lowpass(
     name = "OPAMP",
     frequency = "1MHz",
     GND = GND,
-    IN = INPUT_SIGNAL,
+    IN = INPUT,
     OUT = PROBE,
 )
 
@@ -31,12 +26,12 @@ OperationalAmplifier(
     OPA1 = OPAMP,
 )
 
-# pcb:sch VN_VCC.1 x=435.8800 y=113.3000 rot=180
-# pcb:sch VP_VCC.1 x=435.8800 y=-115.3000 rot=0
 
 # pcb:sch OPAMP.R x=392.7000 y=62.5000 rot=0
 # pcb:sch OPAMP_C1.C x=435.8800 y=-64.5000 rot=270
-# pcb:sch OPAMP_C2.C x=296.1800 y=227.6000 rot=0
+# pcb:sch OPAMP_C2.C x=270.7800 y=240.3000 rot=0
 # pcb:sch OPAMP_R1.R x=103.1400 y=75.2000 rot=270
 # pcb:sch OPAMP_R2.R x=230.1400 y=75.2000 rot=270
-# pcb:sch GND.1 x=303.8000 y=354.6000 rot=0
+# pcb:sch GND.1 x=278.4000 y=354.6000 rot=0
+# pcb:sch VN_VCC.1 x=435.8800 y=214.9000 rot=180
+# pcb:sch VP_VCC.1 x=435.8800 y=24.4000 rot=0
