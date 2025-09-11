@@ -14,8 +14,8 @@ V3 INPUT GND DC 1V AC 1V
   set hcopydevtype = svg
   
   * Amplitude response plot  
-  hardcopy build/sallenkey_amplitude.svg mag(PROBE) title "Sallen Key 1M - Amplitude Response" ylabel V
+  hardcopy simulation/test/output/sallenkey_amplitude.svg mag(PROBE) title "Sallen Key 1M - Amplitude Response" ylabel V
   
   * Phase response plot
-  hardcopy build/sallenkey_phase.svg vp(PROBE) title "Sallen Key 1M - Phase Response" ylabel rad 
+  hardcopy simulation/test/output/sallenkey_phase.svg vp(PROBE) title "Sallen Key 1M - Phase Response" ylabel rad 
 .endc

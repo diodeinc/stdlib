@@ -1,13 +1,13 @@
 """Test for Spice model of Resistor.
 
-pcb sim generics/spice/test/test_SpiceRDIV.zen \
-    --setup generics/spice/test/test_SpiceRDIV.spice \
+pcb sim simulation/test/test_VoltageDivider.zen \
+    --setup simulation/test/test_VoltageDivider.spice \
     -o - | ngspice -i
 """
 
-load("../../../interfaces.zen", "Ground", "Power")
+load("../../interfaces.zen", "Ground", "Power")
 
-Resistor = Module("../../Resistor.zen")
+Resistor = Module("../../generics/Resistor.zen")
 
 VCC = Power()
 PROBE = Net("PROBE")
