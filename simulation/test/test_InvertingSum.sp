@@ -2,7 +2,7 @@ V1 VP_VCC GND DC 12V
 V2 VN_VCC GND DC -12V
 
 V3 INPUT_1 GND DC 1 SIN(0 1V 1000)
-V4 INPUT_2 GND DC 2
+V4 INPUT_2 GND DC 3
 
 .control
   * Time domain analysis - show 5 cycles of 1kHz signal
@@ -12,5 +12,5 @@ V4 INPUT_2 GND DC 2
   set hcopydevtype = svg
   
   * Time domain plot of input and output
-  hardcopy build/inverting_sum.svg v(INPUT_1) v(INPUT_2) v(PROBE) title "Inverting Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy simulation/test/output/inverting_sum.svg v(INPUT_1) v(INPUT_2) v(PROBE) title "Inverting Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc

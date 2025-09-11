@@ -95,7 +95,7 @@ Component(
         "P2": P2,
     },
     spice_model = SpiceModel(
-        "spice/Capacitor.lib",
+        "//simulation/Capacitor.lib",
         "C",
         nets=[P1, P2],
         args={"CVAL": str(value.value)},
