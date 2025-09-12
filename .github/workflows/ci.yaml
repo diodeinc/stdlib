@@ -32,6 +32,16 @@ jobs:
         run: |
           pcb help
 
+      - name: Check formatting (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          pcb fmt --check
+
+      - name: Check formatting (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pcb fmt --check
+
       - name: Build stdlib (Unix)
         if: runner.os != 'Windows'
         run: |
