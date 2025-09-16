@@ -57,6 +57,7 @@ properties = config_properties(
         "pin_count": pin_count,
         "exclude_from_bom": True,
         "do_not_populate": True,
+        "exclude_from_pos_files": True,
     }
 )
 

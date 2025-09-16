@@ -7,5 +7,6 @@ Component(
     properties={
         "do_not_populate": "true",
         "exclude_from_bom": "true",
+        "exclude_from_pos_files": "true",
     },
 )
