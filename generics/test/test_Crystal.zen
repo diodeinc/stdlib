@@ -15,8 +15,3 @@ for package in [package for package in Crystal.Package.values() if "4Pin" in str
     for mount in Crystal.Mount.values():
         name = "Y_" + str(package) + "_" + str(mount)
         Crystal(name = name, package = package, mount = mount, XIN = Net(name + "XIN"), XOUT = Net(name + "XOUT"), GND = Net(name + "GND"))
-
-Layout(
-    name = "preview",
-    path = "build/Crystal",
-)

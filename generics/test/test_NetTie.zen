@@ -38,8 +38,3 @@ NetTie(
     P1 = Net("P1"),
     P2 = Net("P2"),
 )
-
-Layout(
-    name = "preview",
-    path = "build/NetTie",
-)

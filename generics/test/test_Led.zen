@@ -19,8 +19,3 @@ for package in Led.Package.values():
             A = Net(name + "_A"),
             K = GND,
         )
-
-Layout(
-    name = "preview",
-    path = "build/Led",
-)

@@ -13,8 +13,3 @@ for orientation in PinHeader.Orientation.values():
 
                 # All combinations are valid for PinHeader
                 PinHeader(name = name, pins = positions, rows = rows, orientation = orientation, pitch = pitch, **pins)
-
-Layout(
-    name = "preview",
-    path = "build/PinHeader",
-) 

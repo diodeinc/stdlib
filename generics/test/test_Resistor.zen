@@ -26,10 +26,3 @@ Resistor(
     P1 = Net(name + "_P1"), 
     P2 = Net(name + "_P2"),
 )
-
-
-
-Layout(
-    name = "preview",
-    path = "build/Resistor",
-)
