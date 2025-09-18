@@ -18,8 +18,3 @@ for orientation in PinSocket.Orientation:
                     continue
 
                 PinSocket(name = name, pins = positions, rows = rows, orientation = orientation_str, pitch = pitch_str, **pins)
-
-Layout(
-    name = "preview",
-    path = "build/PinSocket",
-)

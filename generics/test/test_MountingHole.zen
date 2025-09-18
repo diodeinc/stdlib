@@ -28,8 +28,3 @@ for diameter in MountingHole.Diameter.values():
                     standard = standard,
                     plating = plating,
                 )
-
-Layout(
-    name = "preview",
-    path = "build/MountingHole",
-)

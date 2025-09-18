@@ -13,8 +13,3 @@ for variant in TestPoint.Variant.values():
         variant = variant,
         P1 = Net(name + "_P1"),
     )
-
-Layout(
-    name = "preview",
-    path = "build/TestPoint",
-)
