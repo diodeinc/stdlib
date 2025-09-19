@@ -8,11 +8,16 @@ FerriteBead = Module("../FerriteBead.zen")
 for package in FerriteBead.Package.values():
     name = "FB_" + str(package)
     FerriteBead(
-        name = name,
-        resistance = "100Ohm",
-        frequency = "100MHz",
-        current = "500mA",
-        package = package,
-        P1 = Net(name + "_P1"),
-        P2 = Net(name + "_P2"),
+        name=name,
+        resistance="100Ohm",
+        frequency="100MHz",
+        current="500mA",
+        package=package,
+        P1=Net(name + "_P1"),
+        P2=Net(name + "_P2"),
     )
+
+Layout(
+    name="preview",
+    path="build/FerriteBead",
+)

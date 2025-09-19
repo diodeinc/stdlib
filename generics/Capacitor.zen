@@ -15,27 +15,29 @@ Dielectric = enum("C0G", "NP0", "X5R", "X7R", "X7S", "X7T", "Y5V", "Z5U")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, default = Package("0603"))
+package = config("package", Package, default=Package("0603"))
 value = config_unit("value", Capacitance)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-voltage = config_unit("voltage", Voltage, optional = True)
-dielectric = config("dielectric", Dielectric, optional = True)
-esr = config_unit("esr", Resistance, optional = True)
-t_max = config_unit("t_max", Temperature, optional = True)
-t_min = config_unit("t_min", Temperature, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+voltage = config_unit("voltage", Voltage, optional=True)
+dielectric = config("dielectric", Dielectric, optional=True)
+esr = config_unit("esr", Resistance, optional=True)
+t_max = config_unit("t_max", Temperature, optional=True)
+t_min = config_unit("t_min", Temperature, optional=True)
 
 # Properties
-properties = config_properties({
-    "value": format_value(value, voltage, dielectric, esr),
-    "package": package,
-    "capacitance": value,
-    "voltage": voltage,
-    "dielectric": dielectric,
-    "esr": esr,
-    "type": "capacitor",
-})
+properties = config_properties(
+    {
+        "value": format_value(value, voltage, dielectric, esr),
+        "package": package,
+        "capacitance": value,
+        "voltage": voltage,
+        "dielectric": dielectric,
+        "esr": esr,
+        "type": "capacitor",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -48,11 +50,13 @@ P2 = io("P2", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _symbol(mount: Mount, package: Package):
     return {
         "library": "@kicad-symbols/Device.kicad_sym",
         "name": "C",
     }
+
 
 def _footprint(mount: Mount, package: Package):
     kicad_footprints = {
@@ -75,23 +79,30 @@ def _footprint(mount: Mount, package: Package):
 
     return kicad_footprints[(mount, package)]
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "C",
-    prefix = "C",
-    symbol = Symbol(**_symbol(mount, package)),
-    footprint = File(_footprint(mount, package)),
-    properties = properties,
-    type = "capacitor",
-    pin_defs = {
+    name="C",
+    prefix="C",
+    symbol=Symbol(**_symbol(mount, package)),
+    footprint=File(_footprint(mount, package)),
+    properties=properties,
+    type="capacitor",
+    pin_defs={
         "P1": "1",
         "P2": "2",
     },
-    pins = {
+    pins={
         "P1": P1,
         "P2": P2,
     },
+    spice_model=SpiceModel(
+        "//simulation/Capacitor.lib",
+        "C",
+        nets=[P1, P2],
+        args={"CVAL": str(value.value)},
+    ),
 )

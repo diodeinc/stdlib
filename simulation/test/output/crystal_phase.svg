@@ -1,0 +1,76 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+  width="100%" height="100%" viewBox="0 0 1024 768"
+  style="fill: none; font-family: Helvetica;
+ font: Helvetica;
+">
+
+<!-- Creator: NGspice -->
+
+<rect x="0" y="0" width="1024" height="768" fill="black" stroke="none"/>
+<text stroke="none" fill="white" font-size="16" x="358" y="752">
+"Frequency (Hz)"
+</text>
+<text transform="rotate(-90, 20, 469)"  stroke="none" fill="white" font-size="16" x="20" y="469">
+"Phase (degrees)"
+</text>
+<text stroke="none" fill="white" font-size="16" x="10" y="16">
+ac1: "Crystal Frequency Response - Phase"
+</text>
+<path stroke="white" d="M85 704l0 -636"/>
+<text stroke="none" fill="white" font-size="16" x="65" y="728">
+10^7
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M239 704l0 -636M349 704l0 -636M434 704l0 -636M504 704l0 -636M563 704l0 -636M614 704l0 -636M659 704l0 -636M699 704l0 -636M735 704l0 -636M768 704l0 -636M799 704l0 -636M827 704l0 -636M854 704l0 -636"/>
+<path stroke="white" stroke-dasharray="1,2" d="M878 704l0 -636M901 704l0 -636M923 704l0 -636M944 704l0 -636"/>
+<path stroke="white" d="M964 704l0 -636"/>
+<text stroke="none" fill="white" font-size="16" x="944" y="728">
+10^8
+</text>
+<text stroke="none" fill="white" font-size="16" x="614" y="752">
+Hz
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 704l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="712">
+-1.30
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 598l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="606">
+-1.25
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 492l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="500">
+-1.20
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 386l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="394">
+-1.15
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 280l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="288">
+-1.10
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 174l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="182">
+-1.05
+</text>
+<path stroke="white" stroke-dasharray="1,2" d="M85 68l879 0"/>
+<text stroke="none" fill="white" font-size="16" x="33" y="76">
+-1.00
+</text>
+<text stroke="none" fill="white" font-size="16" x="10" y="32">
+V
+</text>
+<path stroke="red" d="M439 23l43 0"/>
+<text stroke="none" fill="white" font-size="16" x="492" y="32">
+phase(v(xin))
+</text>
+<path stroke="red" d="M85 83l9 22 9 21 8 22 27 63 9 20 8 21 9 20 9 19 9 20 8 19 18 38 9 18 9 19 8 18 9 18 9 19 9 25 9 -4 8 22 18 34 9 15 9 16 8 15 9 15 9 14 9 15"/>
+<path stroke="blue" d="M85 23l43 0"/>
+<text stroke="none" fill="white" font-size="16" x="138" y="32">
+phase(v(xout))
+</text>
+<path stroke="blue" d="M85 95l9 22 9 21 8 22 9 21 9 20 9 21 9 20 8 20 9 20 9 19 9 20 8 19 9 18 9 19 18 36 8 18 18 36 9 25 9 -1 8 20 9 17 18 32 9 15 8 15 9 15 18 28"/>
+</svg>
