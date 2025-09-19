@@ -7,7 +7,7 @@ Resistor = Module("../../generics/Resistor.zen")
 
 VIN = Power("VIN")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 
 # Standard silicon diode
 Diode(

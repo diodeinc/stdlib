@@ -5,11 +5,11 @@ load("../../interfaces.zen", "Ground", "Power")
 Led = Module("../../generics/Led.zen")
 Resistor = Module("../../generics/Resistor.zen")
 
-VCC = Power()
+VCC = Power("VCC")
 PROBE_RED = Net("PROBE_RED")
 PROBE_GREEN = Net("PROBE_GREEN")
 PROBE_BLUE = Net("PROBE_BLUE")
-GND = Ground()
+GND = Ground("GND")
 
 # Red LED - ~1.8V forward voltage
 Led(

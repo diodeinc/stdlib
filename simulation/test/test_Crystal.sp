@@ -1,6 +1,6 @@
 # Test Crystal SPICE model - frequency response analysis
 # AC source for frequency sweep
-V1 VIN_VCC GND AC 1
+V1 VIN GND AC 1
 
 .control
   # AC frequency sweep around the 16MHz resonance

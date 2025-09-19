@@ -9,16 +9,17 @@ Resistor = Module("../../generics/Resistor.zen")
 VIN = Power("VIN")
 XIN = Net("XIN")
 XOUT = Net("XOUT")
-GND = Ground()
+GND = Ground("GND")
 
 # 16MHz crystal oscillator circuit
 Crystal(
     name="Y1",
-    package="3215_2Pin",
+    package="2016_4Pin",
     frequency="16MHz",
     load_capacitance="12pF",
     XIN=XIN,
     XOUT=XOUT,
+    GND=GND,
 )
 
 # Load capacitors (typical Pierce oscillator configuration)

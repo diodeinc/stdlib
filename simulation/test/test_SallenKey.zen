@@ -9,7 +9,7 @@ VP = Power("VP")
 VN = Power("VN")
 INPUT = Net("INPUT")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 
 OPAMP = sallen_key_lowpass(
     name="OPAMP",

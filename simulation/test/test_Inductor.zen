@@ -5,9 +5,9 @@ load("../../interfaces.zen", "Ground", "Power")
 Inductor = Module("../../generics/Inductor.zen")
 Resistor = Module("../../generics/Resistor.zen")
 
-VCC = Power()
+VCC = Power("VCC")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 
 # Create an RL circuit to demonstrate inductor behavior with switching voltage
 # The inductor will oppose changes in current, creating exponential rise/fall

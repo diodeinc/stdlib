@@ -11,7 +11,7 @@ VN = Power("VN")
 INPUT_SIGNAL = Net("INPUT_SIGNAL")
 INPUT_OFFSET = Net("INPUT_OFFSET")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 VOFFSET = Net("VOFFSET")
 
 OPA1 = noninverting_sum(
