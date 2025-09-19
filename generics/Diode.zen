@@ -85,7 +85,7 @@ def _spice_subcircuit_name(variant: Variant):
     """Returns the appropriate SPICE subcircuit name based on variant."""
     subcircuits = {
         Variant("Standard"): "D",
-        Variant("Schottky"): "D_Schottky", 
+        Variant("Schottky"): "D_Schottky",
         Variant("Zener"): "D_Zener",
     }
     return subcircuits[variant]
@@ -97,35 +97,35 @@ def _spice_args(variant: Variant, v_f, i_f, v_r, i_r):
     if variant == Variant("Schottky"):
         args = {
             "IS": "1e-8",  # Higher saturation current for lower Vf
-            "N": "1.2",    # Slightly higher ideality factor
-            "RS": "5m",    # Lower series resistance
-            "CJO": "2p",   # Junction capacitance
+            "N": "1.2",  # Slightly higher ideality factor
+            "RS": "5m",  # Lower series resistance
+            "CJO": "2p",  # Junction capacitance
         }
     elif variant == Variant("Zener"):
         args = {
-            "IS": "1e-14", # Standard saturation current
-            "N": "1.0",    # Ideal factor
-            "RS": "10m",   # Series resistance
-            "BV": "5.1",   # Breakdown voltage (user configurable)
-            "IBV": "5m",   # Breakdown current
-            "CJO": "1p",   # Junction capacitance
+            "IS": "1e-14",  # Standard saturation current
+            "N": "1.0",  # Ideal factor
+            "RS": "10m",  # Series resistance
+            "BV": "5.1",  # Breakdown voltage (user configurable)
+            "IBV": "5m",  # Breakdown current
+            "CJO": "1p",  # Junction capacitance
         }
     else:  # Standard silicon diode
         args = {
-            "IS": "1e-14", # Saturation current for ~0.7V forward voltage
-            "N": "1.0",    # Ideality factor
-            "RS": "10m",   # Series resistance
-            "CJO": "1p",   # Junction capacitance
+            "IS": "1e-14",  # Saturation current for ~0.7V forward voltage
+            "N": "1.0",  # Ideality factor
+            "RS": "10m",  # Series resistance
+            "CJO": "1p",  # Junction capacitance
         }
-    
+
     # For Zener diodes, use reverse voltage as breakdown voltage
     if variant == Variant("Zener") and v_r:
         args["BV"] = str(v_r.value)
-        
+
     # Note: v_f and i_f are not directly used in SPICE diode models
     # The forward voltage is determined by IS and N parameters
     # Users can still specify them for documentation/BOM purposes
-        
+
     return args
 
 

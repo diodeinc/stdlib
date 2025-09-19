@@ -31,7 +31,7 @@ Resistor(
 
 # Green LED - ~2.2V forward voltage
 Led(
-    name="LED2", 
+    name="LED2",
     package="0603",
     color="green",
     A=VCC,
@@ -42,7 +42,7 @@ Led(
 Resistor(
     name="R2",
     value="140ohms",  # (5V - 2.2V) / 20mA = 140Ω
-    package="0603", 
+    package="0603",
     P1=PROBE_GREEN,
     P2=GND,
 )
@@ -51,12 +51,12 @@ Resistor(
 Led(
     name="LED3",
     package="0603",
-    color="blue", 
+    color="blue",
     A=VCC,
     K=PROBE_BLUE,
 )
 
-# Current limiting resistor for blue LED  
+# Current limiting resistor for blue LED
 Resistor(
     name="R3",
     value="90ohms",  # (5V - 3.2V) / 20mA = 90Ω

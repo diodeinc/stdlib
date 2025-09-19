@@ -185,13 +185,13 @@ def _spice_subcircuit_name(pin_count):
 def _spice_nets(P, pin_count):
     """Returns the nets list for SPICE model based on pin count."""
     nets = [P[0], P[1]]  # Always have at least 2 pins
-    
+
     if pin_count >= 3:
         nets.append(P[2])
-    
+
     if pin_count >= 4:
         nets.append(P[3])
-    
+
     return nets
 
 

@@ -7,7 +7,7 @@ Resistor = Module("../../generics/Resistor.zen")
 
 VCC = Power()
 NET1 = Net("NET1")
-NET2 = Net("NET2") 
+NET2 = Net("NET2")
 PROBE = Net("PROBE")
 GND = Ground()
 
@@ -29,7 +29,7 @@ Resistor(
 )
 
 Resistor(
-    name="R2", 
+    name="R2",
     value="1kOhm",
     package="0603",
     P1=NET2,
@@ -38,7 +38,7 @@ Resistor(
 
 Resistor(
     name="R3",
-    value="1kOhm", 
+    value="1kOhm",
     package="0603",
     P1=PROBE,
     P2=GND,
