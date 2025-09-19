@@ -15,23 +15,25 @@ Color = enum("red", "green", "blue", "yellow", "white", "amber", "orange", "pink
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert = Package)
-color = config("color", Color, convert = Color)
+package = config("package", Package, convert=Package)
+color = config("color", Color, convert=Color)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-forward_voltage = config_unit("forward_voltage", Voltage, optional = True)
-forward_current = config_unit("forward_current", Current, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
+forward_current = config_unit("forward_current", Current, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": format_value("LED", color.value.upper()),
-    "package": package,
-    "color": color,
-    "forward_voltage": forward_voltage,
-    "forward_current": forward_current,
-    "type": "led",
-})
+properties = config_properties(
+    {
+        "value": format_value("LED", color.value.upper()),
+        "package": package,
+        "color": color,
+        "forward_voltage": forward_voltage,
+        "forward_current": forward_current,
+        "type": "led",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -44,6 +46,7 @@ K = io("K", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _footprint(package: Package) -> str:
     kicad_footprints = {
         Package("0201"): "@kicad-footprints/LED_SMD.pretty/LED_0201_0603Metric.kicad_mod",
@@ -54,12 +57,15 @@ def _footprint(package: Package) -> str:
         Package("1210"): "@kicad-footprints/LED_SMD.pretty/LED_1210_3225Metric.kicad_mod",
         Package("2010"): "@kicad-footprints/LED_SMD.pretty/LED_2010_5025Metric.kicad_mod",
         Package("2512"): "@kicad-footprints/LED_SMD.pretty/LED_2512_6332Metric.kicad_mod",
-        Package("1210_Reverse"): "@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm.kicad_mod",
+        Package(
+            "1210_Reverse"
+        ): "@kicad-footprints/LED_SMD.pretty/LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm.kicad_mod",
         Package("1812"): "@kicad-footprints/LED_SMD.pretty/LED_1812_4532Metric.kicad_mod",
     }
     if package not in kicad_footprints:
         error("Invalid package: " + str(package))
     return kicad_footprints[package]
+
 
 def _symbol(_package: Package):
     return {
@@ -67,24 +73,26 @@ def _symbol(_package: Package):
         "name": "LED_Small_Filled",
     }
 
+
 def _value(color: Color, package: Package) -> str:
     color = str(color.value).title()
     package = str(package.value)
     return "LED {} {}".format(package, color)
+
 
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "LED",
-    symbol = Symbol(**_symbol(package)),
-    footprint = File(_footprint(package)),
-    prefix = "D",
-    pins = {
+    name="LED",
+    symbol=Symbol(**_symbol(package)),
+    footprint=File(_footprint(package)),
+    prefix="D",
+    pins={
         "K": K,
         "A": A,
     },
-    properties = properties,
-    type = "led",
+    properties=properties,
+    type="led",
 )

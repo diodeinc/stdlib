@@ -23,6 +23,7 @@ SolderJumperVariant = enum(
 )
 SolderJumperPitch = enum("P1.3mm", "P2.0mm")
 
+
 def _get_symbol(pin_count, style):
     """Returns the appropriate solder jumper symbol based on pin count and style."""
     if pin_count == 2:
@@ -38,23 +39,27 @@ def _get_symbol(pin_count, style):
         else:
             return "Jumper:SolderJumper_3_Bridged123"
 
+
 # -----------------------------------------------------------------------------
 # Component parameters
 # -----------------------------------------------------------------------------
 
-pin_count = config("pin_count", int, default = 2, optional = True)
-style = config("style", SolderJumperStyle, convert = SolderJumperStyle)
-variant = config("variant", SolderJumperVariant, convert = SolderJumperVariant)
-pitch = config("pitch", SolderJumperPitch, default = SolderJumperPitch("P1.3mm"), optional = True)
+pin_count = config("pin_count", int, default=2, optional=True)
+style = config("style", SolderJumperStyle, convert=SolderJumperStyle)
+variant = config("variant", SolderJumperVariant, convert=SolderJumperVariant)
+pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(exclude_from_bom = True, properties = {
-    "value": "",
-    "pin_count": pin_count,
-    "style": style,
-    "variant": variant,
-    "pitch": pitch,
-})
+properties = config_properties(
+    exclude_from_bom=True,
+    properties={
+        "value": "",
+        "pin_count": pin_count,
+        "style": style,
+        "variant": variant,
+        "pitch": pitch,
+    },
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -65,6 +70,7 @@ P = [io("P{}".format(i), Net) for i in range(1, pin_count + 1)]
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _footprint(pin_count, style, variant, pitch):
     # Simplified mapping for common solder jumper footprints
@@ -80,6 +86,7 @@ def _footprint(pin_count, style, variant, pitch):
             return "@kicad-footprints/Jumper.pretty/SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm.kicad_mod"
     else:
         error("Unsupported pin count: {}".format(pin_count))
+
 
 def _symbol(pin_count):
     """Returns the appropriate jumper symbol based on pin count."""
@@ -98,6 +105,7 @@ def _symbol(pin_count):
     else:
         error("Unsupported pin count: {}".format(pin_count))
 
+
 def _pins_and_connections(pin_count):
     # pin_defs: mapping of pin name to pin number as string
     # pins: mapping of pin name to net (if connected)
@@ -112,6 +120,7 @@ def _pins_and_connections(pin_count):
             pins[pin_name] = net
     return pins, pin_defs
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -119,10 +128,10 @@ def _pins_and_connections(pin_count):
 pins, pin_defs = _pins_and_connections(pin_count)
 
 Component(
-    name = "SJ",
-    symbol = Symbol(**_symbol(pin_count)),
-    footprint = File(_footprint(pin_count, style, variant, pitch)),
-    prefix = "JP",
-    pins = pins,
-    properties = properties,
+    name="SJ",
+    symbol=Symbol(**_symbol(pin_count)),
+    footprint=File(_footprint(pin_count, style, variant, pitch)),
+    prefix="JP",
+    pins=pins,
+    properties=properties,
 )

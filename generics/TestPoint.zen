@@ -79,10 +79,12 @@ Variant = enum(
 variant = config("variant", Variant)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": " ",
-    "variant": variant,
-})
+properties = config_properties(
+    {
+        "value": " ",
+        "variant": variant,
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -94,11 +96,13 @@ P1 = io("P1", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _symbol(variant: Variant):
     return {
         "library": "@kicad-symbols/Connector.kicad_sym",
         "name": "TestPoint",
     }
+
 
 def _footprint(variant):
     # Simplified mapping for most common test point footprints
@@ -117,9 +121,15 @@ def _footprint(variant):
         Variant("Pad_3.0x3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_3.0x3.0mm.kicad_mod",
         Variant("Pad_4.0x4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_4.0x4.0mm.kicad_mod",
         # THT variants
-        Variant("THTPad_D1.0mm_Drill0.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod",
-        Variant("THTPad_D1.5mm_Drill0.7mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod",
-        Variant("THTPad_D2.0mm_Drill1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod",
+        Variant(
+            "THTPad_D1.0mm_Drill0.5mm"
+        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod",
+        Variant(
+            "THTPad_D1.5mm_Drill0.7mm"
+        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod",
+        Variant(
+            "THTPad_D2.0mm_Drill1.0mm"
+        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod",
     }
 
     if variant in common_footprints:
@@ -128,17 +138,18 @@ def _footprint(variant):
         # Default to a common pad variant for unsupported ones
         return "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod"
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "TP",
-    symbol = Symbol(**_symbol(variant)),
-    footprint = File(_footprint(variant)),
-    prefix = "TP",
-    pins = {
+    name="TP",
+    symbol=Symbol(**_symbol(variant)),
+    footprint=File(_footprint(variant)),
+    prefix="TP",
+    pins={
         "1": P1,
     },
-    properties = properties,
+    properties=properties,
 )

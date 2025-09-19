@@ -1,10 +1,10 @@
 Component(
-    name = "Version",
-    prefix = "V",
-    symbol = Symbol("./footprints/version-symbol.kicad_sym"),
-    footprint = File("./footprints/version-footprint.kicad_mod"),
-    pins = {},
-    properties = {
+    name="Version",
+    prefix="V",
+    symbol=Symbol("./footprints/version-symbol.kicad_sym"),
+    footprint=File("./footprints/version-footprint.kicad_mod"),
+    pins={},
+    properties={
         "do_not_populate": "true",
         "exclude_from_bom": "true",
     },

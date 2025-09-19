@@ -12,4 +12,4 @@ for orientation in PinHeader.Orientation.values():
                 name = name.replace(".", "_")
 
                 # All combinations are valid for PinHeader
-                PinHeader(name = name, pins = positions, rows = rows, orientation = orientation, pitch = pitch, **pins)
+                PinHeader(name=name, pins=positions, rows=rows, orientation=orientation, pitch=pitch, **pins)

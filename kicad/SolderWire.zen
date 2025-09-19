@@ -17,14 +17,14 @@ SolderWireSize = Size
 # -----------------------------------------------------------------------------
 
 # Required
-size = config("size", Size, default = Size("SMD_1x2mm"), convert = Size)
+size = config("size", Size, default=Size("SMD_1x2mm"), convert=Size)
 
 # Properties – combined and normalized
 properties = config_properties(
-    properties = {
+    properties={
         "size": size,
     },
-    exclude_from_bom = True,
+    exclude_from_bom=True,
 )
 
 # -----------------------------------------------------------------------------
@@ -37,11 +37,13 @@ P1 = io("P1", Net)
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _symbol(size: SolderWireSize):
     return {
         "library": "@kicad-symbols/Connector_Generic.kicad_sym",
         "name": "Conn_01x01",
     }
+
 
 def _footprint(size: SolderWireSize) -> str:
     """Returns the appropriate solder wire pad footprint based on the size."""
@@ -54,15 +56,16 @@ def _footprint(size: SolderWireSize) -> str:
         error("Invalid size: " + str(size))
     return footprints[size]
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "SW",
-    symbol = Symbol(**_symbol(size)),
-    footprint = File(_footprint(size)),
-    prefix = "P",
-    pins = {"Pin_1": P1},
-    properties = properties,
+    name="SW",
+    symbol=Symbol(**_symbol(size)),
+    footprint=File(_footprint(size)),
+    prefix="P",
+    pins={"Pin_1": P1},
+    properties=properties,
 )

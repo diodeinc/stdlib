@@ -7,6 +7,17 @@ on:
     branches: [main]
 
 jobs:
+  fmt:
+    runs-on: ubuntu-large
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install pcb
+        uses: diodeinc/pcb-action/setup@v2
+      - name: Check formatting
+        run: |
+          pcb fmt . --check
+
   build-matrix:
     strategy:
       fail-fast: false
@@ -20,7 +31,6 @@ jobs:
           - name: Ubuntu
             runs-on: ubuntu-large
     runs-on: ${{ matrix.config.runs-on }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

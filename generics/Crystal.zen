@@ -27,21 +27,23 @@ Package = enum(
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert = Package)
+package = config("package", Package, convert=Package)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-load_capacitance = config_unit("load_capacitance", Capacitance, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+load_capacitance = config_unit("load_capacitance", Capacitance, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": format_value(frequency, load_capacitance),
-    "package": package,
-    "frequency": frequency,
-    "load_capacitance": load_capacitance,
-    "type": "crystal",
-})
+properties = config_properties(
+    {
+        "value": format_value(frequency, load_capacitance),
+        "package": package,
+        "frequency": frequency,
+        "load_capacitance": load_capacitance,
+        "type": "crystal",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -52,11 +54,12 @@ XIN = io("XIN", Net)
 XOUT = io("XOUT", Net)
 
 # Additional pins for 4-pin crystals
-GND = io("GND", Net, optional = True)
+GND = io("GND", Net, optional=True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _symbol(package: Package):
     if "2Pin" in str(package):
@@ -69,6 +72,7 @@ def _symbol(package: Package):
             "library": "@kicad-symbols/Device.kicad_sym",
             "name": "Crystal_GND24",
         }
+
 
 def _footprint(package: Package):
     _footprints = {
@@ -88,6 +92,7 @@ def _footprint(package: Package):
 
     return _footprints[package]
 
+
 def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
         if not GND:
@@ -105,16 +110,17 @@ def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
         }
     return pins
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "Y",
-    prefix = "Y",
-    symbol = Symbol(**_symbol(package)),
-    footprint = File(_footprint(package)),
-    pins = _pins(package, XIN, XOUT, GND),
-    properties = properties,
-    type = "crystal",
+    name="Y",
+    prefix="Y",
+    symbol=Symbol(**_symbol(package)),
+    footprint=File(_footprint(package)),
+    pins=_pins(package, XIN, XOUT, GND),
+    properties=properties,
+    type="crystal",
 )
