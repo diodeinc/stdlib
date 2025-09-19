@@ -14,7 +14,10 @@ jobs:
       - uses: diodeinc/pcb-action/setup@v2
         with:
           version: HEAD
-      - run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
+      - name: Build .zen files
+        run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
+      - name: Check formatting
+        run: pcb fmt . --check
 
   test-latest:
     strategy:
