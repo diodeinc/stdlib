@@ -7,38 +7,29 @@ on:
     branches: [main]
 
 jobs:
-  build-matrix:
+  test-head:
+    runs-on: ubuntu-large
+    steps:
+      - uses: actions/checkout@v4
+      - uses: diodeinc/pcb-action/setup@v2
+        with:
+          version: HEAD
+      - run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
+
+  test-latest:
     strategy:
       fail-fast: false
       matrix:
-        pcb-version: [HEAD, latest]
-        config:
-          - name: Windows
-            runs-on: windows-large
-          - name: macOS
-            runs-on: macos-15-xlarge
-          - name: Ubuntu
-            runs-on: ubuntu-large
-    runs-on: ${{ matrix.config.runs-on }}
-
+        os: [ubuntu-large, macos-15-xlarge, windows-large]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install pcb
-        uses: diodeinc/pcb-action/setup@v2
+      - uses: actions/checkout@v4
+      - uses: diodeinc/pcb-action/setup@v2
         with:
-          version: ${{ matrix.pcb-version }}
-
-      - name: Verify pcb installation
-        run: |
-          pcb help
-
+          version: latest
       - name: Build .zen files (Unix)
         if: runner.os != 'Windows'
-        run: |
-          pcb build $(find . -name "*.zen" -type f) -Dwarnings
-
+        run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
       - name: Build .zen files (Windows)
         if: runner.os == 'Windows'
         run: |
