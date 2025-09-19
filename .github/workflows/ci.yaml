@@ -48,4 +48,4 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           $files = Get-ChildItem -Path . -Filter "*.zen" -Recurse | Select-Object -ExpandProperty FullName
-          pcb build $files
+          pcb build $files -Dwarnings
