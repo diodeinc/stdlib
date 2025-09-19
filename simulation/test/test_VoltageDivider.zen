@@ -4,9 +4,9 @@ load("../../interfaces.zen", "Ground", "Power")
 
 Resistor = Module("../../generics/Resistor.zen")
 
-VCC = Power()
+VCC = Power("VCC")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 
 Resistor(
     name="R1",

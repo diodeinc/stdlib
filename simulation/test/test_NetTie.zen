@@ -5,11 +5,11 @@ load("../../interfaces.zen", "Ground", "Power")
 NetTie = Module("../../generics/NetTie.zen")
 Resistor = Module("../../generics/Resistor.zen")
 
-VCC = Power()
+VCC = Power("VCC")
 NET1 = Net("NET1")
 NET2 = Net("NET2")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 
 # Create a 2-pin net tie connecting two nets
 NetTie(

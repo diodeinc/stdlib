@@ -10,7 +10,7 @@ VP = Power("VP")
 VN = Power("VN")
 INPUT_SIGNAL = Net("INPUT")
 PROBE = Net("PROBE")
-GND = Ground()
+GND = Ground("GND")
 VOFFSET = Net("VOFFSET")
 
 OPA1, OPA2 = level_shifter(

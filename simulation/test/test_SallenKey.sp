@@ -1,8 +1,8 @@
 * Ground node
 
 * Positive and negative rails
-V1 VP_VCC GND DC 12V 
-V2 VN_VCC GND DC -12V
+V1 VP GND DC 12V 
+V2 VN GND DC -12V
 
 * Input stimulus for AC analysis. 0V - 1.8V (centered at 0.9V, 0.9V peak AC)
 V3 INPUT GND DC 0.9 AC 0.9

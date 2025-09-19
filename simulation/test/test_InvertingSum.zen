@@ -12,7 +12,7 @@ INPUT_SIGNAL = Net("INPUT_SIGNAL")
 INPUT_OFFSET = Net("INPUT_OFFSET")
 STAGE = Net("STAGE")
 INVERTING_SUM = Net("INVERTING_SUM")
-GND = Ground()
+GND = Ground("GND")
 VOFFSET = Net("VOFFSET")
 
 OPA1 = inverting_sum(
