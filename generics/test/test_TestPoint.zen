@@ -9,7 +9,7 @@ for variant in TestPoint.Variant.values():
     # Replace dots and special characters in variant name for valid component names
     name = "TP_" + str(variant).replace(".", "_").replace("x", "x")
     TestPoint(
-        name = name,
-        variant = variant,
-        P1 = Net(name + "_P1"),
+        name=name,
+        variant=variant,
+        P1=Net(name + "_P1"),
     )
