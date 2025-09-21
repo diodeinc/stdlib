@@ -100,7 +100,7 @@ def sallen_key_lowpass(
 
     R1 = Resistance(m * R)
     R2 = Resistance(R / m)
-    C1 = C * n 
+    C1 = C * n
     C2 = C / n
 
     IN_P = Net(name + "_IN_P")
