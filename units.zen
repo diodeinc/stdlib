@@ -16,5 +16,9 @@ Energy = builtin.Energy
 MagneticFlux = builtin.MagneticFlux
 Conductance = builtin.Conductance
 
+
 def unit(spec, type):
+    # TODO: remove after https://github.com/diodeinc/pcb/pull/172
+    if "hz" in spec:
+        spec = spec.replace("hz", "Hz")
     return type(spec)
