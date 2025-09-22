@@ -98,6 +98,7 @@ Component(
             "tag_type": tag_type,
             "exclude_from_bom": True,
             "do_not_populate": True,
+            "exclude_from_pos_files": True,
         },
     ),
 )

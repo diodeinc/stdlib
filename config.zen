@@ -27,7 +27,10 @@ def config_unit(name, UnitType, optional=False, default=None, **kwargs):
 
 
 def config_properties(
-    properties: dict | None, exclude_from_bom: bool | None = None, do_not_populate: bool | None = None
+    properties: dict | None,
+    exclude_from_bom: bool | None = None,
+    do_not_populate: bool | None = None,
+    exclude_from_pos_files: bool | None = None,
 ) -> dict:
     """Generate component properties with automatic Value field generation.
 
@@ -45,6 +48,7 @@ def config_properties(
             package). Keys are normalized to capitalize the first letter.
         exclude_from_bom: Whether to exclude the component from the BOM.
         do_not_populate: Whether to not populate the component in the schematic.
+        exclude_from_pos_files: Whether to exclude the component from the POS files.
 
     Returns:
         dict: Complete property dictionary with normalized keys and generated
@@ -66,6 +70,7 @@ def config_properties(
     mpn = config("mpn", str, optional=True)
     do_not_populate = do_not_populate or config("do_not_populate", bool, optional=True)
     exclude_from_bom = exclude_from_bom or config("exclude_from_bom", bool, optional=True)
+    exclude_from_pos_files = exclude_from_pos_files or config("exclude_from_pos_files", bool, optional=True)
 
     # Build result dictionary
     result = {}
@@ -79,6 +84,7 @@ def config_properties(
     add_property(result, "mpn", mpn)
     add_property(result, "do_not_populate", do_not_populate)
     add_property(result, "exclude_from_bom", exclude_from_bom)
+    add_property(result, "exclude_from_pos_files", exclude_from_pos_files)
 
     # Add user properties (these override others)
     if user_properties:
@@ -93,7 +99,7 @@ def config_properties(
     # If Value is not set, generate it from the other properties
     if not result.get("Value", None):
         # Metadata keys to exclude from Value generation
-        META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Value", "Alternatives"]
+        META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Exclude_from_pos_files", "Value", "Alternatives"]
         value_parts = []
         for k, v in result.items():
             if k not in META_KEYS and not k.startswith("__") and v:

@@ -52,6 +52,7 @@ pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), 
 # Properties – combined and normalized
 properties = config_properties(
     exclude_from_bom=True,
+    exclude_from_pos_files=True,
     properties={
         "value": "",
         "pin_count": pin_count,

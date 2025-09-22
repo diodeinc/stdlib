@@ -25,6 +25,7 @@ properties = config_properties(
         "size": size,
     },
     exclude_from_bom=True,
+    exclude_from_pos_files=True,
 )
 
 # -----------------------------------------------------------------------------
