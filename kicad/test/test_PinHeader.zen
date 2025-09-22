@@ -7,11 +7,7 @@ for orientation in PinHeader.Orientation.values():
             for positions in range(1, 11):
                 pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * rows + 1)}
                 name = "PinHeader_" + orientation + "_" + pitch + "_" + str(positions) + "_" + str(rows)
+                name = name.replace(".", "_")
 
                 # All combinations are valid for PinHeader
                 PinHeader(name=name, pins=positions, rows=rows, orientation=orientation, pitch=pitch, **pins)
-
-Layout(
-    name="preview",
-    path="build/PinHeader",
-)

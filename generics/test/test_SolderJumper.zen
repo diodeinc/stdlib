@@ -11,6 +11,7 @@ for pin_count in [2, 3]:
         for variant in [SolderJumper.SolderJumperVariant.values()[0], SolderJumper.SolderJumperVariant.values()[1]]:
             for pitch in SolderJumper.SolderJumperPitch.values():
                 name = "SJ_" + str(pin_count) + "pin_" + str(style) + "_" + str(variant) + "_" + str(pitch)
+                name = name.replace(".", "_")
 
                 # Create the appropriate number of nets based on pin_count
                 nets = {}
@@ -18,8 +19,3 @@ for pin_count in [2, 3]:
                     nets["P{}".format(i)] = Net(name + "_P{}".format(i))
 
                 SolderJumper(name=name, pin_count=pin_count, style=style, variant=variant, pitch=pitch, **nets)
-
-Layout(
-    name="preview",
-    path="build/SolderJumper",
-)

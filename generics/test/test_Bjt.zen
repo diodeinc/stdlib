@@ -10,8 +10,3 @@ for package in Bjt.Package.values():
         for mount in Bjt.Mount.values():
             name = "Q_" + str(package) + "_" + str(bjt_type) + "_" + str(mount)
             Bjt(name=name, package=package, bjt_type=bjt_type, mount=mount, C=Net("C"), B=Net("B"), E=Net("E"))
-
-Layout(
-    name="preview",
-    path="build/Bjt",
-)

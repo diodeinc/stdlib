@@ -22,8 +22,3 @@ for package in [package for package in Crystal.Package.values() if "4Pin" in str
             XOUT=Net(name + "XOUT"),
             GND=Net(name + "GND"),
         )
-
-Layout(
-    name="preview",
-    path="build/Crystal",
-)

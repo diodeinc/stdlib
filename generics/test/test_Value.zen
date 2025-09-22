@@ -20,6 +20,3 @@ Capacitor(name="C1", value="1nF 10%", package="0603", dielectric="X7R", P1=Net("
 
 # Test multiple parameters with prefix
 Capacitor(name="C2", value="100nF 10%", package="0603", P1=Net("P1"), P2=Net("P2"))
-
-# Layout
-Layout(name="preview", path="build/Value")

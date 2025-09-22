@@ -3,5 +3,3 @@ load("../../properties.zen", "Layout")
 Version = Module("../Version.zen")
 
 Version(name="V1")
-
-Layout(name="preview", path="build/Version")

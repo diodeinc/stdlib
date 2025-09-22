@@ -19,8 +19,3 @@ for package in Capacitor.Package.values():
                 P1=Net(name + "P1"),
                 P2=Net(name + "P2"),
             )
-
-Layout(
-    name="preview",
-    path="build/Capacitor",
-)

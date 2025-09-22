@@ -6,8 +6,3 @@ for tag_type in TagConnect.TagConnectType:
     name = "TagConnect_" + tag_type.value
     pins = {"P{}".format(i): Net("P{}".format(i)) for i in range(1, TagConnect.PinCount(tag_type) + 1)}
     TagConnect(name=name, tag_type=tag_type.value, **pins)
-
-Layout(
-    name="preview",
-    path="build/TagConnect",
-)
