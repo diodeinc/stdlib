@@ -2,4 +2,4 @@ load("../../properties.zen", "Layout")
 
 Version = Module("../Version.zen")
 
-Version(name = "V1")
+Version(name="V1")

@@ -9,7 +9,7 @@ A configurable pin header component that supports:
 
 Example usage:
     PinHeader = Module("generics/PinHeader.zen")
-    
+
     PinHeader(
         name = "J1",
         pins = 5,
@@ -35,8 +35,8 @@ Pitch = enum(
 )
 
 Orientation = enum(
-    "Vertical",      # Vertical through-hole
-    "Horizontal",    # Horizontal through-hole (SMD style)
+    "Vertical",  # Vertical through-hole
+    "Horizontal",  # Horizontal through-hole (SMD style)
 )
 
 # -----------------------------------------------------------------------------
@@ -44,20 +44,22 @@ Orientation = enum(
 # -----------------------------------------------------------------------------
 
 # Required
-pins = config("pins", int, default = 1)
-rows = config("rows", int, default = 1)
-pitch = config("pitch", Pitch, default = Pitch("2.54mm"))
-orientation = config("orientation", Orientation, default = Orientation("Vertical"))
+pins = config("pins", int, default=1)
+rows = config("rows", int, default=1)
+pitch = config("pitch", Pitch, default=Pitch("2.54mm"))
+orientation = config("orientation", Orientation, default=Orientation("Vertical"))
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": " ",
-    "pins": pins,
-    "rows": rows,
-    "pitch": pitch,
-    "orientation": orientation,
-    "connector_type": "Pin Header",
-})
+properties = config_properties(
+    {
+        "value": " ",
+        "pins": pins,
+        "rows": rows,
+        "pitch": pitch,
+        "orientation": orientation,
+        "connector_type": "Pin Header",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -71,6 +73,7 @@ for i in range(1, pins * rows + 1):
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
     """Returns the appropriate PinHeader footprint based on parameters."""
@@ -96,6 +99,7 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
     # Construct the file path
     return "@kicad-footprints/Connector_PinHeader_" + pitch_str + ".pretty/" + footprint_name + ".kicad_mod"
 
+
 def _symbol(pins: int, rows: int):
     """Returns the appropriate generic connector symbol based on pin configuration."""
 
@@ -116,15 +120,16 @@ def _symbol(pins: int, rows: int):
         "name": symbol_name,
     }
 
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "PH",
-    symbol = Symbol(**_symbol(pins, rows)),
-    footprint = File(_footprint(pins, rows, pitch, orientation)),
-    prefix = "J",
-    pins = io_ports,
-    properties = properties,
-) 
+    name="PH",
+    symbol=Symbol(**_symbol(pins, rows)),
+    footprint=File(_footprint(pins, rows, pitch, orientation)),
+    prefix="J",
+    pins=io_ports,
+    properties=properties,
+)

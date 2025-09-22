@@ -27,21 +27,23 @@ Package = enum(
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert = Package)
+package = config("package", Package, convert=Package)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-load_capacitance = config_unit("load_capacitance", Capacitance, optional = True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+load_capacitance = config_unit("load_capacitance", Capacitance, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties({
-    "value": format_value(frequency, load_capacitance),
-    "package": package,
-    "frequency": frequency,
-    "load_capacitance": load_capacitance,
-    "type": "crystal",
-})
+properties = config_properties(
+    {
+        "value": format_value(frequency, load_capacitance),
+        "package": package,
+        "frequency": frequency,
+        "load_capacitance": load_capacitance,
+        "type": "crystal",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -52,11 +54,12 @@ XIN = io("XIN", Net)
 XOUT = io("XOUT", Net)
 
 # Additional pins for 4-pin crystals
-GND = io("GND", Net, optional = True)
+GND = io("GND", Net, optional=True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def _symbol(package: Package):
     if "2Pin" in str(package):
@@ -69,6 +72,7 @@ def _symbol(package: Package):
             "library": "@kicad-symbols/Device.kicad_sym",
             "name": "Crystal_GND24",
         }
+
 
 def _footprint(package: Package):
     _footprints = {
@@ -88,6 +92,7 @@ def _footprint(package: Package):
 
     return _footprints[package]
 
+
 def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
     if "4Pin" in str(package):
         if not GND:
@@ -105,16 +110,63 @@ def _pins(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
         }
     return pins
 
+
+def _spice_subcircuit_name(package: Package):
+    """Returns the appropriate SPICE subcircuit name based on package."""
+    if "4Pin" in str(package):
+        return "XTAL_4PIN"
+    else:
+        return "XTAL_2PIN"
+
+
+def _spice_nets(package: Package, XIN: Net, XOUT: Net, GND: Net | None):
+    """Returns the nets list for SPICE model based on package."""
+    if "4Pin" in str(package):
+        if not GND:
+            error("GND is required for 4-pin crystal SPICE model")
+        return [XIN, XOUT, GND]
+    else:
+        return [XIN, XOUT]
+
+
+def _spice_args(frequency, load_capacitance, package):
+    """Returns SPICE arguments based on crystal parameters."""
+    args = {
+        "FREQ": str(frequency.value),  # Frequency in Hz
+        "Cm": "10f",  # Motional capacitance (typical 10fF)
+        "Rm": "50",  # ESR/motional resistance (typical 50 ohms)
+        "Cp": "3p",  # Parallel capacitance (typical 3pF)
+    }
+
+    # Add case capacitance for 4-pin crystals
+    if "4Pin" in str(package):
+        args["Ccase"] = "1p"  # Case capacitance to ground (typical 1pF)
+
+    # If load capacitance is specified, adjust Cp accordingly
+    # The parallel capacitance contributes to the load capacitance
+    if load_capacitance:
+        # Cp is typically much smaller than CL
+        args["Cp"] = str(load_capacitance.value / 5)  # Rough approximation
+
+    return args
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "Y",
-    prefix = "Y",
-    symbol = Symbol(**_symbol(package)),
-    footprint = File(_footprint(package)),
-    pins = _pins(package, XIN, XOUT, GND),
-    properties = properties,
-    type = "crystal",
+    name="Y",
+    prefix="Y",
+    symbol=Symbol(**_symbol(package)),
+    footprint=File(_footprint(package)),
+    spice_model=SpiceModel(
+        "//simulation/Crystal.lib",
+        _spice_subcircuit_name(package),
+        nets=_spice_nets(package, XIN, XOUT, GND),
+        args=_spice_args(frequency, load_capacitance, package),
+    ),
+    pins=_pins(package, XIN, XOUT, GND),
+    properties=properties,
+    type="crystal",
 )

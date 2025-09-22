@@ -18,24 +18,26 @@ Mount = enum("SMD")
 package = config("package", Package)
 
 # Optional
-mount = config("mount", Mount, default = Mount("SMD"), optional = True)
-variant = config("variant", Variant, default = Variant("Standard"))
-v_f = config_unit("v_f", Voltage, optional = True)  # Forward voltage
-i_f = config_unit("i_f", Current, optional = True)  # Forward current
-v_r = config_unit("v_r", Voltage, optional = True)  # Reverse voltage
-i_r = config_unit("i_r", Current, optional = True)  # Reverse current
+mount = config("mount", Mount, default=Mount("SMD"), optional=True)
+variant = config("variant", Variant, default=Variant("Standard"))
+v_f = config_unit("v_f", Voltage, optional=True)  # Forward voltage
+i_f = config_unit("i_f", Current, optional=True)  # Forward current
+v_r = config_unit("v_r", Voltage, optional=True)  # Reverse voltage
+i_r = config_unit("i_r", Current, optional=True)  # Reverse current
 
 # Properties
-properties = config_properties({
-    "value": format_value(v_f, i_f, v_r, i_r),
-    "package": package,
-    "variant": variant,
-    "v_f": v_f,
-    "i_f": i_f,
-    "v_r": v_r,
-    "i_r": i_r,
-    "type": "diode",
-})
+properties = config_properties(
+    {
+        "value": format_value(v_f, i_f, v_r, i_r),
+        "package": package,
+        "variant": variant,
+        "v_f": v_f,
+        "i_f": i_f,
+        "v_r": v_r,
+        "i_r": i_r,
+        "type": "diode",
+    }
+)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -48,6 +50,7 @@ K = io("K", Net)  # Cathode
 # Helper functions
 # -----------------------------------------------------------------------------
 
+
 def _symbol(variant: Variant):
     symbols = {
         Variant("Standard"): "@kicad-symbols/Device.kicad_sym:D",
@@ -59,6 +62,7 @@ def _symbol(variant: Variant):
         "library": symbols[variant].split(":")[0],
         "name": symbols[variant].split(":")[1],
     }
+
 
 def _footprint(mount: Mount, package: Package) -> str:
     kicad_footprints = {
@@ -76,18 +80,73 @@ def _footprint(mount: Mount, package: Package) -> str:
 
     return kicad_footprints[(mount, package)]
 
+
+def _spice_subcircuit_name(variant: Variant):
+    """Returns the appropriate SPICE subcircuit name based on variant."""
+    subcircuits = {
+        Variant("Standard"): "D",
+        Variant("Schottky"): "D_Schottky",
+        Variant("Zener"): "D_Zener",
+    }
+    return subcircuits[variant]
+
+
+def _spice_args(variant: Variant, v_f, i_f, v_r, i_r):
+    """Returns SPICE arguments based on variant and parameters."""
+    # Set default values based on variant using proper SPICE parameters
+    if variant == Variant("Schottky"):
+        args = {
+            "IS": "1e-8",  # Higher saturation current for lower Vf
+            "N": "1.2",  # Slightly higher ideality factor
+            "RS": "5m",  # Lower series resistance
+            "CJO": "2p",  # Junction capacitance
+        }
+    elif variant == Variant("Zener"):
+        args = {
+            "IS": "1e-14",  # Standard saturation current
+            "N": "1.0",  # Ideal factor
+            "RS": "10m",  # Series resistance
+            "BV": "5.1",  # Breakdown voltage (user configurable)
+            "IBV": "5m",  # Breakdown current
+            "CJO": "1p",  # Junction capacitance
+        }
+    else:  # Standard silicon diode
+        args = {
+            "IS": "1e-14",  # Saturation current for ~0.7V forward voltage
+            "N": "1.0",  # Ideality factor
+            "RS": "10m",  # Series resistance
+            "CJO": "1p",  # Junction capacitance
+        }
+
+    # For Zener diodes, use reverse voltage as breakdown voltage
+    if variant == Variant("Zener") and v_r:
+        args["BV"] = str(v_r.value)
+
+    # Note: v_f and i_f are not directly used in SPICE diode models
+    # The forward voltage is determined by IS and N parameters
+    # Users can still specify them for documentation/BOM purposes
+
+    return args
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "D",
-    prefix = "D",
-    symbol = Symbol(**_symbol(variant)),
-    footprint = File(_footprint(mount, package)),
-    properties = properties,
-    type = "diode",
-    pins = {
+    name="D",
+    prefix="D",
+    symbol=Symbol(**_symbol(variant)),
+    footprint=File(_footprint(mount, package)),
+    spice_model=SpiceModel(
+        "//simulation/Diode.lib",
+        _spice_subcircuit_name(variant),
+        nets=[A, K],
+        args=_spice_args(variant, v_f, i_f, v_r, i_r),
+    ),
+    properties=properties,
+    type="diode",
+    pins={
         "A": A,
         "K": K,
     },

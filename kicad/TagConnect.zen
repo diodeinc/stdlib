@@ -17,12 +17,13 @@ TagConnectType = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-tag_type = config("tag_type", TagConnectType, convert = TagConnectType)
-properties = config("properties", dict, optional = True)
+tag_type = config("tag_type", TagConnectType, convert=TagConnectType)
+properties = config("properties", dict, optional=True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+
 
 def PinCount(tag_type: TagConnectType) -> int:
     if "2x03" in str(tag_type):
@@ -31,6 +32,7 @@ def PinCount(tag_type: TagConnectType) -> int:
         return 10
     elif "2x07" in str(tag_type):
         return 14
+
 
 def _footprint(tag_type: TagConnectType):
     """Get the KiCad footprint name for a Tag-Connect type."""
@@ -45,6 +47,7 @@ def _footprint(tag_type: TagConnectType):
     if tag_type.value not in footprints:
         error("Invalid Tag-Connect type: " + tag_type.value)
     return footprints[tag_type.value]
+
 
 def _symbol(tag_type: TagConnectType):
     """Get the appropriate symbol for a Tag-Connect type based on pin count."""
@@ -68,6 +71,7 @@ def _symbol(tag_type: TagConnectType):
     else:
         error("Unsupported pin count: " + str(pin_count))
 
+
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------
@@ -83,12 +87,12 @@ for i in range(1, pin_count + 1):
 # -----------------------------------------------------------------------------
 
 Component(
-    name = "TAG_CONNECT",
-    symbol = Symbol(**_symbol(tag_type)),
-    footprint = File(_footprint(tag_type)),
-    prefix = "J",
-    pins = pins,
-    properties = Properties(
+    name="TAG_CONNECT",
+    symbol=Symbol(**_symbol(tag_type)),
+    footprint=File(_footprint(tag_type)),
+    prefix="J",
+    pins=pins,
+    properties=Properties(
         properties,
         {
             "tag_type": tag_type,

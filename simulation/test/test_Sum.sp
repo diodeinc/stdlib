@@ -1,0 +1,16 @@
+V1 VP GND DC 12V 
+V2 VN GND DC -12V
+
+V3 INPUT_SIGNAL GND DC 1 SIN(0 1V 1000)
+V4 INPUT_OFFSET GND DC 2
+
+.control
+  * Time domain analysis - show 5 cycles of 1kHz signal
+  tran 10u 5m
+  
+  * Save output as SVG
+  set hcopydevtype = svg
+  
+  * Time domain plot of input and output
+  hardcopy simulation/test/output/sum.svg v(INPUT_SIGNAL) v(INPUT_OFFSET) v(PROBE) title "Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+.endc

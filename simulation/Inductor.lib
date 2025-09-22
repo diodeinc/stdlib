@@ -1,0 +1,13 @@
+* Inductor SPICE subcircuit
+* Generic Inductor model
+*
+* Parameters:
+*   LVAL - Inductance value in henrys
+*
+* Nodes:
+*   1 - Terminal 1
+*   2 - Terminal 2
+
+.SUBCKT L 1 2 PARAMS: LVAL=0
+L1 1 2 {LVAL}
+.ENDS L

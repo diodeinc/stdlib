@@ -1,0 +1,120 @@
+load("interfaces.zen", "DiffPair", "Ground", "Opamp")
+load("units.zen", "Capacitance", "Frequency", "Resistance", "unit")
+
+Resistor = Module("generics/Resistor.zen")
+Capacitor = Module("generics/Capacitor.zen")
+
+
+def voltage_follower(name, IN: Net, OUT: Net) -> Opamp:
+    """High impedance input, low impedance output"""
+
+    IN_P = IN
+    IN_N = OUT
+
+    return Opamp(name=name, IN_P=IN_P, IN_N=IN_N, OUT=OUT)
+
+
+def inverting_sum(
+    name,
+    INPUTS: list[Net],
+    OUT: Net,
+    GND: Ground,
+    gain: float = 1.0,
+    package: str = "0603",
+    voltage: str = "25V",
+    resistance: Resistance | str = "1k Ohms 1%",
+) -> Opamp:
+    """Inverting summing amplifier"""
+
+    RI = Resistance(resistance)
+    RG = RI * gain
+    IN_N = Net(name + "_IN_N")
+
+    for i, IN in enumerate(INPUTS):
+        Resistor(name=name + "_R_I" + str(i), value=RI, package=package, voltage=voltage, P1=IN, P2=IN_N)
+
+    Resistor(name=name + "_R_F", value=RG, package=package, voltage=voltage, P1=IN_N, P2=OUT)
+
+    return Opamp(name=name, IN_P=GND.NET, IN_N=IN_N, OUT=OUT)
+
+
+def noninverting_sum(
+    name,
+    INPUTS: list[Net],
+    OUT: Net,
+    GND: Ground,
+    gain: float = 1.0,
+    package: str = "0603",
+    voltage: str = "25V",
+    resistance: Resistance | str = "1k Ohms 1%",
+) -> Opamp:
+    """Noninverting summing amplifier, Vout = (1 + RA/RB) * ((V1 + V2) / 2)"""
+
+    RI = Resistance(resistance)
+    RB = Resistance(resistance)
+    RA = RB * (gain * 2 - 1)
+    IN_P = Net(name + "_IN_P")
+    IN_N = Net(name + "_IN_N")
+
+    for i, IN in enumerate(INPUTS):
+        Resistor(name=name + "_RI" + str(i), value=RI, package=package, voltage=voltage, P1=IN, P2=IN_P)
+
+    Resistor(name=name + "_RA", value=RA, package=package, voltage=voltage, P1=IN_N, P2=OUT)
+    Resistor(name=name + "_RB", value=RB, package=package, voltage=voltage, P1=IN_N, P2=GND)
+
+    return Opamp(name=name, IN_P=IN_P, IN_N=IN_N, OUT=OUT)
+
+
+def level_shifter(
+    name, IN: Net, VOFFSET: Net, OUT: Net, GND: Ground, gain: float = 1.0, package: str = "0603"
+) -> (Opamp, Opamp):
+    """Level shifter with an inverting sum amplifier"""
+
+    BUFFER = Net(name + "_BUFFER")
+
+    return (
+        voltage_follower(name=name + "_V_OFFSET_P", IN=VOFFSET, OUT=BUFFER),
+        noninverting_sum(name=name + "_SUM", INPUTS=[BUFFER, IN], OUT=OUT, GND=GND, gain=gain, package=package),
+    )
+
+
+def sallen_key_lowpass(
+    name,
+    frequency: Frequency | str,
+    GND: Ground,
+    IN: Net,
+    OUT: Net,
+    resistance: Resistance | str = "1k Ohms 1%",
+    package: str = "0603",
+    dielectric: str = "NP0",
+    voltage: str = "25V",
+) -> Opamp:
+    """Second order lowpass filter using Sallen-Key topology, assuming equal resistors and capacitors"""
+
+    m = 1
+    n = 1
+
+    F = Frequency(frequency)
+    R = Resistance(resistance)
+    C = 1 / (2 * 3.1415 * R * F)
+
+    R1 = Resistance(m * R)
+    R2 = Resistance(R / m)
+    C1 = C * n
+    C2 = C / n
+
+    IN_P = Net(name + "_IN_P")
+    NODE = Net(name + "_NODE")
+    IN_N = OUT
+
+    Resistor(name=name + "_R1", value=R1, package=package, P1=IN, P2=NODE)
+    Resistor(name=name + "_R2", value=R2, package=package, P1=NODE, P2=IN_P)
+    Capacitor(name=name + "_C1", value=C1, package=package, P1=NODE, P2=OUT, dielectric=dielectric, voltage=voltage)
+    Capacitor(name=name + "_C2", value=C2, package=package, P1=IN_P, P2=GND, dielectric=dielectric, voltage=voltage)
+
+    return Opamp(
+        name=name,
+        IN_P=IN_P,
+        IN_N=IN_N,
+        OUT=OUT,
+    )
