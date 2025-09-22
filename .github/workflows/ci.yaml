@@ -15,7 +15,7 @@ jobs:
         with:
           version: HEAD
       - name: Build .zen files
-        run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
+        run: pcb build . -Dwarnings
       - name: Check formatting
         run: pcb fmt . --check
 
@@ -30,11 +30,5 @@ jobs:
       - uses: diodeinc/pcb-action/setup@v2
         with:
           version: latest
-      - name: Build .zen files (Unix)
-        if: runner.os != 'Windows'
-        run: pcb build $(find . -name "*.zen" -type f) -Dwarnings
-      - name: Build .zen files (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          $files = Get-ChildItem -Path . -Filter "*.zen" -Recurse | Select-Object -ExpandProperty FullName
-          pcb build $files -Dwarnings
+      - name: Build .zen files
+        run: pcb build . -Dwarnings
