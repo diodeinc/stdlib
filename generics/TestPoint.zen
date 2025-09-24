@@ -7,8 +7,6 @@ load("../config.zen", "config_properties")
 Color = enum("Black", "Red", "White", "Yellow")
 
 Variant = enum(
-    "2Pads_Pitch2.54mm_Drill0.8mm",
-    "2Pads_Pitch5.08mm_Drill1.3mm",
     "Bridge_Pitch2.0mm_Drill0.7mm",
     "Bridge_Pitch2.54mm_Drill0.7mm",
     "Bridge_Pitch2.54mm_Drill1.0mm",
