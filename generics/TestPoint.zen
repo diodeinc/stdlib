@@ -94,26 +94,30 @@ def _footprint(variant):
     name = variant.value
     return f"@kicad-footprints/TestPoint.pretty/TestPoint_{name}.kicad_mod"
 
+
 def _properties(variant: Variant):
     """Returns the properties for a specific variant."""
 
     if "Keystone" in variant.value:
         color = config("color", Color, default=Color("Black"), optional=True)
         series = int(variant.value.split("_")[1].split("-")[0])
-        mpn = series + {
-            Color("Red"): 0,
-            Color("Black"): 1,
-            Color("White"): 2,
-            Color("Yellow"): 4,
-        }[color]
-        
+        mpn = (
+            series
+            + {
+                Color("Red"): 0,
+                Color("Black"): 1,
+                Color("White"): 2,
+                Color("Yellow"): 4,
+            }[color]
+        )
+
         return config_properties(
             properties={
                 "mpn": mpn,
                 "color": color,
             },
         )
-    
+
     return config_properties(
         do_not_populate=True,
         exclude_from_bom=True,
@@ -121,6 +125,7 @@ def _properties(variant: Variant):
             "variant": variant,
         },
     )
+
 
 # -----------------------------------------------------------------------------
 # Component definition
