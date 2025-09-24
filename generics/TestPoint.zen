@@ -4,24 +4,26 @@ load("../config.zen", "config_properties")
 # Component types and variants
 # -----------------------------------------------------------------------------
 
+Color = enum("Black", "Red", "White", "Yellow")
+
 Variant = enum(
-    # Pad
-    "Pad_D1.0mm",
-    "Pad_D1.5mm",
-    "Pad_D2.0mm",
-    "Pad_D2.5mm",
-    "Pad_D3.0mm",
-    "Pad_D4.0mm",
-    "Pad_1.0x1.0mm",
-    "Pad_1.5x1.5mm",
-    "Pad_2.0x2.0mm",
-    "Pad_2.5x2.5mm",
-    "Pad_3.0x3.0mm",
-    "Pad_4.0x4.0mm",
-    # Loop
+    "Bridge_Pitch2.0mm_Drill0.7mm",
+    "Bridge_Pitch2.54mm_Drill0.7mm",
+    "Bridge_Pitch2.54mm_Drill1.0mm",
+    "Bridge_Pitch2.54mm_Drill1.3mm",
+    "Bridge_Pitch3.81mm_Drill1.3mm",
+    "Bridge_Pitch5.08mm_Drill0.7mm",
+    "Bridge_Pitch5.08mm_Drill1.3mm",
+    "Bridge_Pitch6.35mm_Drill1.3mm",
+    "Bridge_Pitch7.62mm_Drill1.3mm",
+    "Keystone_5000-5004_Miniature",
+    "Keystone_5005-5009_Compact",
+    "Keystone_5010-5014_Multipurpose",
+    "Keystone_5015_Micro_Mini",
+    "Keystone_5019_Miniature",
     "Loop_D1.80mm_Drill1.0mm_Beaded",
-    "Loop_D2.50mm_Drill1.0mm",
     "Loop_D2.50mm_Drill1.0mm_LowProfile",
+    "Loop_D2.50mm_Drill1.0mm",
     "Loop_D2.50mm_Drill1.85mm",
     "Loop_D2.54mm_Drill1.5mm_Beaded",
     "Loop_D2.60mm_Drill0.9mm_Beaded",
@@ -32,43 +34,34 @@ Variant = enum(
     "Loop_D3.80mm_Drill2.0mm",
     "Loop_D3.80mm_Drill2.5mm",
     "Loop_D3.80mm_Drill2.8mm",
-    # Bridge
-    "Bridge_Pitch2.0mm_Drill0.7mm",
-    "Bridge_Pitch2.54mm_Drill0.7mm",
-    "Bridge_Pitch2.54mm_Drill1.0mm",
-    "Bridge_Pitch2.54mm_Drill1.3mm",
-    "Bridge_Pitch3.81mm_Drill1.3mm",
-    "Bridge_Pitch5.08mm_Drill0.7mm",
-    "Bridge_Pitch5.08mm_Drill1.3mm",
-    "Bridge_Pitch6.35mm_Drill1.3mm",
-    "Bridge_Pitch7.62mm_Drill1.3mm",
-    # PlatedHole
+    "Pad_1.0x1.0mm",
+    "Pad_1.5x1.5mm",
+    "Pad_2.0x2.0mm",
+    "Pad_2.5x2.5mm",
+    "Pad_3.0x3.0mm",
+    "Pad_4.0x4.0mm",
+    "Pad_D1.0mm",
+    "Pad_D1.5mm",
+    "Pad_D2.0mm",
+    "Pad_D2.5mm",
+    "Pad_D3.0mm",
+    "Pad_D4.0mm",
     "Plated_Hole_D2.0mm",
     "Plated_Hole_D3.0mm",
     "Plated_Hole_D4.0mm",
     "Plated_Hole_D5.0mm",
-    # Keystone
-    "Keystone_5000-5004_Miniature",
-    "Keystone_5005-5009_Compact",
-    "Keystone_5010-5014_Multipurpose",
-    "Keystone_5015_Micro_Mini",
-    "Keystone_5019_Miniature",
-    # THTPad
-    "THTPad_D1.0mm_Drill0.5mm",
-    "THTPad_D1.5mm_Drill0.7mm",
-    "THTPad_D2.0mm_Drill1.0mm",
-    "THTPad_D2.5mm_Drill1.2mm",
-    "THTPad_D3.0mm_Drill1.5mm",
-    "THTPad_D4.0mm_Drill2.0mm",
     "THTPad_1.0x1.0mm_Drill0.5mm",
     "THTPad_1.5x1.5mm_Drill0.7mm",
     "THTPad_2.0x2.0mm_Drill1.0mm",
     "THTPad_2.5x2.5mm_Drill1.2mm",
     "THTPad_3.0x3.0mm_Drill1.5mm",
     "THTPad_4.0x4.0mm_Drill2.0mm",
-    # 2Pads
-    "2Pads_Pitch2.54mm_Drill0.8mm",
-    "2Pads_Pitch5.08mm_Drill1.3mm",
+    "THTPad_D1.0mm_Drill0.5mm",
+    "THTPad_D1.5mm_Drill0.7mm",
+    "THTPad_D2.0mm_Drill1.0mm",
+    "THTPad_D2.5mm_Drill1.2mm",
+    "THTPad_D3.0mm_Drill1.5mm",
+    "THTPad_D4.0mm_Drill2.0mm",
 )
 
 # -----------------------------------------------------------------------------
@@ -77,14 +70,6 @@ Variant = enum(
 
 # Config
 variant = config("variant", Variant)
-
-# Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": " ",
-        "variant": variant,
-    }
-)
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -105,38 +90,41 @@ def _symbol(variant: Variant):
 
 
 def _footprint(variant):
-    # Simplified mapping for most common test point footprints
-    common_footprints = {
-        # Pad variants
-        Variant("Pad_D1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.0mm.kicad_mod",
-        Variant("Pad_D1.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod",
-        Variant("Pad_D2.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.0mm.kicad_mod",
-        Variant("Pad_D2.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D2.5mm.kicad_mod",
-        Variant("Pad_D3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D3.0mm.kicad_mod",
-        Variant("Pad_D4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D4.0mm.kicad_mod",
-        Variant("Pad_1.0x1.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_1.0x1.0mm.kicad_mod",
-        Variant("Pad_1.5x1.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_1.5x1.5mm.kicad_mod",
-        Variant("Pad_2.0x2.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_2.0x2.0mm.kicad_mod",
-        Variant("Pad_2.5x2.5mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_2.5x2.5mm.kicad_mod",
-        Variant("Pad_3.0x3.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_3.0x3.0mm.kicad_mod",
-        Variant("Pad_4.0x4.0mm"): "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_4.0x4.0mm.kicad_mod",
-        # THT variants
-        Variant(
-            "THTPad_D1.0mm_Drill0.5mm"
-        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.0mm_Drill0.5mm.kicad_mod",
-        Variant(
-            "THTPad_D1.5mm_Drill0.7mm"
-        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D1.5mm_Drill0.7mm.kicad_mod",
-        Variant(
-            "THTPad_D2.0mm_Drill1.0mm"
-        ): "@kicad-footprints/TestPoint.pretty/TestPoint_THTPad_D2.0mm_Drill1.0mm.kicad_mod",
-    }
+    """Returns the footprint for a specific variant."""
+    name = variant.value
+    return f"@kicad-footprints/TestPoint.pretty/TestPoint_{name}.kicad_mod"
 
-    if variant in common_footprints:
-        return common_footprints[variant]
-    else:
-        # Default to a common pad variant for unsupported ones
-        return "@kicad-footprints/TestPoint.pretty/TestPoint_Pad_D1.5mm.kicad_mod"
+
+def _properties(variant: Variant):
+    """Returns the properties for a specific variant."""
+
+    if "Keystone" in variant.value:
+        color = config("color", Color, default=Color("Black"), optional=True)
+        series = int(variant.value.split("_")[1].split("-")[0])
+        mpn = (
+            series
+            + {
+                Color("Red"): 0,
+                Color("Black"): 1,
+                Color("White"): 2,
+                Color("Yellow"): 4,
+            }[color]
+        )
+
+        return config_properties(
+            properties={
+                "mpn": mpn,
+                "color": color,
+            },
+        )
+
+    return config_properties(
+        do_not_populate=True,
+        exclude_from_bom=True,
+        properties={
+            "variant": variant,
+        },
+    )
 
 
 # -----------------------------------------------------------------------------
@@ -145,11 +133,11 @@ def _footprint(variant):
 
 Component(
     name="TP",
+    prefix="TP",
     symbol=Symbol(**_symbol(variant)),
     footprint=File(_footprint(variant)),
-    prefix="TP",
+    properties=_properties(variant),
     pins={
         "1": P1,
     },
-    properties=properties,
 )
