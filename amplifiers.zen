@@ -1,6 +1,6 @@
 load("interfaces.zen", "DiffPair", "Ground", "Opamp")
 load("units.zen", "Capacitance", "Frequency", "Resistance", "unit")
-load("utils.zen", "e96")
+load("utils.zen", "e96", "e24")
 
 Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
@@ -97,12 +97,12 @@ def sallen_key_lowpass(
 
     F = Frequency(frequency)
     R = Resistance(resistance)
-    C = e96(1 / (2 * 3.1415 * R * F))
+    C = 1 / (2 * 3.1415 * R * F)
 
-    R1 = e96(m * R)
+    R1 = e96(R * m)
     R2 = e96(R / m)
-    C1 = e96(C * n)
-    C2 = e96(C / n)
+    C1 = e24(C * n)
+    C2 = e24(C / n)
 
     IN_P = Net(name + "_IN_P")
     NODE = Net(name + "_NODE")
