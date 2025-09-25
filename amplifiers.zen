@@ -1,5 +1,6 @@
 load("interfaces.zen", "DiffPair", "Ground", "Opamp")
 load("units.zen", "Capacitance", "Frequency", "Resistance", "unit")
+load("utils.zen", "e96")
 
 Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
@@ -27,7 +28,7 @@ def inverting_sum(
     """Inverting summing amplifier"""
 
     RI = Resistance(resistance)
-    RG = RI * gain
+    RG = e96(RI * gain)
     IN_N = Net(name + "_IN_N")
 
     for i, IN in enumerate(INPUTS):
@@ -52,7 +53,7 @@ def noninverting_sum(
 
     RI = Resistance(resistance)
     RB = Resistance(resistance)
-    RA = RB * (gain * 2 - 1)
+    RA = e96(RB * (gain * 2 - 1))
     IN_P = Net(name + "_IN_P")
     IN_N = Net(name + "_IN_N")
 
@@ -96,12 +97,12 @@ def sallen_key_lowpass(
 
     F = Frequency(frequency)
     R = Resistance(resistance)
-    C = 1 / (2 * 3.1415 * R * F)
+    C = e96(1 / (2 * 3.1415 * R * F))
 
-    R1 = Resistance(m * R)
-    R2 = Resistance(R / m)
-    C1 = C * n
-    C2 = C / n
+    R1 = e96(m * R)
+    R2 = e96(R / m)
+    C1 = e96(C * n)
+    C2 = e96(C / n)
 
     IN_P = Net(name + "_IN_P")
     NODE = Net(name + "_NODE")
