@@ -50,10 +50,17 @@ E_SERIES = {
 }
 # fmt: on
 
+def _abs(physical_value):
+    if physical_value.value < 0:
+        return physical_value * -1
+    return physical_value
+
 
 def _e_series(physical_value, series):
     """Return the closest series value to the given number."""
-    unit = physical_value.unit
+    
+    # lambda to convert to physical value
+    _unit = lambda x: physical_value.with_value(x)
 
     # Handle zero or negative values
     if physical_value.value <= 0:
@@ -75,20 +82,18 @@ def _e_series(physical_value, series):
             break
 
     # Find closest E96 value
-    closest = physical_value.with_value(series[0])
-    diff = normalized - closest
-    if diff.value < 0:
-        diff = -diff
+    closest = _unit(series[0])
+    diff = _abs(normalized - closest)
 
     min_diff = diff
 
     for e96_val in series:
-        diff = normalized - physical_value.with_value(e96_val)
-        if diff.value < 0:
-            diff = diff * -1
+        diff = normalized - _unit(e96_val)
+        diff = _abs(diff)
+
         if diff < min_diff:
             min_diff = diff
-            closest = physical_value.with_value(e96_val)
+            closest = _unit(e96_val)
 
     return closest * decade
 
