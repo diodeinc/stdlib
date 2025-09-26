@@ -51,18 +51,25 @@ E_SERIES = {
 # fmt: on
 
 
+def _abs(physical_value):
+    if physical_value.value < 0:
+        return physical_value * -1
+    return physical_value
+
+
 def _e_series(physical_value, series):
     """Return the closest series value to the given number."""
-    unit = physical_value.unit
-    value = physical_value.value
+
+    # lambda to convert to physical value
+    _unit = lambda x: physical_value.with_value(x)
 
     # Handle zero or negative values
-    if value <= 0:
-        return 1.00
+    if physical_value.value <= 0:
+        return error("E series value {physical_value} must be positive")
 
     # Find the appropriate decade
     decade = 1.0
-    normalized = value
+    normalized = physical_value
 
     # Scale down to 1-10 range
     for _ in range(100):  # Limit to 100 iterations to avoid infinite loop
@@ -76,17 +83,20 @@ def _e_series(physical_value, series):
             break
 
     # Find closest E96 value
-    closest = series[0]
-    min_diff = abs(normalized - closest)
+    closest = _unit(series[0])
+    diff = _abs(normalized - closest)
+
+    min_diff = diff
 
     for e96_val in series:
-        diff = abs(normalized - e96_val)
+        diff = normalized - _unit(e96_val)
+        diff = _abs(diff)
+
         if diff < min_diff:
             min_diff = diff
-            closest = e96_val
+            closest = _unit(e96_val)
 
-    return Resistance(closest * decade).with_unit(unit)
-    # TODO use PhysicalValue when ready: return PhysicalValue(closest * decade,unit)
+    return closest * decade
 
 
 def e3(physical_value):
