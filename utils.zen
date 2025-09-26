@@ -57,7 +57,7 @@ def _e_series(physical_value, series):
 
     # Handle zero or negative values
     if physical_value.value <= 0:
-        return error("{physical_value} must be positive")
+        return error("E series value {physical_value} must be positive")
 
     # Find the appropriate decade
     decade = 1.0
