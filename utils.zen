@@ -50,6 +50,7 @@ E_SERIES = {
 }
 # fmt: on
 
+
 def _abs(physical_value):
     if physical_value.value < 0:
         return physical_value * -1
@@ -58,7 +59,7 @@ def _abs(physical_value):
 
 def _e_series(physical_value, series):
     """Return the closest series value to the given number."""
-    
+
     # lambda to convert to physical value
     _unit = lambda x: physical_value.with_value(x)
 
