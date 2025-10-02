@@ -1,3 +1,5 @@
+load("units.zen", "VoltageRange")
+
 Analog = interface(
     NET=using(Net()),
 )
@@ -312,6 +314,7 @@ PcieGen3x2Lane = interface(
 
 Power = interface(
     NET=using(Net("VCC", symbol=Symbol(library="@kicad-symbols/power.kicad_sym", name="VCC"))),
+    voltage=field(VoltageRange | None, None),
 )
 
 Pwm = interface(
