@@ -70,7 +70,9 @@ def config_properties(
     mpn = config("mpn", str, optional=True)
     do_not_populate = do_not_populate or config("do_not_populate", bool, optional=True)
     exclude_from_bom = exclude_from_bom or config("exclude_from_bom", bool, optional=True)
-    exclude_from_pos_files = exclude_from_pos_files or config("exclude_from_pos_files", bool, optional=True)
+    exclude_from_pos_files = (
+        exclude_from_pos_files or config("exclude_from_pos_files", bool, optional=True) or exclude_from_bom
+    )
 
     # Build result dictionary
     result = {}
