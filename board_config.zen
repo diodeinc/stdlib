@@ -1,3 +1,5 @@
+load("units.zen", "Impedance")
+
 # Copper constraints - all clearances and widths for copper features
 Copper = record(
     minimum_clearance=field(float | None, None),  # Minimum clearance between copper features
@@ -73,6 +75,8 @@ NetClass = record(
     diff_pair_via_gap=field(float | None, None),  # Differential pair via gap in mm
     priority=field(int | None, None),  # Priority for netclass resolution (higher = higher priority)
     color=field(str | None, None),  # PCB color (hex like "#FF0000" or CSS name)
+    single_ended_impedance=field(Impedance | None, None),
+    differential_pair_impedance=field(Impedance | None, None),
 )
 
 # Design rules container
@@ -394,6 +398,8 @@ BASE_4L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.2908,
+        color="blue",
+        single_ended_impedance=Impedance(50),
     ),
     NetClass(
         name="85Ohm Diff",
@@ -401,6 +407,8 @@ BASE_4L_NETCLASSES = [
         track_width=0.2235,
         diff_pair_width=0.2235,
         diff_pair_gap=0.127,
+        color="purple",
+        differential_pair_impedance=Impedance(85),
     ),
     NetClass(
         name="90Ohm Diff",
@@ -408,6 +416,8 @@ BASE_4L_NETCLASSES = [
         track_width=0.1867,
         diff_pair_width=0.1867,
         diff_pair_gap=0.127,
+        color="green",
+        differential_pair_impedance=Impedance(90),
     ),
     NetClass(
         name="100Ohm Diff",
@@ -415,6 +425,8 @@ BASE_4L_NETCLASSES = [
         track_width=0.1334,
         diff_pair_width=0.1334,
         diff_pair_gap=0.127,
+        color="yellow",
+        differential_pair_impedance=Impedance(100),
     ),
 ]
 
@@ -472,6 +484,8 @@ BASE_6L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.1461,
+        color="blue",
+        single_ended_impedance=Impedance(50),
     ),
     NetClass(
         name="85Ohm Diff",
@@ -479,6 +493,8 @@ BASE_6L_NETCLASSES = [
         track_width=0.141,
         diff_pair_width=0.141,
         diff_pair_gap=0.127,
+        color="purple",
+        differential_pair_impedance=Impedance(85),
     ),
     NetClass(
         name="90Ohm Diff",
@@ -486,6 +502,8 @@ BASE_6L_NETCLASSES = [
         track_width=0.1359,
         diff_pair_width=0.1359,
         diff_pair_gap=0.1524,
+        color="green",
+        differential_pair_impedance=Impedance(90),
     ),
     NetClass(
         name="100Ohm Diff",
@@ -493,6 +511,8 @@ BASE_6L_NETCLASSES = [
         track_width=0.127,
         diff_pair_width=0.127,
         diff_pair_gap=0.2286,
+        color="yellow",
+        differential_pair_impedance=Impedance(100),
     ),
 ]
 
@@ -561,6 +581,8 @@ BASE_8L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.1702,
+        color="blue",
+        single_ended_impedance=Impedance(50),
     ),
     NetClass(
         name="85Ohm Diff",
@@ -568,6 +590,8 @@ BASE_8L_NETCLASSES = [
         track_width=0.1588,
         diff_pair_width=0.1588,
         diff_pair_gap=0.127,
+        color="purple",
+        differential_pair_impedance=Impedance(85),
     ),
     NetClass(
         name="90Ohm Diff",
@@ -575,6 +599,8 @@ BASE_8L_NETCLASSES = [
         track_width=0.1384,
         diff_pair_width=0.1384,
         diff_pair_gap=0.127,
+        color="green",
+        differential_pair_impedance=Impedance(90),
     ),
     NetClass(
         name="100Ohm Diff",
@@ -582,6 +608,8 @@ BASE_8L_NETCLASSES = [
         track_width=0.127,
         diff_pair_width=0.127,
         diff_pair_gap=0.1778,
+        color="yellow",
+        differential_pair_impedance=Impedance(100),
     ),
 ]
 
