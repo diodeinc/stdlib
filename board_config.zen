@@ -391,26 +391,26 @@ BASE_4L_STACKUP = Stackup(
 BASE_4L_NETCLASSES = [
     DEFAULT_NETCLASS,
     NetClass(
-        name="50Ω SE",
+        name="50Ohm SE",
         clearance=0.2,
         track_width=0.2908,
     ),
     NetClass(
-        name="85Ω Diff",
+        name="85Ohm Diff",
         clearance=0.2,
         track_width=0.2235,
         diff_pair_width=0.2235,
         diff_pair_gap=0.127,
     ),
     NetClass(
-        name="90Ω Diff",
+        name="90Ohm Diff",
         clearance=0.2,
         track_width=0.1867,
         diff_pair_width=0.1867,
         diff_pair_gap=0.127,
     ),
     NetClass(
-        name="100Ω Diff",
+        name="100Ohm Diff",
         clearance=0.2,
         track_width=0.1334,
         diff_pair_width=0.1334,
@@ -469,26 +469,26 @@ BASE_6L_STACKUP = Stackup(
 BASE_6L_NETCLASSES = [
     DEFAULT_NETCLASS,
     NetClass(
-        name="50Ω SE",
+        name="50Ohm SE",
         clearance=0.2,
         track_width=0.1461,
     ),
     NetClass(
-        name="85Ω Diff",
+        name="85Ohm Diff",
         clearance=0.2,
         track_width=0.141,
         diff_pair_width=0.141,
         diff_pair_gap=0.127,
     ),
     NetClass(
-        name="90Ω Diff",
+        name="90Ohm Diff",
         clearance=0.2,
         track_width=0.1359,
         diff_pair_width=0.1359,
         diff_pair_gap=0.1524,
     ),
     NetClass(
-        name="100Ω Diff",
+        name="100Ohm Diff",
         clearance=0.2,
         track_width=0.127,
         diff_pair_width=0.127,
@@ -553,31 +553,31 @@ BASE_8L_STACKUP = Stackup(
 # 8L Impedance-Controlled Netclasses (L1 GCPW, 0.1164mm dielectric, 0.2mm coplanar gap)
 # Calculated using Sierra Circuits impedance calculator
 # Note: These geometries also work on L6 (asymmetric stripline) with acceptable tolerance:
-#   50Ω SE → 48.5Ω (-3%), 85Ω Diff → 83.5Ω (-1.7%), 90Ω Diff → 88.0Ω (-2.2%), 100Ω Diff → 97.6Ω (-2.4%)
+#   50Ohm SE → 48.5Ohm (-3%), 85Ohm Diff → 83.5Ohm (-1.7%), 90Ohm Diff → 88.0Ohm (-2.2%), 100Ohm Diff → 97.6Ohm (-2.4%)
 #   Worst case is still within reasonable bounds for most applications.
 BASE_8L_NETCLASSES = [
     DEFAULT_NETCLASS,
     NetClass(
-        name="50Ω SE",
+        name="50Ohm SE",
         clearance=0.2,
         track_width=0.1702,
     ),
     NetClass(
-        name="85Ω Diff",
+        name="85Ohm Diff",
         clearance=0.2,
         track_width=0.1588,
         diff_pair_width=0.1588,
         diff_pair_gap=0.127,
     ),
     NetClass(
-        name="90Ω Diff",
+        name="90Ohm Diff",
         clearance=0.2,
         track_width=0.1384,
         diff_pair_width=0.1384,
         diff_pair_gap=0.127,
     ),
     NetClass(
-        name="100Ω Diff",
+        name="100Ohm Diff",
         clearance=0.2,
         track_width=0.127,
         diff_pair_width=0.127,
