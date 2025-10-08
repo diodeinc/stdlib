@@ -398,7 +398,7 @@ BASE_4L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.2908,
-        color="blue",
+        color="#0000C2FF",
         single_ended_impedance=Impedance(50),
     ),
     NetClass(
@@ -407,7 +407,7 @@ BASE_4L_NETCLASSES = [
         track_width=0.2235,
         diff_pair_width=0.2235,
         diff_pair_gap=0.127,
-        color="purple",
+        color="#C200C2FF",
         differential_pair_impedance=Impedance(85),
     ),
     NetClass(
@@ -416,7 +416,7 @@ BASE_4L_NETCLASSES = [
         track_width=0.1867,
         diff_pair_width=0.1867,
         diff_pair_gap=0.127,
-        color="green",
+        color="#00C200FF",
         differential_pair_impedance=Impedance(90),
     ),
     NetClass(
@@ -425,7 +425,7 @@ BASE_4L_NETCLASSES = [
         track_width=0.1334,
         diff_pair_width=0.1334,
         diff_pair_gap=0.127,
-        color="yellow",
+        color="#C2C200FF",
         differential_pair_impedance=Impedance(100),
     ),
 ]
@@ -484,7 +484,7 @@ BASE_6L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.1461,
-        color="blue",
+        color="#0000C2FF",
         single_ended_impedance=Impedance(50),
     ),
     NetClass(
@@ -493,7 +493,7 @@ BASE_6L_NETCLASSES = [
         track_width=0.141,
         diff_pair_width=0.141,
         diff_pair_gap=0.127,
-        color="purple",
+        color="#C200C2FF",
         differential_pair_impedance=Impedance(85),
     ),
     NetClass(
@@ -502,7 +502,7 @@ BASE_6L_NETCLASSES = [
         track_width=0.1359,
         diff_pair_width=0.1359,
         diff_pair_gap=0.1524,
-        color="green",
+        color="#00C200FF",
         differential_pair_impedance=Impedance(90),
     ),
     NetClass(
@@ -511,7 +511,7 @@ BASE_6L_NETCLASSES = [
         track_width=0.127,
         diff_pair_width=0.127,
         diff_pair_gap=0.2286,
-        color="yellow",
+        color="#C2C200FF",
         differential_pair_impedance=Impedance(100),
     ),
 ]
@@ -581,7 +581,7 @@ BASE_8L_NETCLASSES = [
         name="50Ohm SE",
         clearance=0.2,
         track_width=0.1702,
-        color="blue",
+        color="#0000C2FF",
         single_ended_impedance=Impedance(50),
     ),
     NetClass(
@@ -590,7 +590,7 @@ BASE_8L_NETCLASSES = [
         track_width=0.1588,
         diff_pair_width=0.1588,
         diff_pair_gap=0.127,
-        color="purple",
+        color="#C200C2FF",
         differential_pair_impedance=Impedance(85),
     ),
     NetClass(
@@ -599,7 +599,7 @@ BASE_8L_NETCLASSES = [
         track_width=0.1384,
         diff_pair_width=0.1384,
         diff_pair_gap=0.127,
-        color="green",
+        color="#00C200FF",
         differential_pair_impedance=Impedance(90),
     ),
     NetClass(
@@ -608,7 +608,7 @@ BASE_8L_NETCLASSES = [
         track_width=0.127,
         diff_pair_width=0.127,
         diff_pair_gap=0.1778,
-        color="yellow",
+        color="#C2C200FF",
         differential_pair_impedance=Impedance(100),
     ),
 ]
