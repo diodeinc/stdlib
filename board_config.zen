@@ -667,15 +667,14 @@ HEAVY_COPPER_CONSTRAINTS = Constraints(
 # Base predefined sizes for common PCB design
 BASE_PREDEFINED_SIZES = PredefinedSizes(
     track_widths=[
-        0.1,  # Safe minimum
-        0.2,  # Standard signals
-        0.4,  # Power traces
-        0.8,  # Heavy power
+        0.127,
+        0.2,
+        0.4,
+        0.8,
     ],
     via_dimensions=[
-        ViaDimension(diameter=0.35, drill=0.2),  # Small via
-        ViaDimension(diameter=0.4, drill=0.25),  # Standard via
-        ViaDimension(diameter=0.45, drill=0.3),  # Large via
+        ViaDimension(diameter=0.4, drill=0.2),
+        ViaDimension(diameter=0.5, drill=0.3),
     ],
 )
 
