@@ -105,6 +105,11 @@ DielectricLayer = record(
 )
 
 # Board stackup configuration
+# Default soldermask thickness assumptions (not currently configurable):
+#   - On FR-4: 1.2 mil (0.03048 mm)
+#   - On Copper: 0.6 mil (0.01524 mm)
+#   - Between Traces: 1.2 mil (0.03048 mm)
+#   - Dielectric Constant: 3.8
 Stackup = record(
     materials=field(list[Material] | None, None),  # List of Material objects
     silk_screen_color=field(str | None, None),  # Hex color like "#44805BFF"
@@ -251,17 +256,26 @@ def Board(
             error("Either 'config' or 'layers' must be provided")
         elif layers == 2:
             stackup = BASE_2L_STACKUP
+            netclasses = BASE_2L_NETCLASSES
         elif layers == 4:
             stackup = BASE_4L_STACKUP
+            netclasses = BASE_4L_NETCLASSES
         elif layers == 6:
             stackup = BASE_6L_STACKUP
+            netclasses = BASE_6L_NETCLASSES
         elif layers == 8:
             stackup = BASE_8L_STACKUP
+            netclasses = BASE_8L_NETCLASSES
         else:
             error("layers must be 2, 4, 6, or 8")
 
+        design_rules = DesignRules(
+            constraints=BASE_CONSTRAINTS,
+            predefined_sizes=BASE_PREDEFINED_SIZES,
+            netclasses=netclasses,
+        )
         config = BoardConfig(
-            design_rules=BASE_DESIGN_RULES,
+            design_rules=design_rules,
             stackup=stackup,
         )
 
@@ -276,6 +290,17 @@ def Board(
 
 
 # Standard Base Configurations
+
+# Default netclass for general-purpose PCB manufacturing
+DEFAULT_NETCLASS = NetClass(
+    name="Default",
+    clearance=0.15,  # Conservative clearance (different nets)
+    track_width=0.15,  # Safe track width for most manufacturers
+    via_diameter=0.5,  # Standard via size (5.3:1 aspect ratio on 1.6mm board)
+    via_drill=0.3,  # Standard drill size
+    diff_pair_width=0.2,  # Reasonable diff pair width
+    diff_pair_gap=0.2,  # Reasonable diff pair gap
+)
 
 # Common materials that can be reused across board configurations
 
@@ -331,6 +356,7 @@ BASE_2L_STACKUP = Stackup(
         CopperLayer(thickness=0.035, role="mixed"),  # Bottom layer (1oz)
     ],
 )
+BASE_2L_NETCLASSES = [DEFAULT_NETCLASS]
 
 # Base 4-layer stackup (1.6mm, 1oz outer/0.5oz inner)
 # SIG/GND/PWR/SIG
@@ -359,6 +385,38 @@ BASE_4L_STACKUP = Stackup(
         CopperLayer(thickness=0.035, role="mixed"),  # Bottom layer (1oz)
     ],
 )
+
+# 4L Impedance-Controlled Netclasses (L1 GCPW, 0.21mm dielectric, 0.2mm coplanar gap)
+# Calculated using Sierra Circuits impedance calculator
+BASE_4L_NETCLASSES = [
+    DEFAULT_NETCLASS,
+    NetClass(
+        name="50Ω SE",
+        clearance=0.2,
+        track_width=0.2908,
+    ),
+    NetClass(
+        name="85Ω Diff",
+        clearance=0.2,
+        track_width=0.2235,
+        diff_pair_width=0.2235,
+        diff_pair_gap=0.127,
+    ),
+    NetClass(
+        name="90Ω Diff",
+        clearance=0.2,
+        track_width=0.1867,
+        diff_pair_width=0.1867,
+        diff_pair_gap=0.127,
+    ),
+    NetClass(
+        name="100Ω Diff",
+        clearance=0.2,
+        track_width=0.1334,
+        diff_pair_width=0.1334,
+        diff_pair_gap=0.127,
+    ),
+]
 
 # Base 6-layer stackup (1.6mm, 1oz outer/0.5oz inner)
 # SIG/GND/PWR/SIG/GND/SIG
@@ -405,6 +463,38 @@ BASE_6L_STACKUP = Stackup(
         CopperLayer(thickness=0.035, role="mixed"),  # Bottom layer (1oz)
     ],
 )
+
+# 6L Impedance-Controlled Netclasses (L1 GCPW, 0.099mm dielectric, 0.2mm coplanar gap)
+# Calculated using Sierra Circuits impedance calculator
+BASE_6L_NETCLASSES = [
+    DEFAULT_NETCLASS,
+    NetClass(
+        name="50Ω SE",
+        clearance=0.2,
+        track_width=0.1461,
+    ),
+    NetClass(
+        name="85Ω Diff",
+        clearance=0.2,
+        track_width=0.141,
+        diff_pair_width=0.141,
+        diff_pair_gap=0.127,
+    ),
+    NetClass(
+        name="90Ω Diff",
+        clearance=0.2,
+        track_width=0.1359,
+        diff_pair_width=0.1359,
+        diff_pair_gap=0.1524,
+    ),
+    NetClass(
+        name="100Ω Diff",
+        clearance=0.2,
+        track_width=0.127,
+        diff_pair_width=0.127,
+        diff_pair_gap=0.2286,
+    ),
+]
 
 # Base 8-layer stackup (1.6mm, 1oz outer/0.5oz inner)
 # SIG/GND/PWR/SIG/GND/SIG/GND/SIG
@@ -460,6 +550,41 @@ BASE_8L_STACKUP = Stackup(
     ],
 )
 
+# 8L Impedance-Controlled Netclasses (L1 GCPW, 0.1164mm dielectric, 0.2mm coplanar gap)
+# Calculated using Sierra Circuits impedance calculator
+# Note: These geometries also work on L6 (asymmetric stripline) with acceptable tolerance:
+#   50Ω SE → 48.5Ω (-3%), 85Ω Diff → 83.5Ω (-1.7%), 90Ω Diff → 88.0Ω (-2.2%), 100Ω Diff → 97.6Ω (-2.4%)
+#   Worst case is still within reasonable bounds for most applications.
+BASE_8L_NETCLASSES = [
+    DEFAULT_NETCLASS,
+    NetClass(
+        name="50Ω SE",
+        clearance=0.2,
+        track_width=0.1702,
+    ),
+    NetClass(
+        name="85Ω Diff",
+        clearance=0.2,
+        track_width=0.1588,
+        diff_pair_width=0.1588,
+        diff_pair_gap=0.127,
+    ),
+    NetClass(
+        name="90Ω Diff",
+        clearance=0.2,
+        track_width=0.1384,
+        diff_pair_width=0.1384,
+        diff_pair_gap=0.127,
+    ),
+    NetClass(
+        name="100Ω Diff",
+        clearance=0.2,
+        track_width=0.127,
+        diff_pair_width=0.127,
+        diff_pair_gap=0.1778,
+    ),
+]
+
 # Common constraint sets for different fabrication capabilities
 
 # Base PCB Constraints (1oz copper)
@@ -508,18 +633,6 @@ HEAVY_COPPER_CONSTRAINTS = Constraints(
     ),
 )
 
-# Common netclass definitions
-
-# Default netclass for general-purpose PCB manufacturing
-DEFAULT_NETCLASS = NetClass(
-    name="Default",
-    clearance=0.15,  # Conservative clearance (different nets)
-    track_width=0.15,  # Safe track width for most manufacturers
-    via_diameter=0.4,  # Standard via size
-    via_drill=0.2,  # Standard drill size
-    diff_pair_width=0.2,  # Reasonable diff pair width
-    diff_pair_gap=0.2,  # Reasonable diff pair gap
-)
 
 # Common predefined sizes for design tool dropdowns
 
