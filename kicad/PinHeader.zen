@@ -52,12 +52,12 @@ orientation = config("orientation", Orientation, default=Orientation("Vertical")
 # Properties – combined and normalized
 properties = config_properties(
     {
-        "value": " ",
+        "value": pitch.value + " " + str(pins) + "x" + str(rows),
+        "description": "Header " + pitch.value + " " + str(pins) + "x" + str(rows) + " " + orientation.value,
         "pins": pins,
         "rows": rows,
         "pitch": pitch,
         "orientation": orientation,
-        "connector_type": "Pin Header",
     }
 )
 
