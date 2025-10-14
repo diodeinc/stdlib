@@ -1,8 +1,19 @@
 load("units.zen", "VoltageRange")
 
-Analog = interface(
-    NET=using(Net()),
+Power = builtin.net_type(
+    "Power",
+    symbol=field(Symbol, default=Symbol(library="@kicad-symbols/power.kicad_sym", name="VCC")),
+    voltage=VoltageRange,
 )
+
+Ground = builtin.net_type(
+    "Ground",
+    symbol=field(Symbol, default=Symbol(library="@kicad-symbols/power.kicad_sym", name="GND")),
+)
+
+Analog = builtin.net_type("Analog")
+Pwm = builtin.net_type("Pwm")
+Gpio = builtin.net_type("Gpio")
 
 Can = interface(
     CAN_H=Net(),
@@ -114,14 +125,6 @@ Ethernet_1000BaseT = interface(
     BI_DC_N=Net(),
     BI_DD_P=Net(),
     BI_DD_N=Net(),
-)
-
-Gpio = interface(
-    NET=using(Net()),
-)
-
-Ground = interface(
-    NET=using(Net("GND", symbol=Symbol(library="@kicad-symbols/power.kicad_sym", name="GND"))),
 )
 
 Hdmi = interface(
@@ -310,15 +313,6 @@ PcieGen3x2Lane = interface(
     RESET_N=Net(),
     WAKE_N=Net(),
     CLK_REQ_N=Net(),
-)
-
-Power = interface(
-    NET=using(Net("VCC", symbol=Symbol(library="@kicad-symbols/power.kicad_sym", name="VCC"))),
-    voltage=field(VoltageRange | None, None),
-)
-
-Pwm = interface(
-    NET=using(Net()),
 )
 
 QLink = interface(
