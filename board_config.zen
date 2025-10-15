@@ -251,6 +251,7 @@ def Board(
     layout_path: str,
     config: BoardConfig | None = None,
     layers: int | None = None,
+    outer_copper_weight: float = 1.0,
     layout_hints: list | None = None,
     default: bool = False,
 ):
@@ -258,24 +259,50 @@ def Board(
     if config == None:
         if layers == None:
             error("Either 'config' or 'layers' must be provided")
-        elif layers == 2:
+
+        # Validate copper weight
+        if outer_copper_weight != 1.0 and outer_copper_weight != 2.0:
+            error("outer_copper_weight must be 1.0 or 2.0")
+
+        # Select configurations based on layers and copper weight
+        if layers == 2:
+            if outer_copper_weight == 2.0:
+                error("2oz outer copper not supported for 2-layer boards")
             stackup = BASE_2L_STACKUP
             netclasses = BASE_2L_NETCLASSES
+            constraints = BASE_CONSTRAINTS
+            predefined_sizes = BASE_PREDEFINED_SIZES
         elif layers == 4:
-            stackup = BASE_4L_STACKUP
-            netclasses = BASE_4L_NETCLASSES
+            if outer_copper_weight == 1.0:
+                stackup = BASE_4L_STACKUP
+                netclasses = BASE_4L_NETCLASSES
+                constraints = BASE_CONSTRAINTS
+                predefined_sizes = BASE_PREDEFINED_SIZES
+            else:  # 2.0
+                stackup = BASE_4L_2OZ_STACKUP
+                netclasses = BASE_4L_2OZ_NETCLASSES
+                constraints = BASE_CONSTRAINTS_2OZ
+                predefined_sizes = BASE_PREDEFINED_SIZES_2OZ
         elif layers == 6:
+            if outer_copper_weight == 2.0:
+                error("2oz outer copper not supported for 6-layer boards")
             stackup = BASE_6L_STACKUP
             netclasses = BASE_6L_NETCLASSES
+            constraints = BASE_CONSTRAINTS
+            predefined_sizes = BASE_PREDEFINED_SIZES
         elif layers == 8:
+            if outer_copper_weight == 2.0:
+                error("2oz outer copper not supported for 8-layer boards")
             stackup = BASE_8L_STACKUP
             netclasses = BASE_8L_NETCLASSES
+            constraints = BASE_CONSTRAINTS
+            predefined_sizes = BASE_PREDEFINED_SIZES
         else:
             error("layers must be 2, 4, 6, or 8")
 
         design_rules = DesignRules(
-            constraints=BASE_CONSTRAINTS,
-            predefined_sizes=BASE_PREDEFINED_SIZES,
+            constraints=constraints,
+            predefined_sizes=predefined_sizes,
             netclasses=netclasses,
         )
         config = BoardConfig(
@@ -304,6 +331,17 @@ DEFAULT_NETCLASS = NetClass(
     via_drill=0.3,  # Standard drill size
     diff_pair_width=0.2,  # Reasonable diff pair width
     diff_pair_gap=0.2,  # Reasonable diff pair gap
+)
+
+# Default 2oz netclass
+DEFAULT_NETCLASS_2OZ = NetClass(
+    name="Default",
+    clearance=0.2,
+    track_width=0.16,
+    via_diameter=0.6,
+    via_drill=0.3,
+    diff_pair_width=0.2,
+    diff_pair_gap=0.2,
 )
 
 # Common materials that can be reused across board configurations
@@ -390,6 +428,24 @@ BASE_4L_STACKUP = Stackup(
     ],
 )
 
+BASE_4L_2OZ_STACKUP = Stackup(
+    materials=[FR4_CORE, BASE_PREPREG],
+    thickness=1.6,
+    symmetric=True,
+    copper_finish="ENIG",
+    silk_screen_color="White",
+    solder_mask_color="Black",
+    layers=[
+        CopperLayer(thickness=0.07, role="mixed"),  # Top layer (2oz)
+        DielectricLayer(thickness=0.21040, material="Prepreg", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="ground"),  # Inner L2 (0.5oz)
+        DielectricLayer(thickness=1.065, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.0152, role="power"),  # Inner L3 (0.5oz)
+        DielectricLayer(thickness=0.21040, material="Prepreg", form="prepreg"),
+        CopperLayer(thickness=0.07, role="mixed"),  # Bottom layer (2oz)
+    ],
+)
+
 # 4L Impedance-Controlled Netclasses (L1 GCPW, 0.21mm dielectric, 0.2mm coplanar gap)
 # Calculated using Sierra Circuits impedance calculator
 BASE_4L_NETCLASSES = [
@@ -428,6 +484,10 @@ BASE_4L_NETCLASSES = [
         color="#C2C200FF",
         differential_pair_impedance=Impedance(100),
     ),
+]
+
+BASE_4L_2OZ_NETCLASSES = [
+    DEFAULT_NETCLASS_2OZ,
 ]
 
 # Base 6-layer stackup (1.6mm, 1oz outer/0.5oz inner)
@@ -639,7 +699,7 @@ BASE_CONSTRAINTS = Constraints(
 )
 
 # Heavy Copper Constraints (2oz copper)
-HEAVY_COPPER_CONSTRAINTS = Constraints(
+BASE_CONSTRAINTS_2OZ = Constraints(
     copper=Copper(
         minimum_clearance=0.2,  # Min spacing (2oz copper)
         minimum_track_width=0.16,  # Min track width (2oz copper)
@@ -678,15 +738,16 @@ BASE_PREDEFINED_SIZES = PredefinedSizes(
     ],
 )
 
-# Base board configurations that can be extended
-BASE_DESIGN_RULES = DesignRules(
-    constraints=BASE_CONSTRAINTS,
-    predefined_sizes=BASE_PREDEFINED_SIZES,
-    netclasses=[DEFAULT_NETCLASS],
-)
-
-# Complete base 4-layer board configuration (1oz outer, 0.5oz inner, base constraints)
-BASE_4L = BoardConfig(
-    design_rules=BASE_DESIGN_RULES,
-    stackup=BASE_4L_STACKUP,
+BASE_PREDEFINED_SIZES_2OZ = PredefinedSizes(
+    track_widths=[
+        0.16,
+        0.3,  # 1A on 2oz
+        0.6,  # 2A on 2oz
+        1.0,  # 3A on 2oz
+        2.1,  # 5A on 2oz
+    ],
+    via_dimensions=[
+        ViaDimension(diameter=0.4, drill=0.2),
+        ViaDimension(diameter=0.6, drill=0.3),
+    ],
 )
