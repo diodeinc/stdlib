@@ -406,8 +406,8 @@ def Board(
 # Default netclass for general-purpose PCB manufacturing
 DEFAULT_NETCLASS = NetClass(
     name="Default",
-    clearance=0.15,  # Conservative clearance (different nets)
-    track_width=0.15,  # Safe track width for most manufacturers
+    clearance=0.16,
+    track_width=0.16,  # Matches 2oz netclass
     via_diameter=0.5,  # Standard via size (5.3:1 aspect ratio on 1.6mm board)
     via_drill=0.3,  # Standard drill size
     diff_pair_width=0.2,  # Reasonable diff pair width
@@ -809,6 +809,7 @@ BASE_CONSTRAINTS_2OZ = Constraints(
 BASE_PREDEFINED_SIZES = PredefinedSizes(
     track_widths=[
         0.127,
+        0.16,
         0.2,
         0.4,
         0.8,
