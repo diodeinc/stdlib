@@ -28,8 +28,3 @@ for orientation in ["Vertical_SMD_Pin1Left", "Vertical_SMD_Pin1Right"]:
             pitch_str = str(pitch).replace(".", "_")
             name = "PinHeader_" + orientation + "_" + pitch_str + "_" + str(positions) + "_1"
             PinHeader(name = name, pins = positions, rows = 1, orientation = orientation, pitch = pitch, **pins)
-
-Layout(
-    name = "preview",
-    path = "build/PinHeader",
-) 
