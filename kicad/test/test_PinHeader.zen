@@ -9,7 +9,7 @@ for orientation in ["Vertical", "Horizontal"]:
                 pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * rows + 1)}
                 pitch_str = str(pitch).replace(".", "_")
                 name = "PinHeader_" + orientation + "_" + pitch_str + "_" + str(positions) + "_" + str(rows)
-                PinHeader(name = name, pins = positions, rows = rows, orientation = orientation, pitch = pitch, **pins)
+                PinHeader(name=name, pins=positions, rows=rows, orientation=orientation, pitch=pitch, **pins)
 
 # Test SMD configurations for dual row (Vertical_SMD only works with rows=2)
 for pitch in PinHeader.Pitch.values():
@@ -17,7 +17,7 @@ for pitch in PinHeader.Pitch.values():
         pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * 2 + 1)}
         pitch_str = str(pitch).replace(".", "_")
         name = "PinHeader_Vertical_SMD_" + pitch_str + "_" + str(positions) + "_2"
-        PinHeader(name = name, pins = positions, rows = 2, orientation = "Vertical_SMD", pitch = pitch, **pins)
+        PinHeader(name=name, pins=positions, rows=2, orientation="Vertical_SMD", pitch=pitch, **pins)
 
 # Test SMD configurations for single row (Vertical_SMD_Pin1Left and Vertical_SMD_Pin1Right only work with rows=1)
 # Skip 1x01 as those footprints don't exist
@@ -27,4 +27,4 @@ for orientation in ["Vertical_SMD_Pin1Left", "Vertical_SMD_Pin1Right"]:
             pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions + 1)}
             pitch_str = str(pitch).replace(".", "_")
             name = "PinHeader_" + orientation + "_" + pitch_str + "_" + str(positions) + "_1"
-            PinHeader(name = name, pins = positions, rows = 1, orientation = orientation, pitch = pitch, **pins)
+            PinHeader(name=name, pins=positions, rows=1, orientation=orientation, pitch=pitch, **pins)
