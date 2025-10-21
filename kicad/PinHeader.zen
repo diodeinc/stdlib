@@ -4,12 +4,14 @@ Pin Header Connector Component
 A configurable pin header component that supports:
 - Single and dual row configurations (1-40 pins per row)
 - Multiple pitch options: 1.27mm, 2.00mm, 2.54mm (standard)
-- Vertical and Horizontal orientations
+- Through-hole orientations: Vertical and Horizontal
+- SMD orientations: Vertical_SMD (dual row), Vertical_SMD_Pin1Left, Vertical_SMD_Pin1Right (single row)
 - Dynamic pin generation based on configuration
 
 Example usage:
     PinHeader = Module("generics/PinHeader.zen")
     
+    # Through-hole dual row
     PinHeader(
         name = "J1",
         pins = 5,
@@ -19,6 +21,17 @@ Example usage:
         Pin_1 = Net("VCC"),
         Pin_2 = Net("GND"),
         # ... up to Pin_10 for 2x5 configuration
+    )
+    
+    # SMD single row
+    PinHeader(
+        name = "J2",
+        pins = 4,
+        rows = 1,
+        pitch = "2.54mm",
+        orientation = "Vertical_SMD_Pin1Left",
+        Pin_1 = Net("SDA"),
+        # ... up to Pin_4
     )
 """
 
@@ -35,8 +48,11 @@ Pitch = enum(
 )
 
 Orientation = enum(
-    "Vertical",      # Vertical through-hole
-    "Horizontal",    # Horizontal through-hole (SMD style)
+    "Vertical",              # Vertical through-hole
+    "Horizontal",            # Horizontal through-hole
+    "Vertical_SMD",          # Vertical SMD (dual row only)
+    "Vertical_SMD_Pin1Left", # Vertical SMD with Pin 1 on left (single row)
+    "Vertical_SMD_Pin1Right",# Vertical SMD with Pin 1 on right (single row)
 )
 
 # -----------------------------------------------------------------------------
@@ -81,6 +97,13 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
     if rows not in [1, 2]:
         error("Invalid row count: " + str(rows) + ". Must be 1 or 2.")
 
+    # Validate SMD orientation combinations
+    orientation_str = orientation.value
+    if rows == 1 and orientation_str == "Vertical_SMD":
+        error("Vertical_SMD orientation is only valid for dual row (rows=2) pin headers. Use Vertical_SMD_Pin1Left or Vertical_SMD_Pin1Right for single row.")
+    if rows == 2 and (orientation_str == "Vertical_SMD_Pin1Left" or orientation_str == "Vertical_SMD_Pin1Right"):
+        error("Vertical_SMD_Pin1Left and Vertical_SMD_Pin1Right orientations are only valid for single row (rows=1) pin headers. Use Vertical_SMD for dual row.")
+
     # Build footprint name
     pitch_str = pitch.value
 
@@ -89,9 +112,9 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
 
     # Build the footprint name
     if rows == 1:
-        footprint_name = "PinHeader_1x" + pin_str + "_P" + pitch_str + "_" + orientation.value
+        footprint_name = "PinHeader_1x" + pin_str + "_P" + pitch_str + "_" + orientation_str
     else:
-        footprint_name = "PinHeader_2x" + pin_str + "_P" + pitch_str + "_" + orientation.value
+        footprint_name = "PinHeader_2x" + pin_str + "_P" + pitch_str + "_" + orientation_str
 
     # Construct the file path
     return "@kicad-footprints/Connector_PinHeader_" + pitch_str + ".pretty/" + footprint_name + ".kicad_mod"

@@ -1,15 +1,33 @@
 load("../../properties.zen", "Layout")
 PinHeader = Module("../PinHeader.zen")
 
-for orientation in PinHeader.Orientation.values():
+# Test through-hole configurations (Vertical and Horizontal work for both single and dual row)
+for orientation in ["Vertical", "Horizontal"]:
     for pitch in PinHeader.Pitch.values():
         for rows in range(1, 3):
             for positions in range(1, 11):
                 pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * rows + 1)}
-                name = "PinHeader_" + orientation + "_" + pitch + "_" + str(positions) + "_" + str(rows)
-
-                # All combinations are valid for PinHeader
+                pitch_str = str(pitch).replace(".", "_")
+                name = "PinHeader_" + orientation + "_" + pitch_str + "_" + str(positions) + "_" + str(rows)
                 PinHeader(name = name, pins = positions, rows = rows, orientation = orientation, pitch = pitch, **pins)
+
+# Test SMD configurations for dual row (Vertical_SMD only works with rows=2)
+for pitch in PinHeader.Pitch.values():
+    for positions in range(1, 11):
+        pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * 2 + 1)}
+        pitch_str = str(pitch).replace(".", "_")
+        name = "PinHeader_Vertical_SMD_" + pitch_str + "_" + str(positions) + "_2"
+        PinHeader(name = name, pins = positions, rows = 2, orientation = "Vertical_SMD", pitch = pitch, **pins)
+
+# Test SMD configurations for single row (Vertical_SMD_Pin1Left and Vertical_SMD_Pin1Right only work with rows=1)
+# Skip 1x01 as those footprints don't exist
+for orientation in ["Vertical_SMD_Pin1Left", "Vertical_SMD_Pin1Right"]:
+    for pitch in PinHeader.Pitch.values():
+        for positions in range(2, 11):  # Start from 2, not 1
+            pins = {"Pin_{}".format(n): Net("Net{}".format(n)) for n in range(1, positions + 1)}
+            pitch_str = str(pitch).replace(".", "_")
+            name = "PinHeader_" + orientation + "_" + pitch_str + "_" + str(positions) + "_1"
+            PinHeader(name = name, pins = positions, rows = 1, orientation = orientation, pitch = pitch, **pins)
 
 Layout(
     name = "preview",
