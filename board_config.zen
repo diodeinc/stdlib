@@ -340,12 +340,14 @@ def DefaultBoardConfig(
         print("Unsupported predefined sizes for copper weight: " + outer_copper_weight.value)
         return None
 
-
     return BoardConfig(
-        stackup = deep_merge(stackup, Stackup(
-            solder_mask_color=solder_mask_color,
-            copper_finish=copper_finish.value,
-        )),
+        stackup=deep_merge(
+            stackup,
+            Stackup(
+                solder_mask_color=solder_mask_color,
+                copper_finish=copper_finish.value,
+            ),
+        ),
         design_rules=DesignRules(
             constraints=constraints,
             netclasses=netclasses,
@@ -402,13 +404,13 @@ def Board(
     # Validate input units
     if isinstance(outer_copper_weight, str):
         outer_copper_weight = CopperWeight(outer_copper_weight)
-    
+
     if isinstance(copper_finish, str):
         copper_finish = CopperFinish(copper_finish)
 
     default_config = DefaultBoardConfig(
-        layers=layers, 
-        outer_copper_weight=outer_copper_weight, 
+        layers=layers,
+        outer_copper_weight=outer_copper_weight,
         copper_finish=copper_finish,
         solder_mask_color=solder_mask_color,
         track_widths=track_widths,
@@ -430,7 +432,7 @@ def Board(
 
     # Add layout to the module
     Layout(
-        name=name, 
+        name=name,
         path=layout_path,
     )
 
