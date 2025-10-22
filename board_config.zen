@@ -1,6 +1,9 @@
 load("units.zen", "Impedance")
+load("properties.zen", "Layout")
 
+# Enum Types
 CopperWeight = enum("0.5oz", "1oz", "2oz")
+CopperFinish = enum("HASL", "HASL Lead-free", "ENIG", "HAL SnPb", "HAL lead-free")
 
 # Copper constraints - all clearances and widths for copper features
 Copper = record(
@@ -290,15 +293,81 @@ def merge_predefined_sizes(
     )
 
 
+def DefaultBoardConfig(
+    layers: int | None = None,
+    outer_copper_weight: CopperWeight = CopperWeight("1oz"),
+    copper_finish: CopperFinish = CopperFinish("ENIG"),
+    track_widths: list | None = None,
+    via_dimensions: list | None = None,
+    solder_mask_color: str | None = None,
+) -> BoardConfig | None:
+    """Provide a default board configuration for the given layers and outer copper weight."""
+
+    stackup = {
+        2: BASE_2L_STACKUP,
+        4: BASE_4L_STACKUP,
+        6: BASE_6L_STACKUP,
+        8: BASE_8L_STACKUP,
+    }.get(layers)
+
+    netclasses = {
+        2: BASE_2L_NETCLASSES,
+        4: BASE_4L_NETCLASSES,
+        6: BASE_6L_NETCLASSES,
+        8: BASE_8L_NETCLASSES,
+    }.get(layers)
+
+    constraints = {
+        CopperWeight("1oz"): BASE_CONSTRAINTS,
+        CopperWeight("2oz"): BASE_CONSTRAINTS_2OZ,
+    }.get(outer_copper_weight)
+
+    predefined_sizes = {
+        CopperWeight("1oz"): BASE_PREDEFINED_SIZES,
+        CopperWeight("2oz"): BASE_PREDEFINED_SIZES_2OZ,
+    }.get(outer_copper_weight)
+
+    if stackup == None:
+        print("Unsupported default stackup for layers: " + str(layers))
+        return None
+    if netclasses == None:
+        print("Unsupported default netclasses for layers: " + str(layers))
+        return None
+    if constraints == None:
+        print("Unsupported default constraints for copper weight: " + outer_copper_weight.value)
+        return None
+    if predefined_sizes == None:
+        print("Unsupported predefined sizes for copper weight: " + outer_copper_weight.value)
+        return None
+
+
+    return BoardConfig(
+        stackup = deep_merge(stackup, Stackup(
+            solder_mask_color=solder_mask_color,
+            copper_finish=copper_finish.value,
+        )),
+        design_rules=DesignRules(
+            constraints=constraints,
+            netclasses=netclasses,
+            predefined_sizes=merge_predefined_sizes(
+                predefined_sizes,
+                track_widths,
+                via_dimensions,
+            ),
+        ),
+    )
+
+
 def Board(
     name: str,
     layout_path: str,
     config: BoardConfig | None = None,
     layers: int | None = None,
-    outer_copper_weight: CopperWeight = CopperWeight("1oz"),
+    outer_copper_weight: str | CopperWeight = "1oz",
+    copper_finish: str | CopperFinish = "ENIG",
+    solder_mask_color: str | None = None,
     track_widths: list | None = None,
     via_dimensions: list | None = None,
-    layout_hints: list | None = None,
     default: bool = False,
 ):
     """Define a PCB board configuration.
@@ -329,76 +398,41 @@ def Board(
         - Custom track_widths and via_dimensions are appended to base configuration
         - All lists are deduplicated and sorted before use
     """
-    # If config is not provided, construct it from layers
+
+    # Validate input units
+    if isinstance(outer_copper_weight, str):
+        outer_copper_weight = CopperWeight(outer_copper_weight)
+    
+    if isinstance(copper_finish, str):
+        copper_finish = CopperFinish(copper_finish)
+
+    default_config = DefaultBoardConfig(
+        layers=layers, 
+        outer_copper_weight=outer_copper_weight, 
+        copper_finish=copper_finish,
+        solder_mask_color=solder_mask_color,
+        track_widths=track_widths,
+        via_dimensions=via_dimensions,
+    )
+
+    if default_config:
+        config = deep_merge(default_config, config)
+
     if config == None:
-        if layers == None:
-            error("Either 'config' or 'layers' must be provided")
+        error("Please provide a board config")
 
-        # Validate copper weight
-        if outer_copper_weight.value not in ["1oz", "2oz"]:
-            error("outer_copper_weight must be '1oz' or '2oz'")
-
-        # Select configurations based on layers and copper weight
-        if layers == 2:
-            if outer_copper_weight.value == "2oz":
-                error("2oz outer copper not supported for 2-layer boards")
-            stackup = BASE_2L_STACKUP
-            netclasses = BASE_2L_NETCLASSES
-            constraints = BASE_CONSTRAINTS
-            predefined_sizes = BASE_PREDEFINED_SIZES
-        elif layers == 4:
-            if outer_copper_weight.value == "1oz":
-                stackup = BASE_4L_STACKUP
-                netclasses = BASE_4L_NETCLASSES
-                constraints = BASE_CONSTRAINTS
-                predefined_sizes = BASE_PREDEFINED_SIZES
-            else:  # "2oz"
-                stackup = BASE_4L_2OZ_STACKUP
-                netclasses = BASE_4L_2OZ_NETCLASSES
-                constraints = BASE_CONSTRAINTS_2OZ
-                predefined_sizes = BASE_PREDEFINED_SIZES_2OZ
-        elif layers == 6:
-            if outer_copper_weight.value == "2oz":
-                error("2oz outer copper not supported for 6-layer boards")
-            stackup = BASE_6L_STACKUP
-            netclasses = BASE_6L_NETCLASSES
-            constraints = BASE_CONSTRAINTS
-            predefined_sizes = BASE_PREDEFINED_SIZES
-        elif layers == 8:
-            if outer_copper_weight.value == "2oz":
-                error("2oz outer copper not supported for 8-layer boards")
-            stackup = BASE_8L_STACKUP
-            netclasses = BASE_8L_NETCLASSES
-            constraints = BASE_CONSTRAINTS
-            predefined_sizes = BASE_PREDEFINED_SIZES
-        else:
-            error("layers must be 2, 4, 6, or 8")
-
-        # Merge user-provided sizes with base configuration
-        final_predefined_sizes = merge_predefined_sizes(
-            predefined_sizes,
-            track_widths,
-            via_dimensions,
-        )
-
-        design_rules = DesignRules(
-            constraints=constraints,
-            predefined_sizes=final_predefined_sizes,
-            netclasses=netclasses,
-        )
-        config = BoardConfig(
-            design_rules=design_rules,
-            stackup=stackup,
-        )
-
+    # Add board config to the module
     builtin.add_board_config(
         name=name,
         default=default,
         config=config,
     )
-    add_property("layout_path", Path(layout_path, allow_not_exist=True))
-    if layout_hints:
-        add_property("layout_hints", layout_hints)
+
+    # Add layout to the module
+    Layout(
+        name=name, 
+        path=layout_path,
+    )
 
 
 # Standard Base Configurations
