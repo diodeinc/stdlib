@@ -308,10 +308,10 @@ def DefaultBoardConfig(
         (4, CopperWeight("1oz")): BASE_4L_STACKUP,
         (6, CopperWeight("1oz")): BASE_6L_STACKUP,
         (8, CopperWeight("1oz")): BASE_8L_STACKUP,
-        (2, CopperWeight("2oz")): BASE_2L_STACKUP, # TODO: Add 2oz stackup
+        (2, CopperWeight("2oz")): BASE_2L_STACKUP,  # TODO: Add 2oz stackup
         (4, CopperWeight("2oz")): BASE_4L_2OZ_STACKUP,
-        (6, CopperWeight("2oz")): BASE_6L_STACKUP, # TODO: Add 2oz stackup
-        (8, CopperWeight("2oz")): BASE_8L_STACKUP, # TODO: Add 2oz stackup
+        (6, CopperWeight("2oz")): BASE_6L_STACKUP,  # TODO: Add 2oz stackup
+        (8, CopperWeight("2oz")): BASE_8L_STACKUP,  # TODO: Add 2oz stackup
     }.get((layers, outer_copper_weight))
 
     netclasses = {
@@ -319,10 +319,10 @@ def DefaultBoardConfig(
         (4, CopperWeight("1oz")): BASE_4L_NETCLASSES,
         (6, CopperWeight("1oz")): BASE_6L_NETCLASSES,
         (8, CopperWeight("1oz")): BASE_8L_NETCLASSES,
-        (2, CopperWeight("2oz")): BASE_2L_NETCLASSES, # TODO: Add 2oz netclasses
+        (2, CopperWeight("2oz")): BASE_2L_NETCLASSES,  # TODO: Add 2oz netclasses
         (4, CopperWeight("2oz")): BASE_4L_2OZ_NETCLASSES,
-        (6, CopperWeight("2oz")): BASE_6L_NETCLASSES, # TODO: Add 2oz netclasses
-        (8, CopperWeight("2oz")): BASE_8L_NETCLASSES, # TODO: Add 2oz netclasses
+        (6, CopperWeight("2oz")): BASE_6L_NETCLASSES,  # TODO: Add 2oz netclasses
+        (8, CopperWeight("2oz")): BASE_8L_NETCLASSES,  # TODO: Add 2oz netclasses
     }.get((layers, outer_copper_weight))
 
     constraints = {
