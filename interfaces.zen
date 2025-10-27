@@ -358,6 +358,11 @@ Spi = interface(
     CLK=Net(),
 )
 
+Spmi = interface(
+    CLK=Net(impedance=Impedance(50)),
+    DATA=Net(impedance=Impedance(50)),
+)
+
 Swd = interface(
     SWDIO=Net(),
     SWCLK=Net(),
