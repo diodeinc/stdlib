@@ -1,0 +1,18 @@
+"""Comprehensive test for JST GH connector component."""
+
+load("../../properties.zen", "Layout")
+
+JstGH = Module("../JstGH.zen")
+
+# Test all combinations of pin counts and orientations
+for pin_count in range(2, 15):  # 2 to 14 pins
+    for orientation in [JstGH.Orientation("Vertical"), JstGH.Orientation("Horizontal")]:
+        # Create pin connections - using generic Net names
+        pin_nets = {}
+        for n in range(1, pin_count + 1):
+            pin_nets["Pin_{}".format(n)] = Net("Pin_{}_{}p_{}".format(n, pin_count, orientation))
+        pin_nets["MountPin"] = Net("MountPin_{}p_{}".format(pin_count, orientation))
+
+        # Create the component
+        name = "JstGH_{}p_{}".format(pin_count, str(orientation))
+        JstGH(name=name, pins=pin_count, orientation=orientation, **pin_nets)
