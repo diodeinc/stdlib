@@ -1,3 +1,5 @@
+load("bom/match_generics.zen", "add_default_bom_profile")
+
 Hint = struct(
     near=lambda a, b: "near({}, {})".format(a, b),
     right=lambda a, b: "right({}, {})".format(a, b),
@@ -42,9 +44,15 @@ def Properties(user_properties: dict | None, base_properties: dict) -> dict:
     return properties
 
 
-def Layout(name: str, path: str | None = None, hints: list | None = None) -> None:
+def Layout(name: str, path: str | None = None, hints: list | None = None, bom_profile: str = "default") -> None:
     """Helper function to create a layout object"""
 
+    # Only register at root
+    if len(builtin.current_module_path()) == 0:
+        if bom_profile == "default":
+            add_default_bom_profile()
+        else:
+            warn("BOM profile '{}' not found".format(bom_profile))
     if path:
         add_property("layout_path", Path(path, allow_not_exist=True))
     if hints:
