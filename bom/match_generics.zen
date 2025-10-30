@@ -1,0 +1,288 @@
+"""Panasonic ERJ Series Resistor Matcher
+
+Automatically assigns Panasonic ERJ MPNs to 0402/0603 resistors.
+"""
+
+load("@stdlib/utils.zen", "e96", "e24")
+load("@stdlib/units.zen", "Voltage", "Resistance")
+
+
+def _code_3digit(value):
+    """3-digit mantissa + multiplier encoding (e.g., 10kΩ → 1002).
+
+    Used by: ERJ-2RKF, ERJ-2RHD, ERJ-2RKD, ERJ-3EKF, etc.
+    """
+    if value < 100.0:
+        # R notation: 22.1Ω → 22R1, 4.7Ω → 4R7
+        i = int(value)
+        f = int((value - i) * 10 + 0.5)
+        return str(i) + "R" + str(f)
+
+    # Standard: find mantissa (100-999) and multiplier
+    mult = 0
+    norm = value
+    for _ in range(10):
+        if norm < 1000.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    mantissa = str(int(norm + 0.5))
+    mantissa = ("0" * (3 - len(mantissa))) + mantissa
+    return mantissa + str(mult)
+
+
+def _code_2digit(value):
+    """2 significant digits + number of zeros encoding (e.g., 2.2MΩ → 225).
+
+    Used by: ERJ-2GEJ, ERJ-U02J, ERJ-3GEJ, ERJ-U03J
+    Format: First 2 significant digits + count of trailing zeros
+    Examples:
+      - 2.2MΩ = 2,200,000 = 22 × 10^5 → "225"
+      - 4.7MΩ = 4,700,000 = 47 × 10^5 → "475"
+      - 1.0MΩ = 1,000,000 = 10 × 10^5 → "105"
+      - 10Ω = 10 = 10 × 10^0 → "100"
+      - 4.7Ω → "4R7" (R notation for < 100Ω)
+    """
+    if value < 100.0:
+        # R notation: 22.1Ω → 22R1, 4.7Ω → 4R7
+        i = int(value)
+        f = int((value - i) * 10 + 0.5)
+        return str(i) + "R" + str(f)
+
+    # Find first 2 significant digits and count of zeros
+    # Normalize to 10-99 range
+    mult = 0
+    norm = value
+
+    # Scale up if < 10 (use for loop since no while in Starlark)
+    for _ in range(10):
+        if norm >= 10.0:
+            break
+        norm = norm * 10.0
+        mult = mult - 1
+
+    # Scale down if >= 100
+    for _ in range(10):
+        if norm < 100.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    # Get 2 significant digits
+    sig_digits = str(int(norm + 0.5))
+
+    return sig_digits + str(mult)
+
+
+def _find_e_series_match(r, series_tolerance, e_series_types):
+    """Find best E96/E24 match where series tolerance band fits in component tolerance."""
+    val = r.value
+    # Default to 1% if tolerance not specified or is 0
+    comp_tol = r.tolerance if (hasattr(r, "tolerance") and r.tolerance > 0) else 0.01
+    c_min, c_max = val * (1 - comp_tol), val * (1 + comp_tol)
+
+    best = None
+    best_diff = None
+
+    for e_type in e_series_types:
+        e_series_fn = e96 if e_type == "e96" else e24
+        e_val = e_series_fn(r)
+
+        # Use series tolerance for the E-series band
+        e_min, e_max = e_val.value * (1 - series_tolerance), e_val.value * (1 + series_tolerance)
+        if e_min >= c_min and e_max <= c_max:
+            diff = abs(e_val.value - val)
+            if best_diff == None or diff < best_diff:
+                best = e_val
+                best_diff = diff
+
+    return best
+
+
+# Flat list of all series - first match is primary MPN, rest are alternatives
+# Note: Must be defined after encoding functions so we can reference them
+SERIES = [
+    # 0402 - 1% tolerance, 1Ω to 10Ω
+    {
+        "package": "0402",
+        "series": "ERJ-H2CF",
+        "min": 1.0,
+        "max": 10.0,
+        "max_v": 50.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "X",
+    },
+    # 0402 - 1% tolerance, 10Ω to 1MΩ
+    {
+        "package": "0402",
+        "series": "ERJ-2RKF",
+        "min": 10.0,
+        "max": 1e6,
+        "max_v": 50.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "X",
+    },
+    # 0402 - 5% tolerance, 1MΩ to 10MΩ
+    {
+        "package": "0402",
+        "series": "ERJ-U02J",
+        "min": 1e6,
+        "max": 10e6,
+        "max_v": 50.0,
+        "tolerance": 0.05,
+        "e_series": ["e24"],
+        "encode": _code_2digit,
+        "suffix": "X",
+    },
+    # 0402 - 1% tolerance, 1Ω to 1MΩ
+    {
+        "package": "0402",
+        "series": "ERJ-PA2F",
+        "min": 1.0,
+        "max": 1e6,
+        "max_v": 50.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "X",
+    },
+    # 0603 - 1% tolerance, 1Ω to 10Ω
+    {
+        "package": "0603",
+        "series": "ERJ-H3EF",
+        "min": 1.0,
+        "max": 10.0,
+        "max_v": 75.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "V",
+    },
+    # 0603 - 1% tolerance, 10Ω to 1MΩ
+    {
+        "package": "0603",
+        "series": "ERJ-3EKF",
+        "min": 10.0,
+        "max": 1e6,
+        "max_v": 75.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "V",
+    },
+    # 0603 - 5% tolerance, 1MΩ to 10MΩ
+    {
+        "package": "0603",
+        "series": "ERJ-U03J",
+        "min": 1e6,
+        "max": 10e6,
+        "max_v": 75.0,
+        "tolerance": 0.05,
+        "e_series": ["e24"],
+        "encode": _code_2digit,
+        "suffix": "V",
+    },
+    # 0603 - 1% tolerance, 1Ω to 1MΩ
+    {
+        "package": "0603",
+        "series": "ERJ-PA3F",
+        "min": 1.0,
+        "max": 1e6,
+        "max_v": 75.0,
+        "tolerance": 0.01,
+        "e_series": ["e96", "e24"],
+        "encode": _code_3digit,
+        "suffix": "V",
+    },
+]
+
+
+def assign_panasonic_resistor(c):
+    """Assign Panasonic ERJ MPNs to 0402/0603 resistors."""
+    # Early returns for invalid/already-assigned components
+    if c.type != "resistor":
+        return
+    if hasattr(c, "mpn") and c.mpn:
+        return
+
+    resistance = Resistance(c.properties.get("resistance", c.properties.get("Resistance")))
+    pkg = c.properties.get("package", c.properties.get("Package"))
+    if type(pkg) == "enum":
+        pkg = pkg.value
+
+    # Check voltage constraint once
+    voltage_constraint = None
+    if "Voltage" in c.properties:
+        voltage_constraint = Voltage(c.properties["Voltage"]).value
+
+    # Try all series for this package and collect matches
+    matches = []
+    for spec in SERIES:
+        if spec["package"] != pkg:
+            continue
+
+        # Check voltage rating
+        if voltage_constraint and voltage_constraint > spec["max_v"]:
+            continue
+
+        # Find E-series match
+        series_tol = spec["tolerance"]
+        e_series_types = spec["e_series"]
+        matched = _find_e_series_match(resistance, series_tol, e_series_types)
+        if not matched:
+            continue
+
+        # Check range
+        if matched.value < spec["min"] or matched.value > spec["max"]:
+            continue
+
+        # Generate MPN using the encoding function and suffix
+        encoder = spec.get("encode", _code_3digit)
+        code = encoder(matched.value)
+        suffix = spec.get("suffix", "X")
+
+        mpn = spec["series"] + code + suffix
+        matches.append(mpn)
+
+    # Assign matches: first is primary, rest are alternatives
+    if matches:
+        c.mpn = matches[0]
+        c.manufacturer = "Panasonic Electronic Components"
+
+        if len(matches) > 1:
+            c.__alternatives__ = []
+            for alt_mpn in matches[1:]:
+                c.__alternatives__.append(
+                    {
+                        "mpn": alt_mpn,
+                        "manufacturer": "Panasonic Electronic Components",
+                    }
+                )
+        return
+
+    # If we get here, no series matched - generate warning
+    matched = _find_e_series_match(c.resistance, 0.01, ["e96", "e24"])
+    if not matched:
+        warn(
+            c.name
+            + ": No E-series match found for "
+            + str(c.resistance.value)
+            + "Ω with "
+            + str(c.resistance.tolerance * 100)
+            + "% tolerance"
+        )
+    elif voltage_constraint:
+        warn(
+            c.name + ": " + pkg + " resistor voltage rating " + str(voltage_constraint) + "V exceeds max for all series"
+        )
+    else:
+        warn(c.name + ": " + str(matched.value) + "Ω out of range for all " + pkg + " series")
+
+
+def add_default_bom_profile():
+    builtin.add_component_modifier(assign_panasonic_resistor)
