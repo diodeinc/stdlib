@@ -59,11 +59,7 @@ def config_properties(
     def add_property(result, key, value):
         if value == None:
             return
-        key = format_value(key).lower().capitalize()
         result[key] = format_value(value)
-        # For lists/arrays or records, add structured versions for tooling
-        if type(value) == "list" or type(value) == "record":
-            result["__" + key.lower() + "__"] = value
 
     # Get configuration values
     user_properties = config("user_properties", dict, default={}, optional=True)

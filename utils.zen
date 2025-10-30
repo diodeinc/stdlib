@@ -137,9 +137,7 @@ def e192(physical_value):
 def format_value(*args):
     strings = []
     for arg in args:
-        if hasattr(arg, "__str__"):
-            strings.append(arg.__str__(arg))
-        elif hasattr(arg, "value"):
+        if type(arg) == "enum":
             strings.append(str(arg.value))
         elif type(arg) == "list":
             # Format lists as comma-separated values instead of JSON-like brackets
