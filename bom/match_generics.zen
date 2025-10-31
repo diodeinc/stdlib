@@ -1,288 +1,377 @@
-"""Panasonic ERJ Series Resistor Matcher
+"""Generic Component Matcher
 
-Automatically assigns Panasonic ERJ MPNs to 0402/0603 resistors.
+Automatically assigns house MPNs to resistors and capacitors.
 """
 
-load("@stdlib/utils.zen", "e96", "e24")
-load("@stdlib/units.zen", "Voltage", "Resistance")
+load("@stdlib/units.zen", "Voltage", "Resistance", "Capacitance")
+load("helpers.zen", "prop", "set_primary_and_alts", "find_e_series_match", "iec60062_3digit", "iec60062_4digit")
 
 
-def _code_3digit(value):
-    """3-digit mantissa + multiplier encoding (e.g., 10kΩ → 1002).
+# =============================================================================
+# DATA - Edit here to add/remove house parts
+# =============================================================================
 
-    Used by: ERJ-2RKF, ERJ-2RHD, ERJ-2RKD, ERJ-3EKF, etc.
+
+def murata_gcm_c0g_0402(cap_values, tolerance="1%"):
+    """Helper to generate GCM1555C1H C0G 50V 0402 capacitor entries.
+
+    Args:
+        cap_values: List of capacitance strings (e.g., ["12pF", "22pF", "100pF"])
+        tolerance: Tolerance string (default "1%")
+
+    Returns:
+        List of capacitor dictionaries
     """
-    if value < 100.0:
-        # R notation: 22.1Ω → 22R1, 4.7Ω → 4R7
-        i = int(value)
-        f = int((value - i) * 10 + 0.5)
-        return str(i) + "R" + str(f)
+    result = []
+    for cap_str in cap_values:
+        cap = Capacitance(cap_str)
+        code = iec60062_3digit(cap.value * 1e12)  # Convert to pF
+        mpns = ["GCM1555C1H" + code + "FA16D", "GCM1555C1H" + code + "FA16J"]
 
-    # Standard: find mantissa (100-999) and multiplier
-    mult = 0
-    norm = value
-    for _ in range(10):
-        if norm < 1000.0:
-            break
-        norm = norm / 10.0
-        mult = mult + 1
+        result.append(
+            {
+                "dielectric": "C0G",
+                "voltage": "50V",
+                "cap": cap_str + " " + tolerance,
+                "mpns": mpns,
+                "manufacturer": "Murata Electronics",
+            }
+        )
 
-    mantissa = str(int(norm + 0.5))
-    mantissa = ("0" * (3 - len(mantissa))) + mantissa
-    return mantissa + str(mult)
-
-
-def _code_2digit(value):
-    """2 significant digits + number of zeros encoding (e.g., 2.2MΩ → 225).
-
-    Used by: ERJ-2GEJ, ERJ-U02J, ERJ-3GEJ, ERJ-U03J
-    Format: First 2 significant digits + count of trailing zeros
-    Examples:
-      - 2.2MΩ = 2,200,000 = 22 × 10^5 → "225"
-      - 4.7MΩ = 4,700,000 = 47 × 10^5 → "475"
-      - 1.0MΩ = 1,000,000 = 10 × 10^5 → "105"
-      - 10Ω = 10 = 10 × 10^0 → "100"
-      - 4.7Ω → "4R7" (R notation for < 100Ω)
-    """
-    if value < 100.0:
-        # R notation: 22.1Ω → 22R1, 4.7Ω → 4R7
-        i = int(value)
-        f = int((value - i) * 10 + 0.5)
-        return str(i) + "R" + str(f)
-
-    # Find first 2 significant digits and count of zeros
-    # Normalize to 10-99 range
-    mult = 0
-    norm = value
-
-    # Scale up if < 10 (use for loop since no while in Starlark)
-    for _ in range(10):
-        if norm >= 10.0:
-            break
-        norm = norm * 10.0
-        mult = mult - 1
-
-    # Scale down if >= 100
-    for _ in range(10):
-        if norm < 100.0:
-            break
-        norm = norm / 10.0
-        mult = mult + 1
-
-    # Get 2 significant digits
-    sig_digits = str(int(norm + 0.5))
-
-    return sig_digits + str(mult)
+    return result
 
 
-def _find_e_series_match(r, series_tolerance, e_series_types):
-    """Find best E96/E24 match where series tolerance band fits in component tolerance."""
-    val = r.value
-    # Default to 1% if tolerance not specified or is 0
-    comp_tol = r.tolerance if (hasattr(r, "tolerance") and r.tolerance > 0) else 0.01
-    c_min, c_max = val * (1 - comp_tol), val * (1 + comp_tol)
+# Dielectric quality ranking: C0G/NP0 > X7T > X7R > X7S > X5R > Y5V > Z5U
+_DIELECTRIC_RANK = {
+    "C0G": 0,
+    "NP0": 0,
+    "X7T": 1,
+    "X7R": 2,
+    "X7S": 3,
+    "X5R": 4,
+    "Y5V": 5,
+    "Z5U": 6,
+}
 
-    best = None
-    best_diff = None
+# Resistor series by package
+SERIES_BY_PKG = {
+    "0402": [
+        {
+            "series": "ERJ-H2CF",
+            "min": "1Ohm",
+            "max": "10Ohm",
+            "max_v": "50V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "X",
+        },
+        {
+            "series": "ERJ-2RKF",
+            "min": "10Ohm",
+            "max": "1MOhm",
+            "max_v": "50V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "X",
+        },
+        {
+            "series": "ERJ-U02J",
+            "min": "1MOhm",
+            "max": "10MOhm",
+            "max_v": "50V",
+            "tolerance": "5%",
+            "e_series": ["e24"],
+            "encode": iec60062_3digit,
+            "suffix": "X",
+        },
+        {
+            "series": "ERJ-PA2F",
+            "min": "1Ohm",
+            "max": "1MOhm",
+            "max_v": "50V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "X",
+        },
+    ],
+    "0603": [
+        {
+            "series": "ERJ-H3EF",
+            "min": "1Ohm",
+            "max": "10Ohm",
+            "max_v": "75V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "V",
+        },
+        {
+            "series": "ERJ-3EKF",
+            "min": "10Ohm",
+            "max": "1MOhm",
+            "max_v": "75V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "V",
+        },
+        {
+            "series": "ERJ-U03J",
+            "min": "1MOhm",
+            "max": "10MOhm",
+            "max_v": "75V",
+            "tolerance": "5%",
+            "e_series": ["e24"],
+            "encode": iec60062_3digit,
+            "suffix": "V",
+        },
+        {
+            "series": "ERJ-PA3F",
+            "min": "1Ohm",
+            "max": "1MOhm",
+            "max_v": "75V",
+            "tolerance": "1%",
+            "e_series": ["e96", "e24"],
+            "encode": iec60062_4digit,
+            "suffix": "V",
+        },
+    ],
+}
 
-    for e_type in e_series_types:
-        e_series_fn = e96 if e_type == "e96" else e24
-        e_val = e_series_fn(r)
+# House capacitor catalog (Murata parts) by package
+HOUSE_CAPS_BY_PKG = {
+    "0402": murata_gcm_c0g_0402(["12pF", "22pF", "30pF", "47pF", "100pF", "330pF"])
+    + [
+        {
+            "dielectric": "C0G",
+            "voltage": "35V",
+            "cap": "10nF 2%",
+            "mpns": ["GRM1555CYA103GE01D", "GRM1555CYA103GE01J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "10nF 10%",
+            "mpns": ["GCM155R71H103KA55D", "GCM155R71H103KA55J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "22nF 10%",
+            "mpns": ["GCM155R71H223KA55D", "GCM155R71H223KA55J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "100nF 10%",
+            "mpns": ["GCM155R71H104KE02D", "GCM155R71H104KE02J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "10V",
+            "cap": "1uF 10%",
+            "mpns": ["GRM155Z71A105KE01J", "GRM155Z71A105KE01D"],
+            "manufacturer": "Murata Electronics",
+        },
+    ],
+    "0603": [
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "100nF 10%",
+            "mpns": ["GCM188R71H104KA57J", "GCM188R71H104KA57D"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "25V",
+            "cap": "1uF 10%",
+            "mpns": ["GCM188R71E105KA64J", "GCM188R71E105KA64D"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "25V",
+            "cap": "2.2uF 20%",
+            "mpns": ["GRM188Z71E225ME43D", "GRM188Z71E225ME43J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "16V",
+            "cap": "4.7uF 20%",
+            "mpns": ["GRM188Z71C475KE21D", "GRM188Z71C475KE21J"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "10V",
+            "cap": "10uF 20%",
+            "mpns": ["GRM188Z71A106KA73D", "GRM188Z71A106KA73J", "GRM188Z71A106MA73D", "GRM188Z71A106MA73J"],
+            "manufacturer": "Murata Electronics",
+        },
+    ],
+    "0805": [
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "4.7uF 20%",
+            "mpns": ["GRM21BZ71H475KE15L", "GRM21BZ71H475KE15K", "GRM21BZ71H475ME15K"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "25V",
+            "cap": "10uF 10%",
+            "mpns": ["GRM21BZ71E106KE15L", "GRM21BZ71E106KE15K"],
+            "manufacturer": "Murata Electronics",
+        },
+    ],
+    "1206": [
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "4.7uF 10%",
+            "mpns": ["GRM31CR71H475KA12L", "GRM31CR71H475KA12K"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "25V",
+            "cap": "10uF 10%",
+            "mpns": ["GRM31CR71E106KA12K", "GRM31CR71E106KA12L"],
+            "manufacturer": "Murata Electronics",
+        },
+    ],
+    "1210": [
+        {
+            "dielectric": "X7R",
+            "voltage": "50V",
+            "cap": "4.7uF 10%",
+            "mpns": ["GCM32ER71H475KA55K", "GCM32ER71H475KA55L"],
+            "manufacturer": "Murata Electronics",
+        },
+        {
+            "dielectric": "X7R",
+            "voltage": "25V",
+            "cap": "10uF 10%",
+            "mpns": ["GCM32ER71E106KA57L", "GCM32ER71E106KA57K"],
+            "manufacturer": "Murata Electronics",
+        },
+    ],
+}
 
-        # Use series tolerance for the E-series band
-        e_min, e_max = e_val.value * (1 - series_tolerance), e_val.value * (1 + series_tolerance)
-        if e_min >= c_min and e_max <= c_max:
-            diff = abs(e_val.value - val)
-            if best_diff == None or diff < best_diff:
-                best = e_val
-                best_diff = diff
 
-    return best
-
-
-# Flat list of all series - first match is primary MPN, rest are alternatives
-# Note: Must be defined after encoding functions so we can reference them
-SERIES = [
-    # 0402 - 1% tolerance, 1Ω to 10Ω
-    {
-        "package": "0402",
-        "series": "ERJ-H2CF",
-        "min": 1.0,
-        "max": 10.0,
-        "max_v": 50.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "X",
-    },
-    # 0402 - 1% tolerance, 10Ω to 1MΩ
-    {
-        "package": "0402",
-        "series": "ERJ-2RKF",
-        "min": 10.0,
-        "max": 1e6,
-        "max_v": 50.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "X",
-    },
-    # 0402 - 5% tolerance, 1MΩ to 10MΩ
-    {
-        "package": "0402",
-        "series": "ERJ-U02J",
-        "min": 1e6,
-        "max": 10e6,
-        "max_v": 50.0,
-        "tolerance": 0.05,
-        "e_series": ["e24"],
-        "encode": _code_2digit,
-        "suffix": "X",
-    },
-    # 0402 - 1% tolerance, 1Ω to 1MΩ
-    {
-        "package": "0402",
-        "series": "ERJ-PA2F",
-        "min": 1.0,
-        "max": 1e6,
-        "max_v": 50.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "X",
-    },
-    # 0603 - 1% tolerance, 1Ω to 10Ω
-    {
-        "package": "0603",
-        "series": "ERJ-H3EF",
-        "min": 1.0,
-        "max": 10.0,
-        "max_v": 75.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "V",
-    },
-    # 0603 - 1% tolerance, 10Ω to 1MΩ
-    {
-        "package": "0603",
-        "series": "ERJ-3EKF",
-        "min": 10.0,
-        "max": 1e6,
-        "max_v": 75.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "V",
-    },
-    # 0603 - 5% tolerance, 1MΩ to 10MΩ
-    {
-        "package": "0603",
-        "series": "ERJ-U03J",
-        "min": 1e6,
-        "max": 10e6,
-        "max_v": 75.0,
-        "tolerance": 0.05,
-        "e_series": ["e24"],
-        "encode": _code_2digit,
-        "suffix": "V",
-    },
-    # 0603 - 1% tolerance, 1Ω to 1MΩ
-    {
-        "package": "0603",
-        "series": "ERJ-PA3F",
-        "min": 1.0,
-        "max": 1e6,
-        "max_v": 75.0,
-        "tolerance": 0.01,
-        "e_series": ["e96", "e24"],
-        "encode": _code_3digit,
-        "suffix": "V",
-    },
-]
-
-
-def assign_panasonic_resistor(c):
-    """Assign Panasonic ERJ MPNs to 0402/0603 resistors."""
-    # Early returns for invalid/already-assigned components
-    if c.type != "resistor":
+def assign_house_resistor(c, series_by_pkg):
+    """Assign house resistor MPNs."""
+    if c.type != "resistor" or (hasattr(c, "mpn") and c.mpn):
         return
-    if hasattr(c, "mpn") and c.mpn:
+
+    resistance = Resistance(prop(c, ["resistance", "Resistance"]))
+    pkg = prop(c, ["package", "Package"])
+    v_req = prop(c, ["Voltage", "voltage"])
+    voltage_constraint = Voltage(v_req).value if v_req else None
+
+    # Skip 0 ohm resistors - they can't be matched to E-series
+    if resistance.value <= 0:
         return
 
-    resistance = Resistance(c.properties.get("resistance", c.properties.get("Resistance")))
-    pkg = c.properties.get("package", c.properties.get("Package"))
-    if type(pkg) == "enum":
-        pkg = pkg.value
+    series_list = series_by_pkg.get(pkg, [])
+    if not series_list:
+        warn(c.name + ": No resistor series available for package " + pkg)
+        return
 
-    # Check voltage constraint once
-    voltage_constraint = None
-    if "Voltage" in c.properties:
-        voltage_constraint = Voltage(c.properties["Voltage"]).value
-
-    # Try all series for this package and collect matches
     matches = []
-    for spec in SERIES:
-        if spec["package"] != pkg:
+    for spec in series_list:
+        spec_min = Resistance(spec["min"]).value
+        spec_max = Resistance(spec["max"]).value
+        spec_max_v = Voltage(spec["max_v"]).value
+        spec_tol = float(spec["tolerance"].replace("%", "")) / 100.0
+
+        if voltage_constraint and voltage_constraint > spec_max_v:
             continue
 
-        # Check voltage rating
-        if voltage_constraint and voltage_constraint > spec["max_v"]:
+        matched = find_e_series_match(resistance, spec_tol, spec["e_series"])
+        if not matched or matched.value < spec_min or matched.value > spec_max:
             continue
 
-        # Find E-series match
-        series_tol = spec["tolerance"]
-        e_series_types = spec["e_series"]
-        matched = _find_e_series_match(resistance, series_tol, e_series_types)
-        if not matched:
-            continue
-
-        # Check range
-        if matched.value < spec["min"] or matched.value > spec["max"]:
-            continue
-
-        # Generate MPN using the encoding function and suffix
-        encoder = spec.get("encode", _code_3digit)
+        encoder = spec.get("encode", iec60062_4digit)
         code = encoder(matched.value)
-        suffix = spec.get("suffix", "X")
-
-        mpn = spec["series"] + code + suffix
+        mpn = spec["series"] + code + spec.get("suffix", "X")
         matches.append(mpn)
 
-    # Assign matches: first is primary, rest are alternatives
     if matches:
-        c.mpn = matches[0]
-        c.manufacturer = "Panasonic Electronic Components"
-
-        if len(matches) > 1:
-            c.__alternatives__ = []
-            for alt_mpn in matches[1:]:
-                c.__alternatives__.append(
-                    {
-                        "mpn": alt_mpn,
-                        "manufacturer": "Panasonic Electronic Components",
-                    }
-                )
+        set_primary_and_alts(c, matches[0], "Panasonic Electronic Components", matches[1:])
         return
 
-    # If we get here, no series matched - generate warning
-    matched = _find_e_series_match(c.resistance, 0.01, ["e96", "e24"])
-    if not matched:
-        warn(
-            c.name
-            + ": No E-series match found for "
-            + str(c.resistance.value)
-            + "Ω with "
-            + str(c.resistance.tolerance * 100)
-            + "% tolerance"
-        )
-    elif voltage_constraint:
-        warn(
-            c.name + ": " + pkg + " resistor voltage rating " + str(voltage_constraint) + "V exceeds max for all series"
-        )
-    else:
-        warn(c.name + ": " + str(matched.value) + "Ω out of range for all " + pkg + " series")
+    # Generate warning
+    warn(c.name + ": No house resistor for " + str(resistance) + " " + pkg)
+
+
+def assign_house_capacitor(c, house_caps_by_pkg):
+    """Assign Murata house MPNs to capacitors."""
+    if c.type != "capacitor" or (hasattr(c, "mpn") and c.mpn):
+        return
+
+    cap = Capacitance(prop(c, ["capacitance", "Capacitance"]))
+    pkg = prop(c, ["package", "Package"])
+    req_diel = prop(c, ["dielectric", "Dielectric"])
+    v_req = prop(c, ["voltage", "Voltage"])
+    req_voltage = Voltage(v_req).value if v_req else None
+
+    tol_req = cap.tolerance if cap.tolerance > 0 else 0.2
+    req_min = cap.value * (1.0 - tol_req)
+    req_max = cap.value * (1.0 + tol_req)
+
+    parts = house_caps_by_pkg.get(pkg, [])
+    if not parts:
+        warn(c.name + ": No house caps available for package " + pkg)
+        return
+
+    best = None
+    best_score = None
+
+    for p in parts:
+        p_cap = Capacitance(p["cap"])
+        p_voltage = Voltage(p["voltage"]).value
+
+        if req_diel:
+            h_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
+            r_rank = _DIELECTRIC_RANK.get(req_diel, 99)
+            if h_rank > r_rank:
+                continue
+
+        if req_voltage and p_voltage < req_voltage:
+            continue
+
+        p_min = p_cap.value * (1.0 - p_cap.tolerance)
+        p_max = p_cap.value * (1.0 + p_cap.tolerance)
+        if p_min < req_min or p_max > req_max:
+            continue
+
+        err = abs(p_cap.value - cap.value) / cap.value
+        diel_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
+        score = (err, p_cap.tolerance, -p_voltage, diel_rank)
+
+        if best_score == None or score < best_score:
+            best = p
+            best_score = score
+
+    if best:
+        set_primary_and_alts(c, best["mpns"][0], best["manufacturer"], best["mpns"][1:])
+        return
+
+    # Generate warning
+    warn(c.name + ": No house cap for " + str(cap) + " " + pkg)
 
 
 def add_default_bom_profile():
-    builtin.add_component_modifier(assign_panasonic_resistor)
+    builtin.add_component_modifier(lambda c: assign_house_resistor(c, SERIES_BY_PKG))
+    builtin.add_component_modifier(lambda c: assign_house_capacitor(c, HOUSE_CAPS_BY_PKG))
