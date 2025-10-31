@@ -24,7 +24,7 @@ def inverting_sum(
     package: str = "0603",
     voltage: Voltage | str = "25V",
     resistance: Resistance | str = "10k Ohms 1%",
-    tolerance: float = 0.01, # 1% tolerance
+    tolerance: float = 0.01,  # 1% tolerance
 ) -> Opamp:
     """Inverting summing amplifier"""
 
@@ -33,7 +33,7 @@ def inverting_sum(
     RG = e96(RI * gain)
     IN_N = Net(name + "_IN_N")
 
-    actual_gain = (RG / RI)
+    actual_gain = RG / RI
     delta = abs(actual_gain - gain)
     if (delta / gain) > tolerance:
         warn(f"Gain mismatch: {gain} != {actual_gain}, delta: {delta}")
@@ -55,7 +55,7 @@ def noninverting_sum(
     package: str = "0603",
     voltage: Voltage | str = "25V",
     resistance: Resistance | str = "10k Ohms 1%",
-    tolerance: float = 0.01, # 1% tolerance
+    tolerance: float = 0.01,  # 1% tolerance
 ) -> Opamp:
     """Noninverting summing amplifier, Vout = (1 + RA/RB) * ((V1 + V2) / 2)"""
 
@@ -65,7 +65,7 @@ def noninverting_sum(
     IN_P = Net(name + "_IN_P")
     IN_N = Net(name + "_IN_N")
 
-    actual_gain = ((RA / RB + 1) / 2) 
+    actual_gain = (RA / RB + 1) / 2
     delta = abs(actual_gain - gain)
 
     if (delta / gain) > tolerance:
