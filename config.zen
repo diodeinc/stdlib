@@ -101,7 +101,7 @@ def config_properties(
         value_parts = []
         for k, v in result.items():
             if k.lower() not in META_KEYS and not k.startswith("__") and v:
-                value_parts.append(str(v))
+                value_parts.append(format_value(v))
         result["value"] = " ".join(value_parts)
 
     return result
