@@ -1,6 +1,6 @@
 """BOM matching helper functions"""
 
-load("@stdlib/utils.zen", "e96", "e24")
+load("../utils.zen", "e96", "e24")
 
 
 def prop(c, names):
