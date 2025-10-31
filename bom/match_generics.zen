@@ -4,41 +4,16 @@ Automatically assigns house MPNs to resistors and capacitors.
 """
 
 load("@stdlib/units.zen", "Voltage", "Resistance", "Capacitance")
-load("helpers.zen", "prop", "set_primary_and_alts", "find_e_series_match", "iec60062_3digit", "iec60062_4digit")
-
-
-# =============================================================================
-# DATA - Edit here to add/remove house parts
-# =============================================================================
-
-
-def murata_gcm_c0g_0402(cap_values, tolerance="1%"):
-    """Helper to generate GCM1555C1H C0G 50V 0402 capacitor entries.
-
-    Args:
-        cap_values: List of capacitance strings (e.g., ["12pF", "22pF", "100pF"])
-        tolerance: Tolerance string (default "1%")
-
-    Returns:
-        List of capacitor dictionaries
-    """
-    result = []
-    for cap_str in cap_values:
-        cap = Capacitance(cap_str)
-        code = iec60062_3digit(cap.value * 1e12)  # Convert to pF
-        mpns = ["GCM1555C1H" + code + "FA16D", "GCM1555C1H" + code + "FA16J"]
-
-        result.append(
-            {
-                "dielectric": "C0G",
-                "voltage": "50V",
-                "cap": cap_str + " " + tolerance,
-                "mpns": mpns,
-                "manufacturer": "Murata Electronics",
-            }
-        )
-
-    return result
+load(
+    "helpers.zen",
+    "prop",
+    "set_primary_and_alts",
+    "find_e_series_match",
+    "iec60062_3digit",
+    "iec60062_4digit",
+    "resistor_series",
+    "murata_cap",
+)
 
 
 # Dielectric quality ranking: C0G/NP0 > X7T > X7R > X7S > X5R > Y5V > Z5U
@@ -56,215 +31,59 @@ _DIELECTRIC_RANK = {
 # Resistor series by package
 SERIES_BY_PKG = {
     "0402": [
-        {
-            "series": "ERJ-H2CF",
-            "min": "1Ohm",
-            "max": "10Ohm",
-            "max_v": "50V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "X",
-        },
-        {
-            "series": "ERJ-2RKF",
-            "min": "10Ohm",
-            "max": "1MOhm",
-            "max_v": "50V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "X",
-        },
-        {
-            "series": "ERJ-U02J",
-            "min": "1MOhm",
-            "max": "10MOhm",
-            "max_v": "50V",
-            "tolerance": "5%",
-            "e_series": ["e24"],
-            "encode": iec60062_3digit,
-            "suffix": "X",
-        },
-        {
-            "series": "ERJ-PA2F",
-            "min": "1Ohm",
-            "max": "1MOhm",
-            "max_v": "50V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "X",
-        },
+        resistor_series("ERJ-H2CF", "1Ohm", "10Ohm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+        resistor_series("ERJ-2RKF", "10Ohm", "1MOhm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+        resistor_series("ERJ-U02J", "1MOhm", "10MOhm", "50V", "5%", ["e24"], iec60062_3digit, "X"),
+        resistor_series("ERJ-PA2F", "1Ohm", "1MOhm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
     ],
     "0603": [
-        {
-            "series": "ERJ-H3EF",
-            "min": "1Ohm",
-            "max": "10Ohm",
-            "max_v": "75V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "V",
-        },
-        {
-            "series": "ERJ-3EKF",
-            "min": "10Ohm",
-            "max": "1MOhm",
-            "max_v": "75V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "V",
-        },
-        {
-            "series": "ERJ-U03J",
-            "min": "1MOhm",
-            "max": "10MOhm",
-            "max_v": "75V",
-            "tolerance": "5%",
-            "e_series": ["e24"],
-            "encode": iec60062_3digit,
-            "suffix": "V",
-        },
-        {
-            "series": "ERJ-PA3F",
-            "min": "1Ohm",
-            "max": "1MOhm",
-            "max_v": "75V",
-            "tolerance": "1%",
-            "e_series": ["e96", "e24"],
-            "encode": iec60062_4digit,
-            "suffix": "V",
-        },
+        resistor_series("ERJ-H3EF", "1Ohm", "10Ohm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        resistor_series("ERJ-3EKF", "10Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        resistor_series("ERJ-U03J", "1MOhm", "10MOhm", "75V", "5%", ["e24"], iec60062_3digit, "V"),
+        resistor_series("ERJ-PA3F", "1Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
     ],
 }
 
 # House capacitor catalog (Murata parts) by package
 HOUSE_CAPS_BY_PKG = {
-    "0402": murata_gcm_c0g_0402(["12pF", "22pF", "30pF", "47pF", "100pF", "330pF"])
-    + [
-        {
-            "dielectric": "C0G",
-            "voltage": "35V",
-            "cap": "10nF 2%",
-            "mpns": ["GRM1555CYA103GE01D", "GRM1555CYA103GE01J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "10nF 10%",
-            "mpns": ["GCM155R71H103KA55D", "GCM155R71H103KA55J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "22nF 10%",
-            "mpns": ["GCM155R71H223KA55D", "GCM155R71H223KA55J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "100nF 10%",
-            "mpns": ["GCM155R71H104KE02D", "GCM155R71H104KE02J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "10V",
-            "cap": "1uF 10%",
-            "mpns": ["GRM155Z71A105KE01J", "GRM155Z71A105KE01D"],
-            "manufacturer": "Murata Electronics",
-        },
+    "0201": [
+        murata_cap("X7R", "10V", "10nF 10%", "GCM033R71A103KA03", ["D", "J"]),
+        murata_cap("X7R", "10V", "100nF 10%", "GRM033Z71A104KE14", ["D", "J"]),
+        murata_cap("X7R", "16V", "100nF 20%", "GRM033Z71C104ME14", ["D", "J"]),
+    ],
+    "0402": [
+        murata_cap("C0G", "50V", "12pF 1%", "GCM1555C1H120FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "22pF 1%", "GCM1555C1H220FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "30pF 1%", "GCM1555C1H300FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "47pF 1%", "GCM1555C1H470FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "100pF 1%", "GCM1555C1H101FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "330pF 1%", "GCM1555C1H331FA16", ["D", "J"]),
+        murata_cap("C0G", "35V", "10nF 2%", "GRM1555CYA103GE01", ["D", "J"]),
+        murata_cap("X7R", "50V", "10nF 10%", "GCM155R71H103KA55", ["D", "J"]),
+        murata_cap("X7R", "50V", "22nF 10%", "GCM155R71H223KA55", ["D", "J"]),
+        murata_cap("X7R", "50V", "100nF 10%", "GCM155R71H104KE02", ["D", "J"]),
+        murata_cap("X7R", "10V", "1uF 10%", "GRM155Z71A105KE01", ["D", "J"]),
     ],
     "0603": [
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "100nF 10%",
-            "mpns": ["GCM188R71H104KA57J", "GCM188R71H104KA57D"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "25V",
-            "cap": "1uF 10%",
-            "mpns": ["GCM188R71E105KA64J", "GCM188R71E105KA64D"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "25V",
-            "cap": "2.2uF 20%",
-            "mpns": ["GRM188Z71E225ME43D", "GRM188Z71E225ME43J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "16V",
-            "cap": "4.7uF 20%",
-            "mpns": ["GRM188Z71C475KE21D", "GRM188Z71C475KE21J"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "10V",
-            "cap": "10uF 20%",
-            "mpns": ["GRM188Z71A106KA73D", "GRM188Z71A106KA73J", "GRM188Z71A106MA73D", "GRM188Z71A106MA73J"],
-            "manufacturer": "Murata Electronics",
-        },
+        murata_cap("X7R", "50V", "100nF 10%", "GCM188R71H104KA57", ["D", "J"]),
+        murata_cap("X7R", "25V", "1uF 10%", "GCM188R71E105KA64", ["D", "J"]),
+        murata_cap("X7R", "25V", "2.2uF 20%", "GRM188Z71E225ME43", ["D", "J"]),
+        murata_cap("X7R", "16V", "4.7uF 20%", "GRM188Z71C475KE21", ["D", "J"]),
+        murata_cap("X7R", "10V", "10uF 10%", "GRM188Z71A106KA73", ["D", "J"]),
+        murata_cap("X7R", "10V", "10uF 20%", "GRM188Z71A106MA73", ["D", "J"]),
     ],
     "0805": [
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "4.7uF 20%",
-            "mpns": ["GRM21BZ71H475KE15L", "GRM21BZ71H475KE15K", "GRM21BZ71H475ME15K"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "25V",
-            "cap": "10uF 10%",
-            "mpns": ["GRM21BZ71E106KE15L", "GRM21BZ71E106KE15K"],
-            "manufacturer": "Murata Electronics",
-        },
+        murata_cap("X7R", "50V", "4.7uF 10%", "GRM21BZ71H475KE15", ["K", "L"]),
+        murata_cap("X7R", "50V", "4.7uF 20%", "GRM21BZ71H475ME15", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GRM21BZ71E106KE15", ["K", "L"]),
     ],
     "1206": [
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "4.7uF 10%",
-            "mpns": ["GRM31CR71H475KA12L", "GRM31CR71H475KA12K"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "25V",
-            "cap": "10uF 10%",
-            "mpns": ["GRM31CR71E106KA12K", "GRM31CR71E106KA12L"],
-            "manufacturer": "Murata Electronics",
-        },
+        murata_cap("X7R", "50V", "4.7uF 10%", "GRM31CR71H475KA12", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GRM31CR71E106KA12", ["K", "L"]),
     ],
     "1210": [
-        {
-            "dielectric": "X7R",
-            "voltage": "50V",
-            "cap": "4.7uF 10%",
-            "mpns": ["GCM32ER71H475KA55K", "GCM32ER71H475KA55L"],
-            "manufacturer": "Murata Electronics",
-        },
-        {
-            "dielectric": "X7R",
-            "voltage": "25V",
-            "cap": "10uF 10%",
-            "mpns": ["GCM32ER71E106KA57L", "GCM32ER71E106KA57K"],
-            "manufacturer": "Murata Electronics",
-        },
+        murata_cap("X7R", "50V", "4.7uF 10%", "GCM32ER71H475KA55", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GCM32ER71E106KA57", ["K", "L"]),
     ],
 }
 
@@ -331,12 +150,7 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     req_max = cap.value * (1.0 + tol_req)
 
     parts = house_caps_by_pkg.get(pkg, [])
-    if not parts:
-        warn(c.name + ": No house caps available for package " + pkg)
-        return
-
-    best = None
-    best_score = None
+    matches = []
 
     for p in parts:
         p_cap = Capacitance(p["cap"])
@@ -360,12 +174,19 @@ def assign_house_capacitor(c, house_caps_by_pkg):
         diel_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
         score = (err, p_cap.tolerance, -p_voltage, diel_rank)
 
-        if best_score == None or score < best_score:
-            best = p
-            best_score = score
+        matches.append((score, p))
 
-    if best:
-        set_primary_and_alts(c, best["mpns"][0], best["manufacturer"], best["mpns"][1:])
+    if matches:
+        sorted_matches = sorted(matches, key=lambda x: x[0])
+        all_mpns = []
+        manufacturer = None
+
+        for score, p in sorted_matches:
+            if manufacturer == None:
+                manufacturer = p["manufacturer"]
+            all_mpns.extend(p["mpns"])
+
+        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
         return
 
     # Generate warning
