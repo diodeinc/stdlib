@@ -13,7 +13,7 @@ GND = Ground("GND")
 
 OPAMP = sallen_key_lowpass(
     name="OPAMP",
-    frequency="1MHz",
+    frequency="1MHz 0.1%",
     GND=GND,
     IN=INPUT,
     OUT=PROBE,
