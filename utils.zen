@@ -145,3 +145,7 @@ def format_value(*args):
         elif arg != None:
             strings.append(str(arg))
     return " ".join(strings)
+
+
+def abs(value):
+    return _abs(value)
