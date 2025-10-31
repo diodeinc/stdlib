@@ -59,11 +59,7 @@ def config_properties(
     def add_property(result, key, value):
         if value == None:
             return
-        key = format_value(key).lower().capitalize()
-        result[key] = format_value(value)
-        # For lists/arrays or records, add structured versions for tooling
-        if type(value) == "list" or type(value) == "record":
-            result["__" + key.lower() + "__"] = value
+        result[key] = value
 
     # Get configuration values
     user_properties = config("user_properties", dict, default={}, optional=True)
@@ -93,19 +89,19 @@ def config_properties(
         for key, value in user_properties.items():
             add_property(result, key, value)
 
-    # If Mpn is set, use it as Value
-    mpn_val = result.get("Mpn", "")
+    # If mpn is set, use it as Value
+    mpn_val = result.get("mpn", "")
     if mpn_val:
-        result["Value"] = mpn_val
+        result["value"] = mpn_val
 
     # If Value is not set, generate it from the other properties
-    if not result.get("Value", None):
+    if not result.get("value", None):
         # Metadata keys to exclude from Value generation
-        META_KEYS = ["Mpn", "Do_not_populate", "Exclude_from_bom", "Exclude_from_pos_files", "Value", "Alternatives"]
+        META_KEYS = ["mpn", "do_not_populate", "exclude_from_bom", "exclude_from_pos_files", "value", "alternatives"]
         value_parts = []
         for k, v in result.items():
-            if k not in META_KEYS and not k.startswith("__") and v:
-                value_parts.append(v)
-        result["Value"] = " ".join(value_parts)
+            if k.lower() not in META_KEYS and not k.startswith("__") and v:
+                value_parts.append(str(v))
+        result["value"] = " ".join(value_parts)
 
     return result
