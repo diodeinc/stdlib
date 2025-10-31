@@ -1,6 +1,6 @@
 load("interfaces.zen", "DiffPair", "Ground", "Opamp")
-load("units.zen", "Capacitance", "Frequency", "Resistance", "unit")
-load("utils.zen", "e96", "e24")
+load("units.zen", "Capacitance", "Frequency", "Resistance", "Voltage")
+load("utils.zen", "e96", "e24", "abs")
 
 Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
@@ -22,19 +22,26 @@ def inverting_sum(
     GND: Ground,
     gain: float = 1.0,
     package: str = "0603",
-    voltage: str = "25V",
-    resistance: Resistance | str = "1k Ohms 1%",
+    voltage: Voltage | str = "25V",
+    resistance: Resistance | str = "10k Ohms 1%",
+    tolerance: float = 0.01, # 1% tolerance
 ) -> Opamp:
     """Inverting summing amplifier"""
 
     RI = Resistance(resistance)
+    V = Voltage(voltage)
     RG = e96(RI * gain)
     IN_N = Net(name + "_IN_N")
 
-    for i, IN in enumerate(INPUTS):
-        Resistor(name=name + "_R_I" + str(i), value=RI, package=package, voltage=voltage, P1=IN, P2=IN_N)
+    actual_gain = (RG / RI)
+    delta = abs(actual_gain - gain)
+    if (delta / gain) > tolerance:
+        warn(f"Gain mismatch: {gain} != {actual_gain}, delta: {delta}")
 
-    Resistor(name=name + "_R_F", value=RG, package=package, voltage=voltage, P1=IN_N, P2=OUT)
+    for i, IN in enumerate(INPUTS):
+        Resistor(name=name + "_R_I" + str(i), value=RI, package=package, voltage=V, P1=IN, P2=IN_N)
+
+    Resistor(name=name + "_R_F", value=RG, package=package, voltage=V, P1=IN_N, P2=OUT)
 
     return Opamp(name=name, IN_P=GND.NET, IN_N=IN_N, OUT=OUT)
 
@@ -46,8 +53,9 @@ def noninverting_sum(
     GND: Ground,
     gain: float = 1.0,
     package: str = "0603",
-    voltage: str = "25V",
-    resistance: Resistance | str = "1k Ohms 1%",
+    voltage: Voltage | str = "25V",
+    resistance: Resistance | str = "10k Ohms 1%",
+    tolerance: float = 0.01, # 1% tolerance
 ) -> Opamp:
     """Noninverting summing amplifier, Vout = (1 + RA/RB) * ((V1 + V2) / 2)"""
 
@@ -56,6 +64,12 @@ def noninverting_sum(
     RA = e96(RB * (gain * 2 - 1))
     IN_P = Net(name + "_IN_P")
     IN_N = Net(name + "_IN_N")
+
+    actual_gain = ((RA / RB + 1) / 2) 
+    delta = abs(actual_gain - gain)
+
+    if (delta / gain) > tolerance:
+        warn(f"Gain mismatch: {gain} != {actual_gain}, delta: {delta}")
 
     for i, IN in enumerate(INPUTS):
         Resistor(name=name + "_RI" + str(i), value=RI, package=package, voltage=voltage, P1=IN, P2=IN_P)
@@ -88,7 +102,7 @@ def sallen_key_lowpass(
     resistance: Resistance | str = "1k Ohms 1%",
     package: str = "0603",
     dielectric: str = "NP0",
-    voltage: str = "25V",
+    voltage: Voltage | str = "25V",
 ) -> Opamp:
     """Second order lowpass filter using Sallen-Key topology, assuming equal resistors and capacitors"""
 
@@ -97,6 +111,7 @@ def sallen_key_lowpass(
 
     F = Frequency(frequency)
     R = Resistance(resistance)
+    V = Voltage(voltage)
     C = 1 / (2 * 3.1415 * R * F)
 
     R1 = e96(R * m)
@@ -104,14 +119,20 @@ def sallen_key_lowpass(
     C1 = e24(C * n)
     C2 = e24(C / n)
 
+    actual_frequency = 1 / (2 * 3.1415 * R * C)
+    delta = abs(F - actual_frequency)
+
+    if F.tolerance and (delta / F) > F.tolerance:
+        warn(f"Frequency mismatch: {frequency} != {actual_frequency}")
+
     IN_P = Net(name + "_IN_P")
     NODE = Net(name + "_NODE")
     IN_N = OUT
 
     Resistor(name=name + "_R1", value=R1, package=package, P1=IN, P2=NODE)
     Resistor(name=name + "_R2", value=R2, package=package, P1=NODE, P2=IN_P)
-    Capacitor(name=name + "_C1", value=C1, package=package, P1=NODE, P2=OUT, dielectric=dielectric, voltage=voltage)
-    Capacitor(name=name + "_C2", value=C2, package=package, P1=IN_P, P2=GND, dielectric=dielectric, voltage=voltage)
+    Capacitor(name=name + "_C1", value=C1, package=package, P1=NODE, P2=OUT, dielectric=dielectric, voltage=V)
+    Capacitor(name=name + "_C2", value=C2, package=package, P1=IN_P, P2=GND, dielectric=dielectric, voltage=V)
 
     return Opamp(
         name=name,
