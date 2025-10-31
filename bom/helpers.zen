@@ -97,3 +97,56 @@ def iec60062_3digit(value):
 
     sig_digits = str(int(norm + 0.5))
     return sig_digits + str(mult)
+
+
+def resistor_series(series, min_val, max_val, max_v, tolerance, e_series, encode, suffix):
+    """Helper to create resistor series entry.
+
+    Args:
+        series: Series prefix (e.g., "ERJ-2RKF")
+        min_val: Min resistance (e.g., "10Ohm")
+        max_val: Max resistance (e.g., "1MOhm")
+        max_v: Max voltage (e.g., "50V")
+        tolerance: Tolerance string (e.g., "1%")
+        e_series: List of E-series (e.g., ["e96", "e24"])
+        encode: Encoding function (iec60062_3digit or iec60062_4digit)
+        suffix: MPN suffix (e.g., "X" or "V")
+
+    Returns:
+        Resistor series dictionary
+    """
+    return {
+        "series": series,
+        "min": min_val,
+        "max": max_val,
+        "max_v": max_v,
+        "tolerance": tolerance,
+        "e_series": e_series,
+        "encode": encode,
+        "suffix": suffix,
+    }
+
+
+def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murata Electronics"):
+    """Helper to create Murata capacitor entry with auto-generated packaging variants.
+
+    Args:
+        dielectric: Dielectric type (e.g., "X7R")
+        voltage: Voltage rating (e.g., "50V")
+        cap: Capacitance with tolerance (e.g., "100nF 10%")
+        base_mpn: Base MPN without suffix (string)
+        suffixes: List of suffixes to append (e.g., ["D", "J"] or ["K", "L"])
+        manufacturer: Manufacturer name
+
+    Returns:
+        Capacitor dictionary
+    """
+    mpns = [base_mpn + suffix for suffix in suffixes]
+
+    return {
+        "dielectric": dielectric,
+        "voltage": voltage,
+        "cap": cap,
+        "mpns": mpns,
+        "manufacturer": manufacturer,
+    }
