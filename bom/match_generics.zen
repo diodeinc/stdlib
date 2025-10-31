@@ -3,7 +3,7 @@
 Automatically assigns house MPNs to resistors and capacitors.
 """
 
-load("@stdlib/units.zen", "Voltage", "Resistance", "Capacitance")
+load("../units.zen", "Voltage", "Resistance", "Capacitance")
 load(
     "helpers.zen",
     "prop",
