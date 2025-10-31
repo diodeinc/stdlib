@@ -1,0 +1,198 @@
+"""Generic Component Matcher
+
+Automatically assigns house MPNs to resistors and capacitors.
+"""
+
+load("../units.zen", "Voltage", "Resistance", "Capacitance")
+load(
+    "helpers.zen",
+    "prop",
+    "set_primary_and_alts",
+    "find_e_series_match",
+    "iec60062_3digit",
+    "iec60062_4digit",
+    "resistor_series",
+    "murata_cap",
+)
+
+
+# Dielectric quality ranking: C0G/NP0 > X7T > X7R > X7S > X5R > Y5V > Z5U
+_DIELECTRIC_RANK = {
+    "C0G": 0,
+    "NP0": 0,
+    "X7T": 1,
+    "X7R": 2,
+    "X7S": 3,
+    "X5R": 4,
+    "Y5V": 5,
+    "Z5U": 6,
+}
+
+# Resistor series by package
+SERIES_BY_PKG = {
+    "0402": [
+        resistor_series("ERJ-H2CF", "1Ohm", "10Ohm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+        resistor_series("ERJ-2RKF", "10Ohm", "1MOhm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+        resistor_series("ERJ-U02J", "1MOhm", "10MOhm", "50V", "5%", ["e24"], iec60062_3digit, "X"),
+        resistor_series("ERJ-PA2F", "1Ohm", "1MOhm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+    ],
+    "0603": [
+        resistor_series("ERJ-H3EF", "1Ohm", "10Ohm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        resistor_series("ERJ-3EKF", "10Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        resistor_series("ERJ-U03J", "1MOhm", "10MOhm", "75V", "5%", ["e24"], iec60062_3digit, "V"),
+        resistor_series("ERJ-PA3F", "1Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+    ],
+}
+
+# House capacitor catalog (Murata parts) by package
+HOUSE_CAPS_BY_PKG = {
+    "0201": [
+        murata_cap("X7R", "10V", "10nF 10%", "GCM033R71A103KA03", ["D", "J"]),
+        murata_cap("X7R", "10V", "100nF 10%", "GRM033Z71A104KE14", ["D", "J"]),
+        murata_cap("X7R", "16V", "100nF 20%", "GRM033Z71C104ME14", ["D", "J"]),
+    ],
+    "0402": [
+        murata_cap("C0G", "50V", "12pF 1%", "GCM1555C1H120FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "22pF 1%", "GCM1555C1H220FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "30pF 1%", "GCM1555C1H300FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "47pF 1%", "GCM1555C1H470FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "100pF 1%", "GCM1555C1H101FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "330pF 1%", "GCM1555C1H331FA16", ["D", "J"]),
+        murata_cap("C0G", "35V", "10nF 2%", "GRM1555CYA103GE01", ["D", "J"]),
+        murata_cap("X7R", "50V", "10nF 10%", "GCM155R71H103KA55", ["D", "J"]),
+        murata_cap("X7R", "50V", "22nF 10%", "GCM155R71H223KA55", ["D", "J"]),
+        murata_cap("X7R", "50V", "100nF 10%", "GCM155R71H104KE02", ["D", "J"]),
+        murata_cap("X7R", "10V", "1uF 10%", "GRM155Z71A105KE01", ["D", "J"]),
+    ],
+    "0603": [
+        murata_cap("X7R", "50V", "100nF 10%", "GCM188R71H104KA57", ["D", "J"]),
+        murata_cap("X7R", "25V", "1uF 10%", "GCM188R71E105KA64", ["D", "J"]),
+        murata_cap("X7R", "25V", "2.2uF 20%", "GRM188Z71E225ME43", ["D", "J"]),
+        murata_cap("X7R", "16V", "4.7uF 20%", "GRM188Z71C475KE21", ["D", "J"]),
+        murata_cap("X7R", "10V", "10uF 10%", "GRM188Z71A106KA73", ["D", "J"]),
+        murata_cap("X7R", "10V", "10uF 20%", "GRM188Z71A106MA73", ["D", "J"]),
+    ],
+    "0805": [
+        murata_cap("X7R", "50V", "4.7uF 10%", "GRM21BZ71H475KE15", ["K", "L"]),
+        murata_cap("X7R", "50V", "4.7uF 20%", "GRM21BZ71H475ME15", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GRM21BZ71E106KE15", ["K", "L"]),
+    ],
+    "1206": [
+        murata_cap("X7R", "50V", "4.7uF 10%", "GRM31CR71H475KA12", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GRM31CR71E106KA12", ["K", "L"]),
+    ],
+    "1210": [
+        murata_cap("X7R", "50V", "4.7uF 10%", "GCM32ER71H475KA55", ["K", "L"]),
+        murata_cap("X7R", "25V", "10uF 10%", "GCM32ER71E106KA57", ["K", "L"]),
+    ],
+}
+
+
+def assign_house_resistor(c, series_by_pkg):
+    """Assign house resistor MPNs."""
+    if c.type != "resistor" or (hasattr(c, "mpn") and c.mpn):
+        return
+
+    resistance = Resistance(prop(c, ["resistance", "Resistance"]))
+    pkg = prop(c, ["package", "Package"])
+    v_req = prop(c, ["Voltage", "voltage"])
+    voltage_constraint = Voltage(v_req).value if v_req else None
+
+    # Skip 0 ohm resistors - they can't be matched to E-series
+    if resistance.value <= 0:
+        return
+
+    series_list = series_by_pkg.get(pkg, [])
+    if not series_list:
+        warn(c.name + ": No resistor series available for package " + pkg)
+        return
+
+    matches = []
+    for spec in series_list:
+        spec_min = Resistance(spec["min"]).value
+        spec_max = Resistance(spec["max"]).value
+        spec_max_v = Voltage(spec["max_v"]).value
+        spec_tol = float(spec["tolerance"].replace("%", "")) / 100.0
+
+        if voltage_constraint and voltage_constraint > spec_max_v:
+            continue
+
+        matched = find_e_series_match(resistance, spec_tol, spec["e_series"])
+        if not matched or matched.value < spec_min or matched.value > spec_max:
+            continue
+
+        encoder = spec.get("encode", iec60062_4digit)
+        code = encoder(matched.value)
+        mpn = spec["series"] + code + spec.get("suffix", "X")
+        matches.append(mpn)
+
+    if matches:
+        set_primary_and_alts(c, matches[0], "Panasonic Electronic Components", matches[1:])
+        return
+
+    # Generate warning
+    warn(c.name + ": No house resistor for " + str(resistance) + " " + pkg)
+
+
+def assign_house_capacitor(c, house_caps_by_pkg):
+    """Assign Murata house MPNs to capacitors."""
+    if c.type != "capacitor" or (hasattr(c, "mpn") and c.mpn):
+        return
+
+    cap = Capacitance(prop(c, ["capacitance", "Capacitance"]))
+    pkg = prop(c, ["package", "Package"])
+    req_diel = prop(c, ["dielectric", "Dielectric"])
+    v_req = prop(c, ["voltage", "Voltage"])
+    req_voltage = Voltage(v_req).value if v_req else None
+
+    tol_req = cap.tolerance if cap.tolerance > 0 else 0.2
+    req_min = cap.value * (1.0 - tol_req)
+    req_max = cap.value * (1.0 + tol_req)
+
+    parts = house_caps_by_pkg.get(pkg, [])
+    matches = []
+
+    for p in parts:
+        p_cap = Capacitance(p["cap"])
+        p_voltage = Voltage(p["voltage"]).value
+
+        if req_diel:
+            h_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
+            r_rank = _DIELECTRIC_RANK.get(req_diel, 99)
+            if h_rank > r_rank:
+                continue
+
+        if req_voltage and p_voltage < req_voltage:
+            continue
+
+        p_min = p_cap.value * (1.0 - p_cap.tolerance)
+        p_max = p_cap.value * (1.0 + p_cap.tolerance)
+        if p_min < req_min or p_max > req_max:
+            continue
+
+        err = abs(p_cap.value - cap.value) / cap.value
+        diel_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
+        score = (err, p_cap.tolerance, -p_voltage, diel_rank)
+
+        matches.append((score, p))
+
+    if matches:
+        sorted_matches = sorted(matches, key=lambda x: x[0])
+        all_mpns = []
+        manufacturer = None
+
+        for score, p in sorted_matches:
+            if manufacturer == None:
+                manufacturer = p["manufacturer"]
+            all_mpns.extend(p["mpns"])
+
+        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        return
+
+    # Generate warning
+    warn(c.name + ": No house cap for " + str(cap) + " " + pkg)
+
+
+def add_default_bom_profile():
+    builtin.add_component_modifier(lambda c: assign_house_resistor(c, SERIES_BY_PKG))
+    builtin.add_component_modifier(lambda c: assign_house_capacitor(c, HOUSE_CAPS_BY_PKG))

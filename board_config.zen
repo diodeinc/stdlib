@@ -379,6 +379,7 @@ def Board(
     track_widths: list | None = None,
     via_dimensions: list | None = None,
     default: bool = False,
+    bom_profile: str = "default",
 ):
     """Define a PCB board configuration.
 
@@ -442,6 +443,7 @@ def Board(
     Layout(
         name=name,
         path=layout_path,
+        bom_profile=bom_profile,
     )
 
 

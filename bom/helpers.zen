@@ -1,0 +1,152 @@
+"""BOM matching helper functions"""
+
+load("../utils.zen", "e96", "e24")
+
+
+def prop(c, names):
+    """Get property by name (case-insensitive), unwrap enums."""
+    for k in names:
+        if k in c.properties:
+            v = c.properties[k]
+            return v.value if type(v) == "enum" else v
+    return None
+
+
+def set_primary_and_alts(c, primary, manufacturer, alts):
+    """Set primary MPN and alternatives on component."""
+    c.mpn = primary
+    c.manufacturer = manufacturer
+    if alts and len(alts) > 0:
+        c.alternatives = [{"mpn": m, "manufacturer": manufacturer} for m in alts]
+
+
+def find_e_series_match(r, series_tolerance, e_series_types):
+    """Find best E96/E24 match where series tolerance band fits in component tolerance."""
+    val = r.value
+
+    # Return None for values that can't be matched (e.g., 0 ohm or negative)
+    if val <= 0:
+        return None
+
+    comp_tol = r.tolerance if r.tolerance > 0 else 0.01
+    c_min, c_max = val * (1 - comp_tol), val * (1 + comp_tol)
+
+    best = None
+    best_diff = None
+
+    e_series_map = {"e96": e96, "e24": e24}
+
+    for e_type in e_series_types:
+        e_series_fn = e_series_map[e_type]
+        e_val = e_series_fn(r)
+
+        e_min, e_max = e_val.value * (1 - series_tolerance), e_val.value * (1 + series_tolerance)
+        if e_min >= c_min and e_max <= c_max:
+            diff = abs(e_val.value - val)
+            if best_diff == None or diff < best_diff:
+                best = e_val
+                best_diff = diff
+
+    return best
+
+
+def encode_R_notation(value):
+    """R notation for values < 100Ω (e.g., 22.1Ω → 22R1, 4.7Ω → 4R7)."""
+    i = int(value)
+    f = int((value - i) * 10 + 0.5)
+    return str(i) + "R" + str(f)
+
+
+def iec60062_4digit(value):
+    """IEC 60062 4-digit code: 3 significant digits + multiplier (e.g., 10kΩ → 1002)."""
+    if value < 100.0:
+        return encode_R_notation(value)
+
+    mult = 0
+    norm = value
+    for _ in range(10):
+        if norm < 1000.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    mantissa = str(int(norm + 0.5))
+    mantissa = ("0" * (3 - len(mantissa))) + mantissa
+    return mantissa + str(mult)
+
+
+def iec60062_3digit(value):
+    """IEC 60062 3-digit code: 2 significant digits + multiplier (e.g., 2.2MΩ → 225)."""
+    if value < 100.0:
+        return encode_R_notation(value)
+
+    mult = 0
+    norm = value
+
+    for _ in range(10):
+        if norm >= 10.0:
+            break
+        norm = norm * 10.0
+        mult = mult - 1
+
+    for _ in range(10):
+        if norm < 100.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    sig_digits = str(int(norm + 0.5))
+    return sig_digits + str(mult)
+
+
+def resistor_series(series, min_val, max_val, max_v, tolerance, e_series, encode, suffix):
+    """Helper to create resistor series entry.
+
+    Args:
+        series: Series prefix (e.g., "ERJ-2RKF")
+        min_val: Min resistance (e.g., "10Ohm")
+        max_val: Max resistance (e.g., "1MOhm")
+        max_v: Max voltage (e.g., "50V")
+        tolerance: Tolerance string (e.g., "1%")
+        e_series: List of E-series (e.g., ["e96", "e24"])
+        encode: Encoding function (iec60062_3digit or iec60062_4digit)
+        suffix: MPN suffix (e.g., "X" or "V")
+
+    Returns:
+        Resistor series dictionary
+    """
+    return {
+        "series": series,
+        "min": min_val,
+        "max": max_val,
+        "max_v": max_v,
+        "tolerance": tolerance,
+        "e_series": e_series,
+        "encode": encode,
+        "suffix": suffix,
+    }
+
+
+def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murata Electronics"):
+    """Helper to create Murata capacitor entry with auto-generated packaging variants.
+
+    Args:
+        dielectric: Dielectric type (e.g., "X7R")
+        voltage: Voltage rating (e.g., "50V")
+        cap: Capacitance with tolerance (e.g., "100nF 10%")
+        base_mpn: Base MPN without suffix (string)
+        suffixes: List of suffixes to append (e.g., ["D", "J"] or ["K", "L"])
+        manufacturer: Manufacturer name
+
+    Returns:
+        Capacitor dictionary
+    """
+    mpns = [base_mpn + suffix for suffix in suffixes]
+
+    return {
+        "dielectric": dielectric,
+        "voltage": voltage,
+        "cap": cap,
+        "mpns": mpns,
+        "manufacturer": manufacturer,
+    }
