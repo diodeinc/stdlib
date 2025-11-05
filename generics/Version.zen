@@ -4,9 +4,7 @@ Component(
     symbol=Symbol("./footprints/version-symbol.kicad_sym"),
     footprint=File("./footprints/version-footprint.kicad_mod"),
     pins={},
-    properties={
-        "do_not_populate": "true",
-        "exclude_from_bom": "true",
-        "exclude_from_pos_files": "true",
-    },
+    dnp=True,
+    skip_bom=True,
+    skip_pos=True,
 )

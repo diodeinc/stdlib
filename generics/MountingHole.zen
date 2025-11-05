@@ -1,4 +1,3 @@
-load("../config.zen", "config_properties")
 load("../units.zen", "unit")
 load("../utils.zen", "format_value")
 
@@ -19,16 +18,12 @@ standard = config("standard", Standard, default=Standard("DIN965"), convert=Stan
 plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(diameter, standard, plating),
-        "diameter": diameter,
-        "standard": standard,
-        "plating": plating,
-        "do_not_populate": True,
-        "exclude_from_bom": True,
-    }
-)
+properties = {
+    "value": format_value(diameter, standard, plating),
+    "diameter": diameter,
+    "standard": standard,
+    "plating": plating,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -125,4 +120,7 @@ Component(
         "1": P1,
     },
     properties=properties,
+    dnp=True,
+    skip_bom=True,
+    skip_pos=True,
 )

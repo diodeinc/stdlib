@@ -1,5 +1,3 @@
-load("../config.zen", "config_properties")
-
 # -----------------------------------------------------------------------------
 # Component types
 # -----------------------------------------------------------------------------
@@ -37,6 +35,7 @@ Variant = enum(
 
 # New variant-based approach (preferred)
 variant = config("variant", Variant, optional=True)
+mpn = config("mpn", str, optional=True)
 
 # Legacy parameters (deprecated)
 mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=True)
@@ -48,18 +47,13 @@ use_jumper_footprint = config("use_jumper_footprint", bool, default=False, optio
 pin_count = int(variant.value.split("_")[0]) if variant else pin_count_legacy
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": " ",
-        "variant": variant if variant else None,
-        "mount_type": mount_type if not variant else None,
-        "pad_size": pad_size if not variant else None,
-        "pin_count": pin_count,
-        "exclude_from_bom": True,
-        "do_not_populate": True,
-        "exclude_from_pos_files": True,
-    }
-)
+properties = {
+    "value": " ",
+    "variant": variant if variant else None,
+    "mount_type": mount_type if not variant else None,
+    "pad_size": pad_size if not variant else None,
+    "pin_count": pin_count,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -202,6 +196,7 @@ def _spice_nets(P, pin_count):
 
 Component(
     name="NT",
+    mpn=mpn,
     symbol=Symbol(**_symbol(pin_count)),
     footprint=File(_footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant)),
     prefix="NT",
@@ -213,4 +208,7 @@ Component(
         args={"RVAL": "1m"},  # 1 milliohm for near-zero resistance
     ),
     properties=properties,
+    dnp=True,
+    skip_bom=True,
+    skip_pos=True,
 )

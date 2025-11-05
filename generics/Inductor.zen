@@ -1,5 +1,6 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Inductance")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -20,19 +21,17 @@ if package == Package("KICAD"):
     kicad_package = config("kicad_package", str, default="L_0603_1608Metric")
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": value,
-        "package": package,
-        "inductance": value,
-        "current": current,
-        "type": "inductor",
-    }
-)
+properties = {
+    "value": format_value(value, current),
+    "package": package,
+    "inductance": value,
+    "current": current,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -78,6 +77,7 @@ def _footprint(package: Package) -> str:
 
 Component(
     name="L",
+    mpn=mpn,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package))
     if package != Package("KICAD")

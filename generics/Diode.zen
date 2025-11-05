@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -18,6 +18,7 @@ Mount = enum("SMD")
 package = config("package", Package)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 variant = config("variant", Variant, default=Variant("Standard"))
 v_f = config_unit("v_f", Voltage, optional=True)  # Forward voltage
@@ -26,18 +27,15 @@ v_r = config_unit("v_r", Voltage, optional=True)  # Reverse voltage
 i_r = config_unit("i_r", Current, optional=True)  # Reverse current
 
 # Properties
-properties = config_properties(
-    {
-        "value": format_value(v_f, i_f, v_r, i_r),
-        "package": package,
-        "variant": variant,
-        "v_f": v_f,
-        "i_f": i_f,
-        "v_r": v_r,
-        "i_r": i_r,
-        "type": "diode",
-    }
-)
+properties = {
+    "value": format_value(v_f, variant),
+    "package": package,
+    "variant": variant,
+    "v_f": v_f,
+    "i_f": i_f,
+    "v_r": v_r,
+    "i_r": i_r,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -135,6 +133,7 @@ def _spice_args(variant: Variant, v_f, i_f, v_r, i_r):
 
 Component(
     name="D",
+    mpn=mpn,
     prefix="D",
     symbol=Symbol(**_symbol(variant)),
     footprint=File(_footprint(mount, package)),

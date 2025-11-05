@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -18,20 +18,18 @@ package = config("package", Package, default=Package("0603"))
 value = config_unit("value", Resistance)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config_unit("voltage", Voltage, optional=True)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(value, voltage),
-        "package": package,
-        "resistance": value,
-        "voltage": voltage,
-        "type": "resistor",
-    }
-)
+properties = {
+    "value": format_value(value, voltage),
+    "package": package,
+    "resistance": value,
+    "voltage": voltage,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -81,6 +79,7 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name="R",
+    mpn=mpn,
     symbol=Symbol(**_symbol(mount, package, use_us_symbol)),
     footprint=File(_footprint(mount, package)),
     prefix="R",

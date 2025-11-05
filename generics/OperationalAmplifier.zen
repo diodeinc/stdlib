@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../interfaces.zen", "Opamp")
 load("../units.zen", "Frequency", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
@@ -18,15 +18,14 @@ Package = enum("SOIC8")
 variant = config("variant", Variant, default=Variant("Single"), optional=True)
 package = config("package", Package, default=Package("SOIC8"), optional=True)
 
+mpn = config("mpn", str, optional=True)
+
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(variant),
-        "package": package,
-        "variant": variant,
-        "type": "opamp",
-    }
-)
+properties = {
+    "value": format_value(variant),
+    "package": package,
+    "variant": variant,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -60,6 +59,7 @@ def _footprint(package: Package):
 
 Component(
     name="U",
+    mpn=mpn,
     symbol=Symbol(_symbol(variant)),
     footprint=File(_footprint(package)),
     prefix="OPA",
@@ -82,4 +82,5 @@ Component(
         },
     ),
     properties=properties,
+    type="opamp",
 )

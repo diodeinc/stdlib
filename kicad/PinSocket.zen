@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -26,16 +26,13 @@ pitch = config("pitch", Pitch, default=Pitch("2.54mm"))
 orientation = config("orientation", Orientation, default=Orientation("Vertical"))
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": pitch.value + " " + str(pins) + "x",
-        "description": "PinSocket " + pitch.value + " " + str(pins) + "x" + str(rows) + " " + orientation.value,
-        "pins": pins,
-        "rows": rows,
-        "pitch": pitch,
-        "orientation": orientation,
-    }
-)
+properties = {
+    "value": format_value(pitch, str(pins) + "x" + str(rows), orientation),
+    "pins": pins,
+    "rows": rows,
+    "pitch": pitch,
+    "orientation": orientation,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports

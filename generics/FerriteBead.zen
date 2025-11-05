@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Frequency", "Resistance")
 load("../utils.zen", "format_value")
 
@@ -19,20 +19,18 @@ resistance = config_unit("resistance", Resistance)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(resistance, current, frequency),
-        "package": package,
-        "resistance": resistance,
-        "frequency": frequency,
-        "current": current,
-        "type": "ferrite_bead",
-    }
-)
+properties = {
+    "value": format_value(resistance, current, frequency),
+    "package": package,
+    "resistance": resistance,
+    "frequency": frequency,
+    "current": current,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -78,6 +76,7 @@ def _footprint(package: Package) -> str:
 
 Component(
     name="FB",
+    mpn=mpn,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     prefix="FB",

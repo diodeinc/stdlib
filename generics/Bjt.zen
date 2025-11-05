@@ -1,5 +1,6 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Frequency", "Voltage")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -14,6 +15,7 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
+mpn = config("mpn", str, optional=True)
 package = config("package", Package, convert=Package)
 bjt_type = config("bjt_type", BjtType, convert=BjtType)
 
@@ -27,19 +29,17 @@ ic_max = config_unit("ic_max", Current, optional=True)
 ft = config_unit("ft", Frequency, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "package": package,
-        "bjt_type": bjt_type,
-        "hfe": hfe,
-        "vceo": vceo,
-        "vebo": vebo,
-        "vcbo": vcbo,
-        "ic_max": ic_max,
-        "ft": ft,
-        "type": "bjt",
-    }
-)
+properties = {
+    "value": format_value(bjt_type, hfe, ic_max, ft),
+    "package": package,
+    "bjt_type": bjt_type,
+    "hfe": hfe,
+    "vceo": vceo,
+    "vebo": vebo,
+    "vcbo": vcbo,
+    "ic_max": ic_max,
+    "ft": ft,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -88,6 +88,7 @@ def _symbol(bjt_type: BjtType):
 
 Component(
     name="Q",
+    mpn=mpn,
     symbol=_symbol(bjt_type),
     footprint=File(_footprint(package)),
     prefix="Q",
