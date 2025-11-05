@@ -1,5 +1,6 @@
 load("units.zen", "Impedance")
 load("properties.zen", "Layout")
+load("bom/match_generics.zen", "add_default_bom_profile")
 
 # Enum Types
 CopperWeight = enum("0.5oz", "1oz", "2oz")
@@ -379,7 +380,8 @@ def Board(
     track_widths: list | None = None,
     via_dimensions: list | None = None,
     default: bool = False,
-    bom_profile: str = "default",
+    modifiers: list | None = None,
+    bom_profile=add_default_bom_profile,
 ):
     """Define a PCB board configuration.
 
@@ -443,6 +445,7 @@ def Board(
     Layout(
         name=name,
         path=layout_path,
+        modifiers=modifiers,
         bom_profile=bom_profile,
     )
 
