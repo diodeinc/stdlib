@@ -37,7 +37,7 @@ SERIES_BY_PKG = {
         resistor_series("ERJ-PA2F", "1Ohm", "1MOhm", "50V", "1%", ["e96", "e24"], iec60062_4digit, "X"),
     ],
     "0603": [
-        resistor_series("ERJ-H3EF", "1Ohm", "10Ohm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        resistor_series("ERJ-H3QF", "1Ohm", "10Ohm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
         resistor_series("ERJ-3EKF", "10Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
         resistor_series("ERJ-U03J", "1MOhm", "10MOhm", "75V", "5%", ["e24"], iec60062_3digit, "V"),
         resistor_series("ERJ-PA3F", "1Ohm", "1MOhm", "75V", "1%", ["e96", "e24"], iec60062_4digit, "V"),
