@@ -133,7 +133,8 @@ def assign_house_resistor(c, series_by_pkg):
         + " "
         + pkg
         + ".\nTry using different component values or specify mpn directly "
-        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)"
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
     )
 
 
@@ -199,7 +200,8 @@ def assign_house_capacitor(c, house_caps_by_pkg):
         + " "
         + pkg
         + ".\nTry using different component values or specify mpn directly "
-        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)"
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
     )
 
 
