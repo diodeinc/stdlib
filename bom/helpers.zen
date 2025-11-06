@@ -150,3 +150,58 @@ def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murat
         "mpns": mpns,
         "manufacturer": manufacturer,
     }
+
+
+def match_component(match: dict, parts: tuple | list):
+    """Create a component modifier that matches specific properties and assigns MPN.
+
+    Args:
+        match: Dict of property names to values to match (case-insensitive)
+        parts: Either a single tuple (mpn, manufacturer) or list of tuples.
+               First tuple is primary, rest are alternatives.
+
+    Returns:
+        A function that can be used as a component modifier
+
+    Example:
+        match_component(
+            match={"resistance": "10k", "package": "0603"},
+            parts=[("ERJ-3EKF1002V", "Panasonic"), ("RC0603FR-0710KL", "Yageo")]
+        )
+    """
+
+    def modifier(c):
+        # Skip if already has MPN
+        if c.mpn:
+            return
+
+        # Check if all match criteria are satisfied
+        for key, expected_value in match.items():
+            actual_value = prop(c, [key])
+
+            # If property doesn't exist or doesn't match, skip this component
+            if actual_value == None or actual_value != expected_value:
+                return
+
+        # All properties match! Now set the MPN
+        # Handle both single tuple and list of tuples
+        if type(parts) == "tuple":
+            # Single part, no alternatives
+            mpn, manufacturer = parts
+            c.mpn = mpn
+            c.manufacturer = manufacturer
+        else:
+            # List of parts
+            if len(parts) == 0:
+                return
+
+            # First is primary
+            primary_mpn, primary_manufacturer = parts[0]
+            c.mpn = primary_mpn
+            c.manufacturer = primary_manufacturer
+
+            # Rest are alternatives (if any)
+            if len(parts) > 1:
+                c.alternatives = [{"mpn": mpn, "manufacturer": mfr} for mpn, mfr in parts[1:]]
+
+    return modifier
