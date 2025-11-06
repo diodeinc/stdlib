@@ -103,10 +103,6 @@ def assign_house_resistor(c, series_by_pkg):
         return
 
     series_list = series_by_pkg.get(pkg, [])
-    if not series_list:
-        warn(c.name + ": No resistor series available for package " + pkg)
-        return
-
     matches = []
     for spec in series_list:
         spec_min = Resistance(spec["min"]).value
@@ -131,7 +127,14 @@ def assign_house_resistor(c, series_by_pkg):
         return
 
     # Generate warning
-    warn(c.name + ": No house resistor for " + str(resistance) + " " + pkg)
+    warn(
+        "No house resistor found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)"
+    )
 
 
 def assign_house_capacitor(c, house_caps_by_pkg):
@@ -190,7 +193,14 @@ def assign_house_capacitor(c, house_caps_by_pkg):
         return
 
     # Generate warning
-    warn(c.name + ": No house cap for " + str(cap) + " " + pkg)
+    warn(
+        "No house cap found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)"
+    )
 
 
 def add_default_bom_profile():
