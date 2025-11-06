@@ -1,5 +1,3 @@
-load("../config.zen", "config_properties")
-
 # -----------------------------------------------------------------------------
 # Component types
 # -----------------------------------------------------------------------------
@@ -23,15 +21,10 @@ Variant = enum(
 variant = config("variant", Variant, default=Variant("1mm_Mask2mm"), convert=Variant, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": "Fiducial",
-        "variant": variant,
-        "do_not_populate": True,
-        "exclude_from_bom": True,
-        "exclude_from_pos_files": True,
-    }
-)
+properties = {
+    "value": "Fiducial",
+    "variant": variant,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -69,4 +62,6 @@ Component(
     prefix="FID",
     pins={},  # No electrical connections
     properties=properties,
+    dnp=True,
+    skip_bom=True,
 )

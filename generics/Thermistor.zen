@@ -1,5 +1,5 @@
 load("./SolderJumper.zen", "pin_defs")
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -8,7 +8,7 @@ load("../utils.zen", "format_value")
 # -----------------------------------------------------------------------------
 
 Package = enum("0201", "0402", "0603", "0805")
-TemperatureCoefficient = enum("NTC", "PTC", "Unspecified")
+TemperatureCoefficient = enum("NTC", "PTC")
 Mount = enum("SMD")
 
 # -----------------------------------------------------------------------------
@@ -20,24 +20,19 @@ package = config("package", Package, default=Package("0603"))
 value = config_unit("value", Resistance)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config_unit("voltage", Voltage, optional=True)
-temperature_coefficient = config(
-    "temperature_coefficient", TemperatureCoefficient, default=TemperatureCoefficient("Unspecified"), optional=True
-)
+temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, optional=True)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(value, voltage),
-        "package": package,
-        "resistance": value,
-        "voltage": voltage,
-        "type": "thermistor",
-    }
-)
-
+properties = {
+    "value": format_value(value, temperature_coefficient, voltage),
+    "package": package,
+    "resistance": value,
+    "voltage": voltage,
+}
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------
@@ -50,7 +45,9 @@ P2 = io("P2", Net)
 # -----------------------------------------------------------------------------
 
 
-def _symbol(mount: Mount, package: Package, temperature_coefficient: TemperatureCoefficient, use_us_symbol: bool):
+def _symbol(
+    mount: Mount, package: Package, temperature_coefficient: TemperatureCoefficient | None, use_us_symbol: bool
+):
     name = ""
 
     if temperature_coefficient == TemperatureCoefficient("PTC"):
@@ -89,6 +86,7 @@ def _footprint(mount: Mount, package: Package):
 
 Component(
     name="TH",
+    mpn=mpn,
     symbol=Symbol(**_symbol(mount, package, temperature_coefficient, use_us_symbol)),
     footprint=File(_footprint(mount, package)),
     prefix="TH",

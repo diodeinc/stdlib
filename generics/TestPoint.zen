@@ -1,5 +1,3 @@
-load("../config.zen", "config_properties")
-
 # -----------------------------------------------------------------------------
 # Component types and variants
 # -----------------------------------------------------------------------------
@@ -95,49 +93,47 @@ def _footprint(variant):
     return f"@kicad-footprints/TestPoint.pretty/TestPoint_{name}.kicad_mod"
 
 
-def _properties(variant: Variant):
-    """Returns the properties for a specific variant."""
-
-    if "Keystone" in variant.value:
-        color = config("color", Color, default=Color("Black"), optional=True)
-        series = int(variant.value.split("_")[1].split("-")[0])
-        mpn = (
-            series
-            + {
-                Color("Red"): 0,
-                Color("Black"): 1,
-                Color("White"): 2,
-                Color("Yellow"): 4,
-            }[color]
-        )
-
-        return config_properties(
-            properties={
-                "mpn": mpn,
-                "color": color,
-            },
-        )
-
-    return config_properties(
-        do_not_populate=True,
-        exclude_from_bom=True,
-        properties={
-            "variant": variant,
-        },
+def _keystone_mpn(variant: Variant, color: Color):
+    series = int(variant.value.split("_")[1].split("-")[0])
+    return (
+        series
+        + {
+            Color("Red"): 0,
+            Color("Black"): 1,
+            Color("White"): 2,
+            Color("Yellow"): 4,
+        }[color]
     )
 
 
-# -----------------------------------------------------------------------------
-# Component definition
-# -----------------------------------------------------------------------------
-
-Component(
-    name="TP",
-    prefix="TP",
-    symbol=Symbol(**_symbol(variant)),
-    footprint=File(_footprint(variant)),
-    properties=_properties(variant),
-    pins={
-        "1": P1,
-    },
-)
+if "Keystone" in variant.value:
+    color = config("color", Color, default=Color("Black"), optional=True)
+    Component(
+        name="TP",
+        prefix="TP",
+        mpn=_keystone_mpn(variant, color),
+        symbol=Symbol(**_symbol(variant)),
+        footprint=File(_footprint(variant)),
+        properties={
+            "color": color,
+        },
+        pins={
+            "1": P1,
+        },
+    )
+else:
+    Component(
+        name="TP",
+        prefix="TP",
+        symbol=Symbol(**_symbol(variant)),
+        footprint=File(_footprint(variant)),
+        properties={
+            "variant": variant,
+        },
+        pins={
+            "1": P1,
+        },
+        dnp=True,
+        skip_bom=True,
+        skip_pos=True,
+    )

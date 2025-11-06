@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -19,21 +19,19 @@ package = config("package", Package, convert=Package)
 color = config("color", Color, convert=Color)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
 forward_current = config_unit("forward_current", Current, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value("LED", color.value.upper()),
-        "package": package,
-        "color": color,
-        "forward_voltage": forward_voltage,
-        "forward_current": forward_current,
-        "type": "led",
-    }
-)
+properties = {
+    "value": format_value("LED", color.value.upper()),
+    "package": package,
+    "color": color,
+    "forward_voltage": forward_voltage,
+    "forward_current": forward_current,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -135,6 +133,7 @@ def _spice_args(color: Color, forward_voltage, forward_current):
 
 Component(
     name="LED",
+    mpn=mpn,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     prefix="D",

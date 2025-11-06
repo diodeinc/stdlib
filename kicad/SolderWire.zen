@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties")
+load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
 # Component types
@@ -24,13 +24,12 @@ SolderWireSize = Size
 size = config("size", Size, default=Size("SMD_1x2mm"), convert=Size)
 
 # Properties – combined and normalized
-properties = config_properties(
-    properties={
-        "size": size,
-    },
-    exclude_from_bom=True,
-    exclude_from_pos_files=True,
-)
+properties = {
+    "value": format_value(size),
+    "size": size,
+    "exclude_from_bom": True,
+    "exclude_from_pos_files": True,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports

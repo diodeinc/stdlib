@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Capacitance", "Frequency")
 load("../utils.zen", "format_value")
 
@@ -31,19 +31,17 @@ package = config("package", Package, convert=Package)
 frequency = config_unit("frequency", Frequency)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 load_capacitance = config_unit("load_capacitance", Capacitance, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(frequency, load_capacitance),
-        "package": package,
-        "frequency": frequency,
-        "load_capacitance": load_capacitance,
-        "type": "crystal",
-    }
-)
+properties = {
+    "value": format_value(frequency, load_capacitance),
+    "package": package,
+    "frequency": frequency,
+    "load_capacitance": load_capacitance,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -157,6 +155,7 @@ def _spice_args(frequency, load_capacitance, package):
 
 Component(
     name="Y",
+    mpn=mpn,
     prefix="Y",
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),

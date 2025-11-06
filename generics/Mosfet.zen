@@ -1,4 +1,4 @@
-load("../config.zen", "config_properties", "config_unit")
+load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -19,23 +19,21 @@ package = config("package", Package, convert=Package)
 channel = config("channel", MosfetChannel, convert=MosfetChannel)
 
 # Optional
+mpn = config("mpn", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 vgs_max = config_unit("vgs_max", Voltage, optional=True)
 vds_max = config_unit("vds_max", Voltage, optional=True)
 id_max = config_unit("id_max", Current, optional=True)
 
 # Properties – combined and normalized
-properties = config_properties(
-    {
-        "value": format_value(channel, "TYPE"),
-        "package": package,
-        "channel": channel,
-        "vgs_max": vgs_max,
-        "vds_max": vds_max,
-        "id_max": id_max,
-        "type": "mosfet",
-    }
-)
+properties = {
+    "value": format_value(channel, "TYPE"),
+    "package": package,
+    "channel": channel,
+    "vgs_max": vgs_max,
+    "vds_max": vds_max,
+    "id_max": id_max,
+}
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -87,6 +85,7 @@ channel_type = str(channel.value).lower()
 
 Component(
     name="M",
+    mpn=mpn,
     symbol=Symbol(**_symbol(channel)),
     footprint=File(_footprint(package)),
     prefix="M",

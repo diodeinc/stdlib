@@ -306,17 +306,17 @@ Available: `Analog`, `Can`, `DiffPair`, `Ethernet`, `Gpio`, `Hdmi`, `I2s`, `I3c`
 ## Configuration
 
 ```zen
-load("@stdlib/config.zen", "config", "config_unit", "config_properties")
+load("@stdlib/config.zen", "config", "config_unit")
 
 # Basic config
 package = config("package", str, default="0603")
 value = config_unit("value", Resistance)  # Unit-aware config
 
 # Property generation
-properties = config_properties({
+properties = {
     "resistance": "10kOhm",
     "voltage": "50V",
-}, mpn="RC0603FR-0710KL")  # MPN becomes Value if provided
+}
 ```
 
 ## Pin Mapping
@@ -342,7 +342,7 @@ pins = builder.build()
 ## Custom Components
 
 ```zen
-load("@stdlib/config.zen", "config_properties", "config_unit")
+load("@stdlib/config.zen", "config_unit")
 load("@stdlib/units.zen", "Capacitance")
 
 # Define parameters
@@ -361,7 +361,7 @@ Component(
     prefix = "C",
     symbol = Symbol(library = "@kicad-symbols/Device.kicad_sym", name = "C"),
     footprint = File("@kicad-footprints/Capacitor_SMD.pretty/C_0603_1608Metric.kicad_mod"),
-    properties = config_properties({"capacitance": value, "package": package}),
+    properties = {"capacitance": value, "package": package},
     pins = {"P1": P1, "P2": P2},
 )
 ```
