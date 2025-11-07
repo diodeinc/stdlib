@@ -121,6 +121,14 @@ I2s = interface(
     MCLK=Net(),
 )
 
+I2sBidirectional = interface(
+    BCLK=Net(),
+    LRCLK=Net(),
+    SDATA_IN=Net(),
+    SDATA_OUT=Net(),
+    MCLK=Net(),
+)
+
 I3c = interface(
     SDA=Net(),
     SCL=Net(),
