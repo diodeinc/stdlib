@@ -51,12 +51,6 @@ E_SERIES = {
 # fmt: on
 
 
-def _abs(physical_value):
-    if physical_value.value < 0:
-        return physical_value * -1
-    return physical_value
-
-
 def _e_series(physical_value, series):
     """Return the closest series value to the given number."""
 
@@ -84,13 +78,12 @@ def _e_series(physical_value, series):
 
     # Find closest E96 value
     closest = _unit(series[0])
-    diff = _abs(normalized - closest)
+    diff = normalized.diff(closest)
 
     min_diff = diff
 
     for e96_val in series:
-        diff = normalized - _unit(e96_val)
-        diff = _abs(diff)
+        diff = normalized.diff(_unit(e96_val))
 
         if diff < min_diff:
             min_diff = diff
