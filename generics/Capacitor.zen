@@ -27,6 +27,16 @@ esr = config_unit("esr", Resistance, optional=True)
 t_max = config_unit("t_max", Temperature, optional=True)
 t_min = config_unit("t_min", Temperature, optional=True)
 
+# -----------------------------------------------------------------------------
+# IO ports
+# -----------------------------------------------------------------------------
+
+P1 = io("P1", Net)
+P2 = io("P2", Net)
+
+if not voltage and hasattr(P1, "voltage") and hasattr(P2, "voltage"):
+    voltage = Voltage(P1.voltage.diff(P2.voltage) * 1.5)
+
 # Properties
 properties = {
     "value": format_value(value, voltage, dielectric, esr),
@@ -36,13 +46,6 @@ properties = {
     "dielectric": dielectric,
     "esr": esr,
 }
-
-# -----------------------------------------------------------------------------
-# IO ports
-# -----------------------------------------------------------------------------
-
-P1 = io("P1", Net)
-P2 = io("P2", Net)
 
 # -----------------------------------------------------------------------------
 # Helper functions
