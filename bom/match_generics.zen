@@ -149,9 +149,8 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     v_req = prop(c, ["voltage", "Voltage"])
     req_voltage = Voltage(v_req).value if v_req else None
 
-    tol_req = cap.tolerance if cap.tolerance > 0 else 0.2
-    req_min = cap.value * (1.0 - tol_req)
-    req_max = cap.value * (1.0 + tol_req)
+    if cap.tolerance <= 0:
+        cap = cap.with_tolerance(0.2)
 
     parts = house_caps_by_pkg.get(pkg, [])
     matches = []
@@ -169,9 +168,7 @@ def assign_house_capacitor(c, house_caps_by_pkg):
         if req_voltage and p_voltage < req_voltage:
             continue
 
-        p_min = p_cap.value * (1.0 - p_cap.tolerance)
-        p_max = p_cap.value * (1.0 + p_cap.tolerance)
-        if p_min < req_min or p_max > req_max:
+        if not p_cap.within(cap):
             continue
 
         err = abs(p_cap.value - cap.value) / cap.value
