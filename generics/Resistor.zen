@@ -19,6 +19,7 @@ value = config_unit("value", Resistance)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config_unit("voltage", Voltage, optional=True)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
@@ -77,9 +78,13 @@ def _footprint(mount: Mount, package: Package):
 # Component definition
 # -----------------------------------------------------------------------------
 
+if manufacturer and not mpn:
+    error("MPN must be specified if manufacturer is specified")
+
 Component(
     name="R",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(mount, package, use_us_symbol)),
     footprint=File(_footprint(mount, package)),
     prefix="R",

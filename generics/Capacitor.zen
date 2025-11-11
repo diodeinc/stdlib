@@ -20,6 +20,7 @@ value = config_unit("value", Capacitance)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config_unit("voltage", Voltage, optional=True)
 dielectric = config("dielectric", Dielectric, optional=True)
@@ -85,9 +86,13 @@ def _footprint(mount: Mount, package: Package):
 # Component definition
 # -----------------------------------------------------------------------------
 
+if manufacturer and not mpn:
+    error("MPN must be specified if manufacturer is specified")
+
 Component(
     name="C",
     mpn=mpn,
+    manufacturer=manufacturer,
     prefix="C",
     symbol=Symbol(**_symbol(mount, package)),
     footprint=File(_footprint(mount, package)),
