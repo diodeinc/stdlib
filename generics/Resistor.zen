@@ -78,6 +78,9 @@ def _footprint(mount: Mount, package: Package):
 # Component definition
 # -----------------------------------------------------------------------------
 
+if manufacturer and not mpn:
+    error("MPN must be specified if manufacturer is specified")
+
 Component(
     name="R",
     mpn=mpn,
