@@ -49,15 +49,18 @@ HOUSE_CAPS_BY_PKG = {
     "0201": [
         murata_cap("X7R", "10V", "10nF 10%", "GCM033R71A103KA03", ["D", "J"]),
         murata_cap("X7R", "10V", "100nF 10%", "GRM033Z71A104KE14", ["D", "J"]),
-        murata_cap("X7R", "16V", "100nF 20%", "GRM033Z71C104ME14", ["D", "J"]),
     ],
     "0402": [
+        murata_cap("C0G", "50V", "10pF 1%", "GCM1555C1H100FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "12pF 1%", "GCM1555C1H120FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "22pF 1%", "GCM1555C1H220FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "30pF 1%", "GCM1555C1H300FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "47pF 1%", "GCM1555C1H470FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "82pF 1%", "GCM1555C1H820FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "100pF 1%", "GCM1555C1H101FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "330pF 1%", "GCM1555C1H331FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "430pF 1%", "GCM1555C1H431FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "1nF 1%", "GCM1555C1H102FA16", ["D", "J"]),
         murata_cap("C0G", "35V", "10nF 2%", "GRM1555CYA103GE01", ["D", "J"]),
         murata_cap("X7R", "50V", "10nF 10%", "GCM155R71H103KA55", ["D", "J"]),
         murata_cap("X7R", "50V", "22nF 10%", "GCM155R71H223KA55", ["D", "J"]),
@@ -65,25 +68,30 @@ HOUSE_CAPS_BY_PKG = {
         murata_cap("X7R", "10V", "1uF 10%", "GRM155Z71A105KE01", ["D", "J"]),
     ],
     "0603": [
-        murata_cap("X7R", "50V", "100nF 10%", "GCM188R71H104KA57", ["D", "J"]),
+        murata_cap("C0G", "100V", "10nF 5%", "GCM1885C2A103JE02", ["D", "J", "W", "V"]),
+        murata_cap("X7R", "100V", "22nF 10%", "GCM188R72A223KA37", ["D", "J"]),
+        murata_cap("X7R", "100V", "100nF 10%", "GRM188R72A104KA35", ["D", "J"]),
+        murata_cap("X7R", "50V", "220nF 10%", "GCM188R71H224KA64", ["D", "J"]),
         murata_cap("X7R", "25V", "1uF 10%", "GCM188R71E105KA64", ["D", "J"]),
         murata_cap("X7R", "25V", "2.2uF 20%", "GRM188Z71E225ME43", ["D", "J"]),
         murata_cap("X7R", "16V", "4.7uF 20%", "GRM188Z71C475KE21", ["D", "J"]),
         murata_cap("X7R", "10V", "10uF 10%", "GRM188Z71A106KA73", ["D", "J"]),
-        murata_cap("X7R", "10V", "10uF 20%", "GRM188Z71A106MA73", ["D", "J"]),
     ],
     "0805": [
+        murata_cap("X7R", "100V", "220nF 10%", "GRM21AR72A224KAC5", ["K", "L"]),
         murata_cap("X7R", "50V", "4.7uF 10%", "GRM21BZ71H475KE15", ["K", "L"]),
-        murata_cap("X7R", "50V", "4.7uF 20%", "GRM21BZ71H475ME15", ["K", "L"]),
         murata_cap("X7R", "25V", "10uF 10%", "GRM21BZ71E106KE15", ["K", "L"]),
+        murata_cap("X7R", "10V", "22uF 20%", "GRM21BZ71A226ME15", ["K", "L"]),
     ],
     "1206": [
-        murata_cap("X7R", "50V", "4.7uF 10%", "GRM31CR71H475KA12", ["K", "L"]),
-        murata_cap("X7R", "25V", "10uF 10%", "GRM31CR71E106KA12", ["K", "L"]),
+        murata_cap("X7R", "100V", "4.7uF 10%", "GRM31CZ72A475KE11", ["K", "L"]),
+        # X5R, but GRT has good DC bias characteristics
+        murata_cap("X5R", "50V", "10uF 10%", "GRT31CR61H106KE01", ["K", "L"]),
+        murata_cap("X7R", "16V", "22uF 20%", "GRM31CZ71C226ME15", ["K", "L"]),
     ],
     "1210": [
-        murata_cap("X7R", "50V", "4.7uF 10%", "GCM32ER71H475KA55", ["K", "L"]),
-        murata_cap("X7R", "25V", "10uF 10%", "GCM32ER71E106KA57", ["K", "L"]),
+        murata_cap("X7R", "25V", "22uF 10%", "GRM32ER71E226KE15", ["K", "L"]),
+        murata_cap("X7R", "10V", "47uF 10%", "GRM32ER71A476KE15", ["K", "L"]),
     ],
 }
 
