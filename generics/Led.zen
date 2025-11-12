@@ -20,6 +20,7 @@ color = config("color", Color, convert=Color)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
 forward_current = config_unit("forward_current", Current, optional=True)
@@ -131,9 +132,13 @@ def _spice_args(color: Color, forward_voltage, forward_current):
 # Component definition
 # -----------------------------------------------------------------------------
 
+if manufacturer and not mpn:
+    error("MPN must be specified if manufacturer is specified")
+
 Component(
     name="LED",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     prefix="D",
