@@ -20,6 +20,7 @@ frequency = config_unit("frequency", Frequency)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
@@ -77,6 +78,7 @@ def _footprint(package: Package) -> str:
 Component(
     name="FB",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     prefix="FB",

@@ -20,6 +20,7 @@ channel = config("channel", MosfetChannel, convert=MosfetChannel)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 vgs_max = config_unit("vgs_max", Voltage, optional=True)
 vds_max = config_unit("vds_max", Voltage, optional=True)
@@ -86,6 +87,7 @@ channel_type = str(channel.value).lower()
 Component(
     name="M",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(channel)),
     footprint=File(_footprint(package)),
     prefix="M",

@@ -19,6 +19,7 @@ package = config("package", Package)
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 variant = config("variant", Variant, default=Variant("Standard"))
 v_f = config_unit("v_f", Voltage, optional=True)  # Forward voltage
@@ -134,6 +135,7 @@ def _spice_args(variant: Variant, v_f, i_f, v_r, i_r):
 Component(
     name="D",
     mpn=mpn,
+    manufacturer=manufacturer,
     prefix="D",
     symbol=Symbol(**_symbol(variant)),
     footprint=File(_footprint(mount, package)),

@@ -36,6 +36,7 @@ Variant = enum(
 # New variant-based approach (preferred)
 variant = config("variant", Variant, optional=True)
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 
 # Legacy parameters (deprecated)
 mount_type = config("mount_type", MountType, default=MountType("SMD"), optional=True)
@@ -197,6 +198,7 @@ def _spice_nets(P, pin_count):
 Component(
     name="NT",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(pin_count)),
     footprint=File(_footprint(pin_count, mount_type, pad_size, use_jumper_footprint, variant)),
     prefix="NT",

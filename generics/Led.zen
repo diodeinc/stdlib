@@ -132,9 +132,6 @@ def _spice_args(color: Color, forward_voltage, forward_current):
 # Component definition
 # -----------------------------------------------------------------------------
 
-if manufacturer and not mpn:
-    error("MPN must be specified if manufacturer is specified")
-
 Component(
     name="LED",
     mpn=mpn,
