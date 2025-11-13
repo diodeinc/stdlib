@@ -22,6 +22,7 @@ if package == Package("KICAD"):
 
 # Optional
 mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
@@ -78,6 +79,7 @@ def _footprint(package: Package) -> str:
 Component(
     name="L",
     mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package))
     if package != Package("KICAD")
