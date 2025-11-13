@@ -3,7 +3,7 @@
 Automatically assigns house MPNs to resistors and capacitors.
 """
 
-load("../units.zen", "Voltage", "Resistance", "Capacitance", "Power")
+load("../units.zen", "Voltage", "Resistance", "ResistanceRange", "Capacitance", "Power")
 load(
     "helpers.zen",
     "prop",
@@ -11,7 +11,7 @@ load(
     "find_e_series_match",
     "iec60062_3digit",
     "iec60062_4digit",
-    "resistor_series",
+    "panasonic_erj",
     "discrete_resistor_series",
     "murata_cap",
 )
@@ -32,22 +32,25 @@ _DIELECTRIC_RANK = {
 # Resistor series by package
 SERIES_BY_PKG = {
     "0402": [
-        resistor_series("ERJ-H2CF", "1Ohm", "10Ohm", "50V", "0.1W", "1%", ["e96", "e24"], iec60062_4digit, "X"),
-        resistor_series("ERJ-2RKF", "10Ohm", "1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], iec60062_4digit, "X"),
-        resistor_series("ERJ-U02J", "1MOhm", "10MOhm", "50V", "0.1W", "5%", ["e24"], iec60062_3digit, "X"),
-        resistor_series("ERJ-PA2F", "1Ohm", "1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], iec60062_4digit, "X"),
+        panasonic_erj("ERJ-H2CF", "1Ohm – 10Ohm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
+        panasonic_erj("ERJ-2RKF", "10Ohm – 1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
+        panasonic_erj("ERJ-U02J", "1MOhm – 10MOhm", "50V", "0.1W", "5%", ["e24"], "X", iec60062_3digit),
+        panasonic_erj("ERJ-PA2F", "1Ohm – 1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
     ],
     "0603": [
-        resistor_series("ERJ-H3QF", "1Ohm", "10Ohm", "75V", "0.333W", "1%", ["e96", "e24"], iec60062_4digit, "V"),
-        resistor_series("ERJ-3EKF", "10Ohm", "1MOhm", "75V", "0.333W", "1%", ["e96", "e24"], iec60062_4digit, "V"),
-        resistor_series("ERJ-U03J", "1MOhm", "10MOhm", "75V", "0.333W", "5%", ["e24"], iec60062_3digit, "V"),
-        resistor_series("ERJ-PA3F", "1Ohm", "1MOhm", "75V", "0.333W", "1%", ["e96", "e24"], iec60062_4digit, "V"),
+        panasonic_erj("ERJ-H3QF", "1Ohm – 10Ohm", "75V", "0.333W", "1%", ["e96", "e24"], "V", iec60062_4digit),
+        panasonic_erj("ERJ-3EKF", "10Ohm – 1MOhm", "75V", "0.333W", "1%", ["e96", "e24"], "V", iec60062_4digit),
+        panasonic_erj("ERJ-U03J", "1MOhm – 10MOhm", "75V", "0.333W", "5%", ["e24"], "V", iec60062_3digit),
+        panasonic_erj("ERJ-PA3F", "1Ohm – 1MOhm", "75V", "0.333W", "1%", ["e96", "e24"], "V", iec60062_4digit),
     ],
     "2512": [
-        # Stackpole CSNL series: Current sense resistors (discrete values)
+        # Stackpole CSNL series: Current sense resistors
         discrete_resistor_series(
             "Stackpole Electronics Inc",
             "CSNL2512",
+            "170V",
+            "2W",
+            "1%",
             [
                 ("1mOhm", "CSNL2512FT1L00"),
                 ("2mOhm", "CSNL2512FT2L00"),
@@ -56,14 +59,14 @@ SERIES_BY_PKG = {
                 ("5mOhm", "CSNL2512FT5L00"),
                 ("10mOhm", "CSNL2512FT10L0"),
             ],
-            "170V",
-            "2W",
-            "1%",
         ),
-        # YAGEO PA_E series: AEC-Q200 current sense resistors (discrete values)
+        # YAGEO PA_E series: AEC-Q200 current sense resistors
         discrete_resistor_series(
             "YAGEO",
             "PA_E",
+            "170V",
+            "2W",
+            "1%",
             [
                 ("1mOhm", "PA2512FKF7W0R001E"),
                 ("2mOhm", "PA2512FKF7W0R002E"),
@@ -72,9 +75,6 @@ SERIES_BY_PKG = {
                 ("5mOhm", "PA2512FKF7W0R005E"),
                 ("10mOhm", "PA2512FKF7W0R01E"),
             ],
-            "170V",
-            "2W",
-            "1%",
         ),
     ],
 }
@@ -139,12 +139,12 @@ def assign_house_resistor(c, series_by_pkg):
     resistance = Resistance(prop(c, ["resistance", "Resistance"]))
     pkg = prop(c, ["package", "Package"])
     v_req = prop(c, ["Voltage", "voltage"])
-    voltage_constraint = Voltage(v_req).value if v_req else None
+    voltage_constraint = Voltage(v_req) if v_req else None
     p_req = prop(c, ["Power", "power"])
-    power_constraint = Power(p_req).value if p_req else None
+    power_constraint = Power(p_req) if p_req else None
 
     # Skip 0 ohm resistors - they can't be matched to E-series
-    if resistance.value <= 0:
+    if resistance.value <= 0.0:
         return
 
     series_list = series_by_pkg.get(pkg, [])
@@ -153,8 +153,8 @@ def assign_house_resistor(c, series_by_pkg):
 
     for spec in series_list:
         spec_type = spec.get("type", "e_series")
-        spec_max_v = Voltage(spec["max_v"]).value
-        spec_power = Power(spec["power"]).value
+        spec_max_v = spec["max_v"]
+        spec_power = spec["power"]
         spec_tol = float(spec["tolerance"].replace("%", "")) / 100.0
 
         if voltage_constraint and voltage_constraint > spec_max_v:
@@ -175,11 +175,9 @@ def assign_house_resistor(c, series_by_pkg):
                         manufacturer = spec["manufacturer"]
         else:
             # E-series: standard matching logic
-            spec_min = Resistance(spec["min"]).value
-            spec_max = Resistance(spec["max"]).value
-
+            spec_range = spec["resistance_range"]
             matched = find_e_series_match(resistance, spec_tol, spec["e_series"])
-            if not matched or matched.value < spec_min or matched.value > spec_max:
+            if not matched or matched.value < spec_range.min or matched.value > spec_range.max:
                 continue
 
             encoder = spec.get("encode", iec60062_4digit)
@@ -187,7 +185,7 @@ def assign_house_resistor(c, series_by_pkg):
             mpn = spec["series"] + code + spec.get("suffix", "X")
             matches.append(mpn)
             if manufacturer == None:
-                manufacturer = "Panasonic Electronic Components"
+                manufacturer = spec["manufacturer"]
 
     if matches:
         set_primary_and_alts(c, matches[0], manufacturer, matches[1:])
@@ -215,7 +213,7 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     pkg = prop(c, ["package", "Package"])
     req_diel = prop(c, ["dielectric", "Dielectric"])
     v_req = prop(c, ["voltage", "Voltage"])
-    req_voltage = Voltage(v_req).value if v_req else None
+    req_voltage = Voltage(v_req) if v_req else None
 
     if cap.tolerance <= 0:
         cap = cap.with_tolerance(0.2)
@@ -224,8 +222,8 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     matches = []
 
     for p in parts:
-        p_cap = Capacitance(p["cap"])
-        p_voltage = Voltage(p["voltage"]).value
+        p_cap = p["cap"]
+        p_voltage = p["voltage"]
 
         if req_diel:
             h_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
@@ -239,9 +237,9 @@ def assign_house_capacitor(c, house_caps_by_pkg):
         if not p_cap.within(cap):
             continue
 
-        err = abs(p_cap.value - cap.value) / cap.value
+        err = p_cap.diff(cap) / cap
         diel_rank = _DIELECTRIC_RANK.get(p["dielectric"], 99)
-        score = (err, p_cap.tolerance, -p_voltage, diel_rank)
+        score = (err, p_cap.tolerance, p_voltage * -1, diel_rank)
 
         matches.append((score, p))
 

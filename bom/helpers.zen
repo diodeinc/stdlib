@@ -1,6 +1,7 @@
 """BOM matching helper functions"""
 
 load("../utils.zen", "e96", "e24")
+load("../units.zen", "ResistanceRange", "Voltage", "Power", "Capacitance")
 
 
 def prop(c, names):
@@ -89,13 +90,13 @@ def iec60062_3digit(value):
     return sig_digits + str(mult)
 
 
-def resistor_series(series, min_val, max_val, max_v, power, tolerance, e_series, encode, suffix):
+def resistor_series(manufacturer, series, resistance_range, max_v, power, tolerance, e_series, encode, suffix):
     """Helper to create resistor series entry.
 
     Args:
+        manufacturer: Manufacturer name (e.g., "Panasonic Electronic Components")
         series: Series prefix (e.g., "ERJ-2RKF")
-        min_val: Min resistance (e.g., "10Ohm")
-        max_val: Max resistance (e.g., "1MOhm")
+        resistance_range: Resistance range (e.g., "10Ohm – 1MOhm")
         max_v: Max voltage (e.g., "50V")
         power: Power rating (e.g., "0.1W")
         tolerance: Tolerance string (e.g., "1%")
@@ -107,11 +108,11 @@ def resistor_series(series, min_val, max_val, max_v, power, tolerance, e_series,
         Resistor series dictionary
     """
     return {
+        "manufacturer": manufacturer,
         "series": series,
-        "min": min_val,
-        "max": max_val,
-        "max_v": max_v,
-        "power": power,
+        "resistance_range": ResistanceRange(resistance_range),
+        "max_v": Voltage(max_v),
+        "power": Power(power),
         "tolerance": tolerance,
         "e_series": e_series,
         "encode": encode,
@@ -119,17 +120,46 @@ def resistor_series(series, min_val, max_val, max_v, power, tolerance, e_series,
     }
 
 
-def discrete_resistor_series(manufacturer, series, values_with_mpns, max_v, power, tolerance):
+def panasonic_erj(series, resistance_range, voltage, power, tolerance, e_series, suffix, encode):
+    """Shorthand for Panasonic ERJ resistor series.
+
+    Args:
+        series: Series name (e.g., "ERJ-3EKF")
+        resistance_range: Resistance range (e.g., "10Ohm – 1MOhm")
+        voltage: Max voltage (e.g., "75V")
+        power: Power rating (e.g., "0.333W")
+        tolerance: Tolerance string (e.g., "1%")
+        e_series: List of E-series (e.g., ["e96", "e24"])
+        suffix: MPN suffix (e.g., "V")
+        encode: Encoding function (iec60062_3digit or iec60062_4digit)
+
+    Returns:
+        Resistor series dictionary
+    """
+    return resistor_series(
+        "Panasonic Electronic Components",
+        series,
+        resistance_range,
+        voltage,
+        power,
+        tolerance,
+        e_series,
+        encode,
+        suffix,
+    )
+
+
+def discrete_resistor_series(manufacturer, series, max_v, power, tolerance, values_with_mpns):
     """Helper to create discrete resistor series (non-E-series, exact values only).
 
     Args:
         manufacturer: Manufacturer name (e.g., "Stackpole Electronics Inc")
         series: Series name (e.g., "CSNL2512")
-        values_with_mpns: List of tuples [(resistance_str, mpn), ...]
-                          e.g., [("0.5mOhm", "CSNL2512FTL500"), ("1mOhm", "CSNL2512FT1L00")]
         max_v: Max voltage (e.g., "170V")
         power: Power rating (e.g., "2W")
         tolerance: Tolerance string (e.g., "1%")
+        values_with_mpns: List of tuples [(resistance_str, mpn), ...]
+                          e.g., [("0.5mOhm", "CSNL2512FTL500"), ("1mOhm", "CSNL2512FT1L00")]
 
     Returns:
         Discrete resistor series dictionary
@@ -139,8 +169,8 @@ def discrete_resistor_series(manufacturer, series, values_with_mpns, max_v, powe
         "manufacturer": manufacturer,
         "series": series,
         "values": values_with_mpns,
-        "max_v": max_v,
-        "power": power,
+        "max_v": Voltage(max_v),
+        "power": Power(power),
         "tolerance": tolerance,
     }
 
@@ -163,8 +193,8 @@ def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murat
 
     return {
         "dielectric": dielectric,
-        "voltage": voltage,
-        "cap": cap,
+        "voltage": Voltage(voltage),
+        "cap": Capacitance(cap),
         "mpns": mpns,
         "manufacturer": manufacturer,
     }
