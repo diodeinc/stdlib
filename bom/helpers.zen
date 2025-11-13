@@ -89,7 +89,7 @@ def iec60062_3digit(value):
     return sig_digits + str(mult)
 
 
-def resistor_series(series, min_val, max_val, max_v, tolerance, e_series, encode, suffix):
+def resistor_series(series, min_val, max_val, max_v, power, tolerance, e_series, encode, suffix):
     """Helper to create resistor series entry.
 
     Args:
@@ -97,6 +97,7 @@ def resistor_series(series, min_val, max_val, max_v, tolerance, e_series, encode
         min_val: Min resistance (e.g., "10Ohm")
         max_val: Max resistance (e.g., "1MOhm")
         max_v: Max voltage (e.g., "50V")
+        power: Power rating (e.g., "0.1W")
         tolerance: Tolerance string (e.g., "1%")
         e_series: List of E-series (e.g., ["e96", "e24"])
         encode: Encoding function (iec60062_3digit or iec60062_4digit)
@@ -110,10 +111,37 @@ def resistor_series(series, min_val, max_val, max_v, tolerance, e_series, encode
         "min": min_val,
         "max": max_val,
         "max_v": max_v,
+        "power": power,
         "tolerance": tolerance,
         "e_series": e_series,
         "encode": encode,
         "suffix": suffix,
+    }
+
+
+def discrete_resistor_series(manufacturer, series, values_with_mpns, max_v, power, tolerance):
+    """Helper to create discrete resistor series (non-E-series, exact values only).
+
+    Args:
+        manufacturer: Manufacturer name (e.g., "Stackpole Electronics Inc")
+        series: Series name (e.g., "CSNL2512")
+        values_with_mpns: List of tuples [(resistance_str, mpn), ...]
+                          e.g., [("0.5mOhm", "CSNL2512FTL500"), ("1mOhm", "CSNL2512FT1L00")]
+        max_v: Max voltage (e.g., "170V")
+        power: Power rating (e.g., "2W")
+        tolerance: Tolerance string (e.g., "1%")
+
+    Returns:
+        Discrete resistor series dictionary
+    """
+    return {
+        "type": "discrete",
+        "manufacturer": manufacturer,
+        "series": series,
+        "values": values_with_mpns,
+        "max_v": max_v,
+        "power": power,
+        "tolerance": tolerance,
     }
 
 

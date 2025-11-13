@@ -1,5 +1,5 @@
 load("../config.zen", "config_unit")
-load("../units.zen", "Resistance", "Voltage")
+load("../units.zen", "Resistance", "Voltage", "Power")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -22,6 +22,7 @@ mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config_unit("voltage", Voltage, optional=True)
+power = config_unit("power", Power, optional=True)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
 
 do_not_populate = config("do_not_populate", bool, default=False)
@@ -34,11 +35,14 @@ if exclude_from_bom:
 
 # Properties – combined and normalized
 properties = {
-    "value": format_value(value, voltage),
+    "value": format_value(value, voltage, power),
     "package": package,
     "resistance": value,
     "voltage": voltage,
 }
+
+if power:
+    properties["power"] = power
 
 # -----------------------------------------------------------------------------
 # IO ports
