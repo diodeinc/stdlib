@@ -132,6 +132,7 @@ def assign_house_resistor(c, series_by_pkg):
 
     if matches:
         set_primary_and_alts(c, matches[0], "Panasonic Electronic Components", matches[1:])
+        c.matcher = "assign_house_resistor"
         return
 
     # Generate warning
@@ -196,6 +197,7 @@ def assign_house_capacitor(c, house_caps_by_pkg):
             all_mpns.extend(p["mpns"])
 
         set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        c.matcher = "assign_house_capacitor"
         return
 
     # Generate warning

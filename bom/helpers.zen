@@ -142,7 +142,7 @@ def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murat
     }
 
 
-def match_component(match: dict, parts: tuple | list):
+def match_component(match: dict, parts: tuple | list, matcher: str = "match_component"):
     """Create a component modifier that matches specific properties and assigns MPN.
 
     Args:
@@ -183,5 +183,6 @@ def match_component(match: dict, parts: tuple | list):
         primary_mpn, primary_manufacturer = parts_list[0]
         alts = [mpn for mpn, _ in parts_list[1:]]
         set_primary_and_alts(c, primary_mpn, primary_manufacturer, alts)
+        c.matcher = matcher
 
     return modifier
