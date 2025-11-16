@@ -133,9 +133,6 @@ HOUSE_CAPS_BY_PKG = {
 
 def assign_house_resistor(c, series_by_pkg):
     """Assign house resistor MPNs."""
-    if c.type != "resistor" or (hasattr(c, "mpn") and c.mpn):
-        return
-
     resistance = Resistance(prop(c, ["resistance", "Resistance"]))
     pkg = prop(c, ["package", "Package"])
     v_req = prop(c, ["Voltage", "voltage"])
@@ -206,9 +203,6 @@ def assign_house_resistor(c, series_by_pkg):
 
 def assign_house_capacitor(c, house_caps_by_pkg):
     """Assign Murata house MPNs to capacitors."""
-    if c.type != "capacitor" or (hasattr(c, "mpn") and c.mpn):
-        return
-
     cap = Capacitance(prop(c, ["capacitance", "Capacitance"]))
     pkg = prop(c, ["package", "Package"])
     req_diel = prop(c, ["dielectric", "Dielectric"])
@@ -269,6 +263,14 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     )
 
 
-def add_default_bom_profile():
-    builtin.add_component_modifier(lambda c: assign_house_resistor(c, SERIES_BY_PKG))
-    builtin.add_component_modifier(lambda c: assign_house_capacitor(c, HOUSE_CAPS_BY_PKG))
+def assign_house_parts(c):
+    """Single modifier that dispatches to resistor or capacitor matching."""
+    # Skip if already has MPN
+    if hasattr(c, "mpn") and c.mpn:
+        return
+
+    # Dispatch based on component type
+    if c.type == "resistor":
+        assign_house_resistor(c, SERIES_BY_PKG)
+    elif c.type == "capacitor":
+        assign_house_capacitor(c, HOUSE_CAPS_BY_PKG)
