@@ -27,7 +27,7 @@ forward_current = config_unit("forward_current", Current, optional=True)
 
 # Properties – combined and normalized
 properties = {
-    "value": format_value("LED", color.value.upper()),
+    "value": format_value("LED", color.value.upper(), forward_voltage),
     "package": package,
     "color": color,
     "forward_voltage": forward_voltage,

@@ -3,7 +3,7 @@
 Automatically assigns house MPNs to resistors and capacitors.
 """
 
-load("../units.zen", "Voltage", "Resistance", "ResistanceRange", "Capacitance", "Power")
+load("../units.zen", "Voltage", "VoltageRange", "Resistance", "ResistanceRange", "Capacitance", "Power")
 load(
     "helpers.zen",
     "prop",
@@ -16,6 +16,7 @@ load(
     "uniroyal",
     "discrete_resistor_series",
     "murata_cap",
+    "led",
 )
 
 
@@ -172,6 +173,29 @@ HOUSE_CAPS_BY_PKG = {
     ],
 }
 
+# House LED catalog by package
+HOUSE_LEDS_BY_PKG = {
+    "0402": [
+        # Vishay CHIPLED series (@ 5mA for blue, @ 20mA for AlInGaP)
+        led("blue", "2.65V – 3.15V (2.8V nom.)", "VLMB1500-GS08", "Vishay Semiconductor Opto Division"),
+        led("green", "1.9V – 2.4V (2V nom.)", "VLMG1500-GS08", "Vishay Semiconductor Opto Division"),
+        led("orange", "1.8V – 2.4V (2V nom.)", "VLMO1500-GS08", "Vishay Semiconductor Opto Division"),
+        led("red", "1.8V – 2.4V (2V nom.)", "VLMS1500-GS08", "Vishay Semiconductor Opto Division"),
+        # Lite-On LTST-C281 series (0.35mm height, AlInGaP K-series @ 5mA)
+        led("orange", "1.7V – 2.3V (2V nom.)", "LTST-C281KFKT-5A", "Lite-On Inc."),
+        led("green", "1.7V – 2.3V (2V nom.)", "LTST-C281KGKT-5A", "Lite-On Inc."),
+        led("red", "1.7V – 2.3V (2V nom.)", "LTST-C281KRKT-5A", "Lite-On Inc."),
+        led("yellow", "1.7V – 2.3V (2V nom.)", "LTST-C281KSKT-5A", "Lite-On Inc."),
+        # Lite-On LTST-C281 series (0.35mm height, InGaN T-series blue @ 5mA)
+        led("blue", "2.65V – 3.15V (2.9V nom.)", "LTST-C281TBKT-5A", "Lite-On Inc."),
+        # Lite-On LTST-C283 series (0.2mm height, AlInGaP K-series @ 5mA)
+        led("green", "1.7V – 2.3V (2V nom.)", "LTST-C283KGKT-5A", "Lite-On Inc."),
+        led("red", "1.7V – 2.3V (2V nom.)", "LTST-C283KRKT-5A", "Lite-On Inc."),
+        # Lite-On LTST-C283 series (0.2mm height, InGaN T-series blue @ 5mA)
+        led("blue", "2.65V – 3.15V (2.9V nom.)", "LTST-C283TBKT-5A", "Lite-On Inc."),
+    ],
+}
+
 
 def assign_house_resistor(c, series_by_pkg):
     """Assign house resistor MPNs."""
@@ -301,8 +325,53 @@ def assign_house_capacitor(c, house_caps_by_pkg):
     )
 
 
+def assign_house_led(c, house_leds_by_pkg):
+    """Assign house LED MPNs."""
+    pkg = prop(c, ["package", "Package"])
+    color = prop(c, ["color", "Color"])
+    v_req = prop(c, ["forward_voltage", "Forward_voltage"])
+    req_voltage = Voltage(v_req) if v_req else None
+
+    parts = house_leds_by_pkg.get(pkg, [])
+    matches = []
+
+    for p in parts:
+        # Match color exactly
+        if p["color"] != color:
+            continue
+
+        if req_voltage:
+            if req_voltage.tolerance == 0.0:
+                # Assume 15% tolerance if not specified
+                req_voltage = req_voltage.with_tolerance(0.15)
+            # LED's Vf should be within the specified range
+            if p["forward_voltage"] not in req_voltage:
+                continue
+
+        matches.append(p)
+
+    if matches:
+        # Use first match as primary, rest as alternatives
+        manufacturer = matches[0]["manufacturer"]
+        all_mpns = [p["mpn"] for p in matches]
+        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        c.matcher = "assign_house_led"
+        return
+
+    # Generate warning
+    warn(
+        "No house LED found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_parts(c):
-    """Single modifier that dispatches to resistor or capacitor matching."""
+    """Single modifier that dispatches to resistor, capacitor, or LED matching."""
     # Skip if already has MPN
     if hasattr(c, "mpn") and c.mpn:
         return
@@ -312,3 +381,5 @@ def assign_house_parts(c):
         assign_house_resistor(c, SERIES_BY_PKG)
     elif c.type == "capacitor":
         assign_house_capacitor(c, HOUSE_CAPS_BY_PKG)
+    elif c.type == "led":
+        assign_house_led(c, HOUSE_LEDS_BY_PKG)

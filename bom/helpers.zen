@@ -1,7 +1,7 @@
 """BOM matching helper functions"""
 
 load("../utils.zen", "e96", "e24")
-load("../units.zen", "ResistanceRange", "Voltage", "Power", "Capacitance")
+load("../units.zen", "ResistanceRange", "Voltage", "VoltageRange", "Power", "Capacitance")
 
 
 def prop(c, names):
@@ -258,6 +258,26 @@ def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murat
         "voltage": Voltage(voltage),
         "cap": Capacitance(cap),
         "mpns": mpns,
+        "manufacturer": manufacturer,
+    }
+
+
+def led(color: str, voltage_range: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create LED catalog entry.
+
+    Args:
+        color: LED color (e.g., "red", "blue", "green")
+        voltage_range: Forward voltage range (e.g., "1.8V – 2.4V (2V nom.)")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        LED dictionary
+    """
+    return {
+        "color": color,
+        "forward_voltage": VoltageRange(voltage_range),
+        "mpn": mpn,
         "manufacturer": manufacturer,
     }
 
