@@ -157,4 +157,5 @@ Component(
     prefix="J",
     pins=io_ports,
     properties=properties,
+    type="connector",
 )

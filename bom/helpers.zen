@@ -293,6 +293,30 @@ def led(color: str, voltage_range: str, mpn: str, manufacturer: str) -> dict:
     }
 
 
+def pin_header(pins: int, rows: int, pitch: str, orientation: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create pin header catalog entry.
+
+    Args:
+        pins: Number of pins per row
+        rows: Number of rows (1 or 2)
+        pitch: Pitch (e.g., "1.27mm", "2.54mm")
+        orientation: Orientation (e.g., "Vertical", "Horizontal")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Pin header dictionary
+    """
+    return {
+        "pins": pins,
+        "rows": rows,
+        "pitch": pitch,
+        "orientation": orientation,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
 def ferrite_bead(impedance: str, frequency: str, current: str, dcr: str, mpn: str, manufacturer: str) -> dict:
     """Helper to create ferrite bead catalog entry.
 

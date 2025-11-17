@@ -29,6 +29,7 @@ load(
     "murata_cap",
     "led",
     "ferrite_bead",
+    "pin_header",
 )
 
 
@@ -221,6 +222,22 @@ HOUSE_FB_BY_PKG = {
         ferrite_bead("220Ohm 25%", "100MHz", "3A", "40mOhm", "MPZ2012S221AT000", "TDK Corporation"),
     ],
 }
+
+# House pin header catalog (Würth Elektronik WR-PHD series)
+HOUSE_PH = [
+    # 1.27mm pitch, 2 rows, vertical through-hole
+    pin_header(2, 2, "1.27mm", "Vertical", "62200421121", "Würth Elektronik"),
+    pin_header(4, 2, "1.27mm", "Vertical", "62200821121", "Würth Elektronik"),
+    pin_header(5, 2, "1.27mm", "Vertical", "62201021121", "Würth Elektronik"),
+    pin_header(5, 2, "1.27mm", "Vertical", "ZX-PZ1.27-2-5PZZ", "Megastar"),
+    pin_header(10, 2, "1.27mm", "Vertical", "62202021121", "Würth Elektronik"),
+    # 2.54mm pitch, 2 rows, vertical through-hole
+    pin_header(2, 2, "2.54mm", "Vertical", "61300421121", "Würth Elektronik"),
+    pin_header(3, 2, "2.54mm", "Vertical", "61300621121", "Würth Elektronik"),
+    pin_header(4, 2, "2.54mm", "Vertical", "61300821121", "Würth Elektronik"),
+    pin_header(5, 2, "2.54mm", "Vertical", "61301021121", "Würth Elektronik"),
+    pin_header(10, 2, "2.54mm", "Vertical", "61302021121", "Würth Elektronik"),
+]
 
 
 def assign_house_resistor(c, series_by_pkg):
@@ -449,8 +466,49 @@ def assign_house_ferrite_bead(c, house_fb_by_pkg):
     )
 
 
+def assign_house_pin_header(c, house_ph):
+    """Assign house pin header MPNs."""
+    pins_req = prop(c, ["pins", "Pins"])
+    rows_req = prop(c, ["rows", "Rows"])
+    pitch_req = prop(c, ["pitch", "Pitch"])
+    orientation_req = prop(c, ["orientation", "Orientation"])
+
+    matches = []
+
+    for p in house_ph:
+        # All parameters must match exactly
+        if pins_req and p["pins"] != pins_req:
+            continue
+        if rows_req and p["rows"] != rows_req:
+            continue
+        if pitch_req and p["pitch"] != pitch_req:
+            continue
+        if orientation_req and p["orientation"] != orientation_req:
+            continue
+
+        matches.append(p)
+
+    if matches:
+        # Use first match as primary, rest as alternatives
+        c.mpn = matches[0]["mpn"]
+        c.manufacturer = matches[0]["manufacturer"]
+        if len(matches) > 1:
+            c.alternatives = [{"mpn": p["mpn"], "manufacturer": p["manufacturer"]} for p in matches[1:]]
+        c.matcher = "assign_house_pin_header"
+        return
+
+    # Generate warning
+    warn(
+        "No house pin header found for "
+        + c.value
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_parts(c):
-    """Single modifier that dispatches to resistor, capacitor, LED, or ferrite bead matching."""
+    """Single modifier that dispatches component matching by type."""
     # Skip if already has MPN
     if hasattr(c, "mpn") and c.mpn:
         return
@@ -464,3 +522,7 @@ def assign_house_parts(c):
         assign_house_led(c, HOUSE_LEDS_BY_PKG)
     elif c.type == "ferrite_bead":
         assign_house_ferrite_bead(c, HOUSE_FB_BY_PKG)
+    elif c.type == "connector":
+        connector_type = prop(c, ["connector_type", "Connector_type"])
+        if connector_type == "Pin Header":
+            assign_house_pin_header(c, HOUSE_PH)
