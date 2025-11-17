@@ -66,6 +66,39 @@ def iec60062_4digit(value):
     return mantissa + str(mult)
 
 
+def encode_3digit_multiplier(value):
+    """3-digit + multiplier encoding (Uniroyal style): no R-notation, always 3 digits.
+
+    Uses J/K/L for negative powers: J=10^-1, K=10^-2, L=10^-3
+    Examples: 16.2Ω → 162J, 100Ω → 1000, 10kΩ → 1002
+    """
+    mult = 0
+    norm = value
+
+    # Scale to 100-999 range
+    for _ in range(10):
+        if norm >= 100.0:
+            break
+        norm = norm * 10.0
+        mult = mult - 1
+
+    for _ in range(10):
+        if norm < 1000.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    # Round and format to 3 digits
+    mantissa = str(int(norm + 0.5))
+    mantissa = ("0" * (3 - len(mantissa))) + mantissa
+
+    # Map multiplier to character
+    multiplier_map = {-3: "L", -2: "K", -1: "J"}
+    mult_char = multiplier_map.get(mult, str(mult))
+
+    return mantissa + mult_char
+
+
 def iec60062_3digit(value):
     """IEC 60062 3-digit code: 2 significant digits + multiplier (e.g., 2.2MΩ → 225)."""
     if value < 100.0:
@@ -138,6 +171,35 @@ def panasonic_erj(series, resistance_range, voltage, power, tolerance, e_series,
     """
     return resistor_series(
         "Panasonic Electronic Components",
+        series,
+        resistance_range,
+        voltage,
+        power,
+        tolerance,
+        e_series,
+        encode,
+        suffix,
+    )
+
+
+def uniroyal(series, resistance_range, voltage, power, tolerance, e_series, suffix, encode):
+    """Shorthand for Uniroyal chip resistor series.
+
+    Args:
+        series: Series name (e.g., "0402WGF")
+        resistance_range: Resistance range (e.g., "10Ohm – 10MOhm")
+        voltage: Max voltage (e.g., "50V")
+        power: Power rating (e.g., "0.0625W")
+        tolerance: Tolerance string (e.g., "1%")
+        e_series: List of E-series (e.g., ["e96", "e24"])
+        suffix: Packaging suffix (e.g., "TCE")
+        encode: Encoding function (typically encode_3digit_multiplier)
+
+    Returns:
+        Resistor series dictionary
+    """
+    return resistor_series(
+        "Uniroyal Electronics",
         series,
         resistance_range,
         voltage,
