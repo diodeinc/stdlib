@@ -1,5 +1,5 @@
 load("../config.zen", "config_unit")
-load("../units.zen", "Current", "Frequency", "Resistance")
+load("../units.zen", "Current", "Frequency", "Resistance", "Impedance")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -15,20 +15,34 @@ Mount = enum("SMD")
 
 # Required
 package = config("package", Package)
-resistance = config_unit("resistance", Resistance)
-frequency = config_unit("frequency", Frequency)
+
+# Deprecated
+resistance = config_unit("resistance", Resistance, optional=True)
 
 # Optional
+dcr = config_unit("dcr", Resistance, optional=True)
+impedance = config_unit("impedance", Impedance, default=Impedance("220Ohm"), optional=True)
+frequency = config_unit("frequency", Frequency, default=Frequency("100MHz"), optional=True)
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 current = config_unit("current", Current, optional=True)
 
+# Backwards compatibility: if resistance is specified, use it as impedance
+if resistance:
+    impedance = resistance
+    warn("'resistance' is deprecated, use 'impedance' instead")
+
+# Ensure we have an effective impedance
+if not impedance:
+    error("FerriteBead requires either 'resistance' or 'impedance' to be specified")
+
 # Properties – combined and normalized
 properties = {
-    "value": format_value(resistance, current, frequency),
+    "value": format_value(impedance, current, frequency),
     "package": package,
-    "resistance": resistance,
+    "impedance": impedance,
+    "dcr": dcr,
     "frequency": frequency,
     "current": current,
 }
