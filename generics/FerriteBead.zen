@@ -21,7 +21,7 @@ resistance = config_unit("resistance", Resistance, optional=True)
 
 # Optional
 dcr = config_unit("dcr", Resistance, optional=True)
-impedance = config_unit("impedance", Impedance, default=Impedance("220Ohm"), optional=True)
+impedance = config_unit("value", Impedance, default=Impedance("220Ohm"), optional=True)
 frequency = config_unit("frequency", Frequency, default=Frequency("100MHz"), optional=True)
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)

@@ -9,7 +9,7 @@ for package in FerriteBead.Package.values():
     name = "FB_" + str(package)
     FerriteBead(
         name=name,
-        impedance="220Ohm",
+        value="220Ohm",
         frequency="100MHz",
         current="500mA",
         package=package,
