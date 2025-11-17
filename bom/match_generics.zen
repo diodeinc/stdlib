@@ -224,20 +224,30 @@ HOUSE_FB_BY_PKG = {
 }
 
 # House pin header catalog (Würth Elektronik WR-PHD series)
-HOUSE_PH = [
-    # 1.27mm pitch, 2 rows, vertical through-hole
-    pin_header(2, 2, "1.27mm", "Vertical", "62200421121", "Würth Elektronik"),
-    pin_header(4, 2, "1.27mm", "Vertical", "62200821121", "Würth Elektronik"),
-    pin_header(5, 2, "1.27mm", "Vertical", "62201021121", "Würth Elektronik"),
-    pin_header(5, 2, "1.27mm", "Vertical", "ZX-PZ1.27-2-5PZZ", "Megastar"),
-    pin_header(10, 2, "1.27mm", "Vertical", "62202021121", "Würth Elektronik"),
-    # 2.54mm pitch, 2 rows, vertical through-hole
-    pin_header(2, 2, "2.54mm", "Vertical", "61300421121", "Würth Elektronik"),
-    pin_header(3, 2, "2.54mm", "Vertical", "61300621121", "Würth Elektronik"),
-    pin_header(4, 2, "2.54mm", "Vertical", "61300821121", "Würth Elektronik"),
-    pin_header(5, 2, "2.54mm", "Vertical", "61301021121", "Würth Elektronik"),
-    pin_header(10, 2, "2.54mm", "Vertical", "61302021121", "Würth Elektronik"),
-]
+# Key: (pitch, rows, pins, orientation) -> [(mpn, manufacturer), ...]
+HOUSE_PH = {
+    # 1.27mm pitch, 2 rows, vertical
+    ("1.27mm", 2, 2, "Vertical"): [("62200421121", "Würth Elektronik")],
+    ("1.27mm", 2, 4, "Vertical"): [("62200821121", "Würth Elektronik")],
+    ("1.27mm", 2, 5, "Vertical"): [("62201021121", "Würth Elektronik"), ("ZX-PZ1.27-2-5PZZ", "Megastar")],
+    ("1.27mm", 2, 10, "Vertical"): [("62202021121", "Würth Elektronik")],
+    # 2.54mm pitch, 1 row, vertical
+    ("2.54mm", 1, 2, "Vertical"): [("61300211121", "Würth Elektronik")],
+    ("2.54mm", 1, 3, "Vertical"): [("61300311121", "Würth Elektronik")],
+    ("2.54mm", 1, 4, "Vertical"): [("61300411121", "Würth Elektronik")],
+    ("2.54mm", 1, 5, "Vertical"): [("61300511121", "Würth Elektronik")],
+    ("2.54mm", 1, 6, "Vertical"): [("61300611121", "Würth Elektronik")],
+    ("2.54mm", 1, 8, "Vertical"): [("61300811121", "Würth Elektronik")],
+    ("2.54mm", 1, 10, "Vertical"): [("61301011121", "Würth Elektronik")],
+    ("2.54mm", 1, 15, "Vertical"): [("61301511121", "Würth Elektronik")],
+    # 2.54mm pitch, 2 rows, vertical
+    ("2.54mm", 2, 2, "Vertical"): [("61300421121", "Würth Elektronik")],
+    ("2.54mm", 2, 3, "Vertical"): [("61300621121", "Würth Elektronik")],
+    ("2.54mm", 2, 4, "Vertical"): [("61300821121", "Würth Elektronik")],
+    ("2.54mm", 2, 5, "Vertical"): [("61301021121", "Würth Elektronik")],
+    ("2.54mm", 2, 10, "Vertical"): [("61302021121", "Würth Elektronik")],
+    ("2.54mm", 2, 20, "Vertical"): [("61304021121", "Würth Elektronik")],
+}
 
 
 def assign_house_resistor(c, series_by_pkg):
@@ -473,27 +483,17 @@ def assign_house_pin_header(c, house_ph):
     pitch_req = prop(c, ["pitch", "Pitch"])
     orientation_req = prop(c, ["orientation", "Orientation"])
 
-    matches = []
-
-    for p in house_ph:
-        # All parameters must match exactly
-        if pins_req and p["pins"] != pins_req:
-            continue
-        if rows_req and p["rows"] != rows_req:
-            continue
-        if pitch_req and p["pitch"] != pitch_req:
-            continue
-        if orientation_req and p["orientation"] != orientation_req:
-            continue
-
-        matches.append(p)
+    # O(1) lookup using tuple key
+    key = (pitch_req, rows_req, pins_req, orientation_req)
+    matches = house_ph.get(key, [])
 
     if matches:
         # Use first match as primary, rest as alternatives
-        c.mpn = matches[0]["mpn"]
-        c.manufacturer = matches[0]["manufacturer"]
+        primary_mpn, primary_mfr = matches[0]
+        c.mpn = primary_mpn
+        c.manufacturer = primary_mfr
         if len(matches) > 1:
-            c.alternatives = [{"mpn": p["mpn"], "manufacturer": p["manufacturer"]} for p in matches[1:]]
+            c.alternatives = [{"mpn": mpn, "manufacturer": mfr} for mpn, mfr in matches[1:]]
         c.matcher = "assign_house_pin_header"
         return
 
