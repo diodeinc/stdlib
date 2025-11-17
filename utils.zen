@@ -57,9 +57,10 @@ def _e_series(physical_value, series):
     # lambda to convert to physical value
     _unit = lambda x: physical_value.with_value(x)
 
-    # Handle zero or negative values
+    # Handle zero or negative values - return unchanged
+    # (will fail range checks naturally in matching logic)
     if physical_value.value <= 0:
-        return error("E series value {physical_value} must be positive")
+        return physical_value
 
     # Find the appropriate decade
     decade = 1.0

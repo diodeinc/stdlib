@@ -31,13 +31,50 @@ _DIELECTRIC_RANK = {
 
 # Resistor series by package
 SERIES_BY_PKG = {
+    "0201": [
+        # 0 ohm jumpers (checked first for exact 0 ohm match)
+        discrete_resistor_series(
+            "Panasonic Electronic Components",
+            "ERJ-1GJ",
+            "25V",
+            "0.05W",
+            "0%",
+            [("0Ohm", "ERJ-1GJ0R00C")],
+        ),
+        discrete_resistor_series(
+            "YAGEO",
+            "RC_L",
+            "25V",
+            "0.05W",
+            "0%",
+            [("0Ohm", "RC0201FR-070RL")],
+        ),
+    ],
     "0402": [
+        # 0 ohm jumpers (checked first for exact 0 ohm match)
+        discrete_resistor_series(
+            "Panasonic Electronic Components",
+            "ERJ-2G",
+            "50V",
+            "0.1W",
+            "0%",
+            [("0Ohm", "ERJ-2GE0R00X")],
+        ),
         panasonic_erj("ERJ-H2CF", "1Ohm – 10Ohm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
         panasonic_erj("ERJ-2RKF", "10Ohm – 1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
         panasonic_erj("ERJ-U02J", "1MOhm – 10MOhm", "50V", "0.1W", "5%", ["e24"], "X", iec60062_3digit),
         panasonic_erj("ERJ-PA2F", "1Ohm – 1MOhm", "50V", "0.1W", "1%", ["e96", "e24"], "X", iec60062_4digit),
     ],
     "0603": [
+        # 0 ohm jumpers (checked first for exact 0 ohm match)
+        discrete_resistor_series(
+            "Panasonic Electronic Components",
+            "ERJ-3G",
+            "75V",
+            "0.333W",
+            "0%",
+            [("0Ohm", "ERJ-3GEY0R00V")],
+        ),
         panasonic_erj("ERJ-H3QF", "1Ohm – 10Ohm", "75V", "0.333W", "1%", ["e96", "e24"], "V", iec60062_4digit),
         panasonic_erj("ERJ-3EKF", "10Ohm – 1MOhm", "75V", "0.333W", "1%", ["e96", "e24"], "V", iec60062_4digit),
         panasonic_erj("ERJ-U03J", "1MOhm – 10MOhm", "75V", "0.333W", "5%", ["e24"], "V", iec60062_3digit),
@@ -93,6 +130,7 @@ HOUSE_CAPS_BY_PKG = {
         murata_cap("C0G", "50V", "47pF 1%", "GCM1555C1H470FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "82pF 1%", "GCM1555C1H820FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "100pF 1%", "GCM1555C1H101FA16", ["D", "J"]),
+        murata_cap("C0G", "50V", "220pF 1%", "GCM1555C1H221FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "330pF 1%", "GCM1555C1H331FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "430pF 1%", "GCM1555C1H431FA16", ["D", "J"]),
         murata_cap("C0G", "50V", "1nF 1%", "GCM1555C1H102FA16", ["D", "J"]),
@@ -139,10 +177,6 @@ def assign_house_resistor(c, series_by_pkg):
     voltage_constraint = Voltage(v_req) if v_req else None
     p_req = prop(c, ["Power", "power"])
     power_constraint = Power(p_req) if p_req else None
-
-    # Skip 0 ohm resistors - they can't be matched to E-series
-    if resistance.value <= 0.0:
-        return
 
     series_list = series_by_pkg.get(pkg, [])
     matches = []
