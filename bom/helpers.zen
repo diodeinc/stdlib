@@ -1,7 +1,18 @@
 """BOM matching helper functions"""
 
 load("../utils.zen", "e96", "e24")
-load("../units.zen", "ResistanceRange", "Voltage", "VoltageRange", "Power", "Capacitance")
+load(
+    "../units.zen",
+    "ResistanceRange",
+    "Voltage",
+    "VoltageRange",
+    "Power",
+    "Capacitance",
+    "Resistance",
+    "Impedance",
+    "Current",
+    "Frequency",
+)
 
 
 def prop(c, names):
@@ -277,6 +288,30 @@ def led(color: str, voltage_range: str, mpn: str, manufacturer: str) -> dict:
     return {
         "color": color,
         "forward_voltage": VoltageRange(voltage_range),
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
+def ferrite_bead(impedance: str, frequency: str, current: str, dcr: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create ferrite bead catalog entry.
+
+    Args:
+        impedance: Impedance with tolerance (e.g., "220Ohm 25%")
+        frequency: Test frequency (e.g., "100MHz")
+        current: Rated current (e.g., "1.4A")
+        dcr: DC resistance max (e.g., "100mOhm")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Ferrite bead dictionary
+    """
+    return {
+        "impedance": Impedance(impedance),
+        "frequency": Frequency(frequency),
+        "current": Current(current),
+        "dcr": Resistance(dcr),
         "mpn": mpn,
         "manufacturer": manufacturer,
     }

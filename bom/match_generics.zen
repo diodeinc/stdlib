@@ -3,7 +3,18 @@
 Automatically assigns house MPNs to resistors and capacitors.
 """
 
-load("../units.zen", "Voltage", "VoltageRange", "Resistance", "ResistanceRange", "Capacitance", "Power")
+load(
+    "../units.zen",
+    "Voltage",
+    "VoltageRange",
+    "Resistance",
+    "ResistanceRange",
+    "Capacitance",
+    "Power",
+    "Current",
+    "Frequency",
+    "Impedance",
+)
 load(
     "helpers.zen",
     "prop",
@@ -17,6 +28,7 @@ load(
     "discrete_resistor_series",
     "murata_cap",
     "led",
+    "ferrite_bead",
 )
 
 
@@ -196,6 +208,20 @@ HOUSE_LEDS_BY_PKG = {
     ],
 }
 
+# House ferrite bead catalog by package
+HOUSE_FB_BY_PKG = {
+    "0402": [
+        ferrite_bead("220Ohm 25%", "100MHz", "1.4A", "100mOhm", "BLM15PX221SN1D", "Murata Electronics"),
+    ],
+    "0603": [
+        ferrite_bead("220Ohm 25%", "100MHz", "2A", "50mOhm", "BLM18EG221SN1D", "Murata Electronics"),
+    ],
+    "0805": [
+        ferrite_bead("220Ohm 25%", "100MHz", "2A", "45mOhm", "BLM21PG221SN1D", "Murata Electronics"),
+        ferrite_bead("220Ohm 25%", "100MHz", "3A", "40mOhm", "MPZ2012S221AT000", "TDK Corporation"),
+    ],
+}
+
 
 def assign_house_resistor(c, series_by_pkg):
     """Assign house resistor MPNs."""
@@ -370,8 +396,61 @@ def assign_house_led(c, house_leds_by_pkg):
     )
 
 
+def assign_house_ferrite_bead(c, house_fb_by_pkg):
+    """Assign house ferrite bead MPNs."""
+    pkg = prop(c, ["package", "Package"])
+    impedance_req = prop(c, ["impedance", "Impedance"])
+    freq_req = prop(c, ["frequency", "Frequency"])
+    dcr_constraint = prop(c, ["dcr", "Dcr"])
+    current_constraint = prop(c, ["current", "Current"])
+
+    parts = house_fb_by_pkg.get(pkg, [])
+    matches = []
+
+    for p in parts:
+        # Frequency must match exactly
+        if freq_req and p["frequency"] != freq_req:
+            continue
+
+        # Impedance must match (tolerance-based)
+        if impedance_req:
+            if impedance_req.tolerance == 0.0:
+                impedance_req = impedance_req.with_tolerance(0.25)
+            if not p["impedance"].within(impedance_req):
+                continue
+
+        # DCR: part's DCR must be <= required (lower is better)
+        if dcr_constraint and p["dcr"] > dcr_constraint:
+            continue
+
+        # Current: part's current must be >= required (higher is better)
+        if current_constraint and p["current"] < current_constraint:
+            continue
+
+        matches.append(p)
+
+    if matches:
+        # Use first match as primary, rest as alternatives
+        manufacturer = matches[0]["manufacturer"]
+        all_mpns = [p["mpn"] for p in matches]
+        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        c.matcher = "assign_house_ferrite_bead"
+        return
+
+    # Generate warning
+    warn(
+        "No house ferrite bead found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_parts(c):
-    """Single modifier that dispatches to resistor, capacitor, or LED matching."""
+    """Single modifier that dispatches to resistor, capacitor, LED, or ferrite bead matching."""
     # Skip if already has MPN
     if hasattr(c, "mpn") and c.mpn:
         return
@@ -383,3 +462,5 @@ def assign_house_parts(c):
         assign_house_capacitor(c, HOUSE_CAPS_BY_PKG)
     elif c.type == "led":
         assign_house_led(c, HOUSE_LEDS_BY_PKG)
+    elif c.type == "ferrite_bead":
+        assign_house_ferrite_bead(c, HOUSE_FB_BY_PKG)
