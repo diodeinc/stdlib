@@ -18,7 +18,7 @@ Variant = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-variant = config("variant", Variant, default=Variant("1mm_Mask2mm"), convert=Variant, optional=True)
+variant = config("variant", Variant, default=Variant("1mm_Mask2mm"), optional=True)
 
 # Properties – combined and normalized
 properties = {

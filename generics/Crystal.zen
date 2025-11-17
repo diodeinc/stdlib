@@ -27,7 +27,7 @@ Package = enum(
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package)
 frequency = config_unit("frequency", Frequency)
 
 # Optional

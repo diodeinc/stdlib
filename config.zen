@@ -21,7 +21,7 @@ def config_unit(name, UnitType, optional=False, default=None, **kwargs):
     def convert_unit(x):
         if x == None:
             return None
-        return unit(x, UnitType)
+        return UnitType(x)
 
     return config(name, unit_type, default=default, convert=convert_unit, optional=optional, **kwargs)
 

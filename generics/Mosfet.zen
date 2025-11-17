@@ -15,8 +15,8 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
-channel = config("channel", MosfetChannel, convert=MosfetChannel)
+package = config("package", Package)
+channel = config("channel", MosfetChannel)
 
 # Optional
 mpn = config("mpn", str, optional=True)

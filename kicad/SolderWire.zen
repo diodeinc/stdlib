@@ -21,7 +21,7 @@ SolderWireSize = Size
 # -----------------------------------------------------------------------------
 
 # Required
-size = config("size", Size, default=Size("SMD_1x2mm"), convert=Size)
+size = config("size", Size, default=Size("SMD_1x2mm"))
 
 # Properties – combined and normalized
 properties = {

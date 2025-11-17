@@ -68,7 +68,7 @@ MolexPicoBladeVariant = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-variant = config("variant", MolexPicoBladeVariant, convert=MolexPicoBladeVariant)
+variant = config("variant", MolexPicoBladeVariant)
 properties = config("properties", dict, optional=True)
 
 # -----------------------------------------------------------------------------

@@ -15,8 +15,8 @@ Color = enum("red", "green", "blue", "yellow", "white", "amber", "orange", "pink
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
-color = config("color", Color, convert=Color)
+package = config("package", Package)
+color = config("color", Color)
 
 # Optional
 mpn = config("mpn", str, optional=True)

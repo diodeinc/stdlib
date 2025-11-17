@@ -17,7 +17,7 @@ TagConnectType = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-tag_type = config("tag_type", TagConnectType, convert=TagConnectType)
+tag_type = config("tag_type", TagConnectType)
 properties = config("properties", dict, optional=True)
 
 # -----------------------------------------------------------------------------

@@ -14,7 +14,7 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-package = config("package", Package, convert=Package)
+package = config("package", Package)
 resistance = config_unit("resistance", Resistance)
 frequency = config_unit("frequency", Frequency)
 
