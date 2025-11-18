@@ -30,6 +30,7 @@ load(
     "led",
     "ferrite_bead",
     "pin_header",
+    "tvs",
 )
 
 
@@ -247,6 +248,26 @@ HOUSE_PH = {
     ("2.54mm", 2, 5, "Vertical"): [("61301021121", "Würth Elektronik")],
     ("2.54mm", 2, 10, "Vertical"): [("61302021121", "Würth Elektronik")],
     ("2.54mm", 2, 20, "Vertical"): [("61304021121", "Würth Elektronik")],
+}
+
+# House TVS diode catalog by package (8/20µs pulse ratings per IEC 61000-4-5)
+HOUSE_TVS_BY_PKG = {
+    "DO-219AB": [
+        # Vishay eSMP series - 5V standoff
+        tvs("5V", "9.2V", "1000W", "SMF5V0A-E3-08", "Vishay General Semiconductor - Diodes Division"),
+        # Littelfuse SZSMF series - 5V standoff (AEC-Q101 automotive)
+        tvs("5V", "9.2V", "1000W", "SZSMF5.0AT1G", "Littelfuse Inc."),
+        # Vishay eSMP series - 20V standoff
+        tvs("20V", "32.4V", "1000W", "SMF20A-E3-08", "Vishay General Semiconductor - Diodes Division"),
+        # Littelfuse SMF series - 20V standoff
+        tvs("20V", "32.4V", "1000W", "SMF20A", "Littelfuse Inc."),
+        # Littelfuse SZSMF series - 20V standoff (AEC-Q101 automotive)
+        tvs("20V", "32.4V", "1000W", "SZSMF20AT1G", "Littelfuse Inc."),
+    ],
+    "DO-214AC": [
+        # Vishay TransZorb series - 20V standoff
+        tvs("20V", "32.4V", "2000W", "SMAJ20A-E3/61", "Vishay General Semiconductor - Diodes Division"),
+    ],
 }
 
 
@@ -507,6 +528,51 @@ def assign_house_pin_header(c, house_ph):
     )
 
 
+def assign_house_tvs(c, house_tvs_by_pkg):
+    """Assign house TVS diode MPNs."""
+    pkg = prop(c, ["package", "Package"])
+    req_standoff = prop(c, ["reverse_standoff_voltage", "Reverse_standoff_voltage"])
+    req_clamping = prop(c, ["reverse_clamping_voltage", "Reverse_clamping_voltage"])
+    req_power = prop(c, ["peak_pulse_power", "Peak_pulse_power"])
+
+    parts = house_tvs_by_pkg.get(pkg, [])
+    matches = []
+
+    for p in parts:
+        # Standoff voltage: part must be within the requirement
+        if req_standoff and p["standoff_voltage"] not in req_standoff:
+            continue
+
+        # Clamping voltage: part must be within the requirement
+        if req_clamping and p["clamping_voltage"] not in req_clamping:
+            continue
+
+        # Power: part must be within the requirement
+        if req_power and p["peak_pulse_power"] not in req_power:
+            continue
+
+        matches.append(p)
+
+    if matches:
+        # Use first match as primary, rest as alternatives
+        manufacturer = matches[0]["manufacturer"]
+        all_mpns = [p["mpn"] for p in matches]
+        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        c.matcher = "assign_house_tvs"
+        return
+
+    # Generate warning
+    warn(
+        "No house TVS diode found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_parts(c):
     """Single modifier that dispatches component matching by type."""
     # Skip if already has MPN
@@ -522,6 +588,8 @@ def assign_house_parts(c):
         assign_house_led(c, HOUSE_LEDS_BY_PKG)
     elif c.type == "ferrite_bead":
         assign_house_ferrite_bead(c, HOUSE_FB_BY_PKG)
+    elif c.type == "tvs":
+        assign_house_tvs(c, HOUSE_TVS_BY_PKG)
     elif c.type == "connector":
         connector_type = prop(c, ["connector_type", "Connector_type"])
         if connector_type == "Pin Header":

@@ -341,6 +341,41 @@ def ferrite_bead(impedance: str, frequency: str, current: str, dcr: str, mpn: st
     }
 
 
+def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create TVS diode catalog entry.
+
+    Args:
+        standoff_voltage: Reverse standoff voltage (e.g., "5V" or "5V to 6V")
+        clamping_voltage: Clamping voltage @ Ipp (e.g., "9.2V" or "9V to 12V")
+        peak_pulse_power: Peak pulse power (e.g., "200W" or "200W to 400W")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        TVS diode dictionary
+    """
+    # Use ranges for all values to support flexible matching
+    standoff_val = (
+        VoltageRange(standoff_voltage)
+        if "to" in standoff_voltage
+        else VoltageRange(standoff_voltage + " to " + standoff_voltage)
+    )
+    clamping_val = (
+        VoltageRange(clamping_voltage)
+        if "to" in clamping_voltage
+        else VoltageRange(clamping_voltage + " to " + clamping_voltage)
+    )
+    power_val = Power(peak_pulse_power)
+
+    return {
+        "standoff_voltage": standoff_val,
+        "clamping_voltage": clamping_val,
+        "peak_pulse_power": power_val,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
 def match_component(match: dict, parts: tuple | list, matcher: str = "match_component"):
     """Create a component modifier that matches specific properties and assigns MPN.
 
