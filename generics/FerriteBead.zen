@@ -31,11 +31,11 @@ current = config_unit("current", Current, optional=True)
 # Backwards compatibility: if resistance is specified, use it as impedance
 if resistance:
     impedance = resistance
-    warn("'resistance' is deprecated, use 'impedance' instead")
+    warn("'resistance' is deprecated, use 'value' instead")
 
 # Ensure we have an effective impedance
 if not impedance:
-    error("FerriteBead requires either 'resistance' or 'impedance' to be specified")
+    error("FerriteBead requires 'value' to be specified")
 
 # Properties – combined and normalized
 properties = {
