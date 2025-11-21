@@ -43,8 +43,8 @@ def _get_symbol(pin_count, style):
 # -----------------------------------------------------------------------------
 
 pin_count = config("pin_count", int, default=2, optional=True)
-style = config("style", SolderJumperStyle, convert=SolderJumperStyle)
-variant = config("variant", SolderJumperVariant, convert=SolderJumperVariant)
+style = config("style", SolderJumperStyle)
+variant = config("variant", SolderJumperVariant)
 pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), optional=True)
 
 # Properties – combined and normalized

@@ -1,7 +1,18 @@
 """BOM matching helper functions"""
 
 load("../utils.zen", "e96", "e24")
-load("../units.zen", "ResistanceRange", "Voltage", "Power", "Capacitance")
+load(
+    "../units.zen",
+    "ResistanceRange",
+    "Voltage",
+    "VoltageRange",
+    "Power",
+    "Capacitance",
+    "Resistance",
+    "Impedance",
+    "Current",
+    "Frequency",
+)
 
 
 def prop(c, names):
@@ -64,6 +75,39 @@ def iec60062_4digit(value):
     mantissa = str(int(norm + 0.5))
     mantissa = ("0" * (3 - len(mantissa))) + mantissa
     return mantissa + str(mult)
+
+
+def encode_3digit_multiplier(value):
+    """3-digit + multiplier encoding (Uniroyal style): no R-notation, always 3 digits.
+
+    Uses J/K/L for negative powers: J=10^-1, K=10^-2, L=10^-3
+    Examples: 16.2Ω → 162J, 100Ω → 1000, 10kΩ → 1002
+    """
+    mult = 0
+    norm = value
+
+    # Scale to 100-999 range
+    for _ in range(10):
+        if norm >= 100.0:
+            break
+        norm = norm * 10.0
+        mult = mult - 1
+
+    for _ in range(10):
+        if norm < 1000.0:
+            break
+        norm = norm / 10.0
+        mult = mult + 1
+
+    # Round and format to 3 digits
+    mantissa = str(int(norm + 0.5))
+    mantissa = ("0" * (3 - len(mantissa))) + mantissa
+
+    # Map multiplier to character
+    multiplier_map = {-3: "L", -2: "K", -1: "J"}
+    mult_char = multiplier_map.get(mult, str(mult))
+
+    return mantissa + mult_char
 
 
 def iec60062_3digit(value):
@@ -149,6 +193,35 @@ def panasonic_erj(series, resistance_range, voltage, power, tolerance, e_series,
     )
 
 
+def uniroyal(series, resistance_range, voltage, power, tolerance, e_series, suffix, encode):
+    """Shorthand for Uniroyal chip resistor series.
+
+    Args:
+        series: Series name (e.g., "0402WGF")
+        resistance_range: Resistance range (e.g., "10Ohm – 10MOhm")
+        voltage: Max voltage (e.g., "50V")
+        power: Power rating (e.g., "0.0625W")
+        tolerance: Tolerance string (e.g., "1%")
+        e_series: List of E-series (e.g., ["e96", "e24"])
+        suffix: Packaging suffix (e.g., "TCE")
+        encode: Encoding function (typically encode_3digit_multiplier)
+
+    Returns:
+        Resistor series dictionary
+    """
+    return resistor_series(
+        "Uniroyal Electronics",
+        series,
+        resistance_range,
+        voltage,
+        power,
+        tolerance,
+        e_series,
+        encode,
+        suffix,
+    )
+
+
 def discrete_resistor_series(manufacturer, series, max_v, power, tolerance, values_with_mpns):
     """Helper to create discrete resistor series (non-E-series, exact values only).
 
@@ -196,6 +269,109 @@ def murata_cap(dielectric, voltage, cap, base_mpn, suffixes, manufacturer="Murat
         "voltage": Voltage(voltage),
         "cap": Capacitance(cap),
         "mpns": mpns,
+        "manufacturer": manufacturer,
+    }
+
+
+def led(color: str, voltage_range: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create LED catalog entry.
+
+    Args:
+        color: LED color (e.g., "red", "blue", "green")
+        voltage_range: Forward voltage range (e.g., "1.8V – 2.4V (2V nom.)")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        LED dictionary
+    """
+    return {
+        "color": color,
+        "forward_voltage": VoltageRange(voltage_range),
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
+def pin_header(pins: int, rows: int, pitch: str, orientation: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create pin header catalog entry.
+
+    Args:
+        pins: Number of pins per row
+        rows: Number of rows (1 or 2)
+        pitch: Pitch (e.g., "1.27mm", "2.54mm")
+        orientation: Orientation (e.g., "Vertical", "Horizontal")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Pin header dictionary
+    """
+    return {
+        "pins": pins,
+        "rows": rows,
+        "pitch": pitch,
+        "orientation": orientation,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
+def ferrite_bead(impedance: str, frequency: str, current: str, dcr: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create ferrite bead catalog entry.
+
+    Args:
+        impedance: Impedance with tolerance (e.g., "220Ohm 25%")
+        frequency: Test frequency (e.g., "100MHz")
+        current: Rated current (e.g., "1.4A")
+        dcr: DC resistance max (e.g., "100mOhm")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Ferrite bead dictionary
+    """
+    return {
+        "impedance": Impedance(impedance),
+        "frequency": Frequency(frequency),
+        "current": Current(current),
+        "dcr": Resistance(dcr),
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
+def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create TVS diode catalog entry.
+
+    Args:
+        standoff_voltage: Reverse standoff voltage (e.g., "5V" or "5V to 6V")
+        clamping_voltage: Clamping voltage @ Ipp (e.g., "9.2V" or "9V to 12V")
+        peak_pulse_power: Peak pulse power (e.g., "200W" or "200W to 400W")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        TVS diode dictionary
+    """
+    # Use ranges for all values to support flexible matching
+    standoff_val = (
+        VoltageRange(standoff_voltage)
+        if "to" in standoff_voltage
+        else VoltageRange(standoff_voltage + " to " + standoff_voltage)
+    )
+    clamping_val = (
+        VoltageRange(clamping_voltage)
+        if "to" in clamping_voltage
+        else VoltageRange(clamping_voltage + " to " + clamping_voltage)
+    )
+    power_val = Power(peak_pulse_power)
+
+    return {
+        "standoff_voltage": standoff_val,
+        "clamping_voltage": clamping_val,
+        "peak_pulse_power": power_val,
+        "mpn": mpn,
         "manufacturer": manufacturer,
     }
 
