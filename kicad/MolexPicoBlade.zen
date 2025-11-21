@@ -108,19 +108,19 @@ def _footprint(variant: MolexPicoBladeVariant):
     # Use a simplified mapping for common variants
     common_footprints = {
         MolexPicoBladeVariant("53047-0210_1x02_Vertical"): File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0210_1x02_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0210_1x02_P1.25mm_Vertical.kicad_mod"
         ),
         MolexPicoBladeVariant("53047-0310_1x03_Vertical"): File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0310_1x03_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0310_1x03_P1.25mm_Vertical.kicad_mod"
         ),
         MolexPicoBladeVariant("53047-0410_1x04_Vertical"): File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0410_1x04_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0410_1x04_P1.25mm_Vertical.kicad_mod"
         ),
         MolexPicoBladeVariant("53047-0510_1x05_Vertical"): File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0510_1x05_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0510_1x05_P1.25mm_Vertical.kicad_mod"
         ),
         MolexPicoBladeVariant("53047-0610_1x06_Vertical"): File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0610_1x06_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0610_1x06_P1.25mm_Vertical.kicad_mod"
         ),
     }
 
@@ -129,14 +129,14 @@ def _footprint(variant: MolexPicoBladeVariant):
     else:
         # Default to a 2-pin vertical variant for others
         return File(
-            "@kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0210_1x02_P1.25mm_Vertical.kicad_mod"
+            "gitlab.com/kicad/libraries/kicad-footprints/Connector_Molex.pretty/Molex_PicoBlade_53047-0210_1x02_P1.25mm_Vertical.kicad_mod"
         )
 
 
 def _symbol(pin_count: int):
     """Get the appropriate symbol based on pin count."""
     pin_str = str(pin_count) if pin_count >= 10 else "0" + str(pin_count)
-    return Symbol(library="@kicad-symbols/Connector_Generic.kicad_sym", name="Conn_01x" + pin_str)
+    return Symbol(library="gitlab.com/kicad/libraries/kicad-symbols/Connector_Generic.kicad_sym", name="Conn_01x" + pin_str)
 
 
 def _mpn(variant: MolexPicoBladeVariant) -> str:

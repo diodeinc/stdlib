@@ -75,7 +75,7 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
         footprint_name += "_Pin1Left"
 
     # Construct the file path
-    return "@kicad-footprints/Connector_PinSocket_" + pitch_str + ".pretty/" + footprint_name + ".kicad_mod"
+    return "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinSocket_" + pitch_str + ".pretty/" + footprint_name + ".kicad_mod"
 
 
 def _symbol(pins: int, rows: int):
@@ -94,7 +94,7 @@ def _symbol(pins: int, rows: int):
             symbol_name = "Conn_02x" + pin_str + "_Odd_Even"
 
     return {
-        "library": "@kicad-symbols/Connector_Generic.kicad_sym",
+        "library": "gitlab.com/kicad/libraries/kicad-symbols/Connector_Generic.kicad_sym",
         "name": symbol_name,
     }
 

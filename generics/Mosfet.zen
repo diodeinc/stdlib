@@ -51,7 +51,7 @@ S = io("S", Net)
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("SOT-23-3"): "@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod",
+        Package("SOT-23-3"): "gitlab.com/kicad/libraries/kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23-3.kicad_mod",
     }
 
     if package not in kicad_footprints:
@@ -63,11 +63,11 @@ def _footprint(package: Package) -> str:
 def _symbol(channel: MosfetChannel):
     symbols = {
         MosfetChannel("N"): {
-            "library": "@kicad-symbols/Device.kicad_sym",
+            "library": "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym",
             "name": "Q_NMOS",
         },
         MosfetChannel("P"): {
-            "library": "@kicad-symbols/Device.kicad_sym",
+            "library": "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym",
             "name": "Q_PMOS",
         },
     }

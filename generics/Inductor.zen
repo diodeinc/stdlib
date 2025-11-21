@@ -48,7 +48,7 @@ P2 = io("P2", Net)
 
 def _symbol(package: Package):
     return {
-        "library": "@kicad-symbols/Device.kicad_sym",
+        "library": "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym",
         "name": "L",
     }
 
@@ -56,14 +56,14 @@ def _symbol(package: Package):
 def _footprint(package: Package) -> str:
     """Returns the appropriate inductor footprint based on the package."""
     footprints = {
-        Package("0201"): "@kicad-footprints/Inductor_SMD.pretty/L_0201_0603Metric.kicad_mod",
-        Package("0402"): "@kicad-footprints/Inductor_SMD.pretty/L_0402_1005Metric.kicad_mod",
-        Package("0603"): "@kicad-footprints/Inductor_SMD.pretty/L_0603_1608Metric.kicad_mod",
-        Package("0805"): "@kicad-footprints/Inductor_SMD.pretty/L_0805_2012Metric.kicad_mod",
-        Package("1206"): "@kicad-footprints/Inductor_SMD.pretty/L_1206_3216Metric.kicad_mod",
-        Package("1210"): "@kicad-footprints/Inductor_SMD.pretty/L_1210_3225Metric.kicad_mod",
-        Package("2010"): "@kicad-footprints/Inductor_SMD.pretty/L_2010_5025Metric.kicad_mod",
-        Package("2512"): "@kicad-footprints/Inductor_SMD.pretty/L_2512_6332Metric.kicad_mod",
+        Package("0201"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_0201_0603Metric.kicad_mod",
+        Package("0402"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_0402_1005Metric.kicad_mod",
+        Package("0603"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_0603_1608Metric.kicad_mod",
+        Package("0805"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_0805_2012Metric.kicad_mod",
+        Package("1206"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_1206_3216Metric.kicad_mod",
+        Package("1210"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_1210_3225Metric.kicad_mod",
+        Package("2010"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_2010_5025Metric.kicad_mod",
+        Package("2512"): "gitlab.com/kicad/libraries/kicad-footprints/Inductor_SMD.pretty/L_2512_6332Metric.kicad_mod",
     }
 
     if package not in footprints:
@@ -83,7 +83,7 @@ Component(
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package))
     if package != Package("KICAD")
-    else File(f"@kicad-footprints/{kicad_library}.pretty/{kicad_package}.kicad_mod"),
+    else File(f"gitlab.com/kicad/libraries/kicad-footprints/{kicad_library}.pretty/{kicad_package}.kicad_mod"),
     prefix="L",
     pins={
         "1": P1,

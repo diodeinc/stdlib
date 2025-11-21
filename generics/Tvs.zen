@@ -49,10 +49,10 @@ else:
 
 def _footprint(package: Package) -> str:
     kicad_footprints = {
-        Package("DO-219AB"): "@kicad-footprints/Diode_SMD.pretty/D_SMF.kicad_mod",
-        Package("DO-214AC"): "@kicad-footprints/Diode_SMD.pretty/D_SMA.kicad_mod",
-        Package("DO-214AA"): "@kicad-footprints/Diode_SMD.pretty/D_SMB.kicad_mod",
-        Package("DO-214AB"): "@kicad-footprints/Diode_SMD.pretty/D_SMC.kicad_mod",
+        Package("DO-219AB"): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMF.kicad_mod",
+        Package("DO-214AC"): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMA.kicad_mod",
+        Package("DO-214AA"): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMB.kicad_mod",
+        Package("DO-214AB"): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMC.kicad_mod",
     }
     return kicad_footprints[package]
 
@@ -62,7 +62,7 @@ Component(
     mpn=mpn,
     manufacturer=manufacturer,
     prefix="D",
-    symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name="D_Zener"),
+    symbol=Symbol(library="gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym", name="D_Zener"),
     footprint=File(_footprint(package)),
     properties={
         "value": format_value(reverse_standoff_voltage, "TVS Diode", peak_pulse_power),

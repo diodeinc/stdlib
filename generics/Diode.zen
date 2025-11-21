@@ -52,9 +52,9 @@ K = io("K", Net)  # Cathode
 
 def _symbol(variant: Variant):
     symbols = {
-        Variant("Standard"): "@kicad-symbols/Device.kicad_sym:D",
-        Variant("Schottky"): "@kicad-symbols/Device.kicad_sym:D_Schottky",
-        Variant("Zener"): "@kicad-symbols/Device.kicad_sym:D_Zener",
+        Variant("Standard"): "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym:D",
+        Variant("Schottky"): "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym:D_Schottky",
+        Variant("Zener"): "gitlab.com/kicad/libraries/kicad-symbols/Device.kicad_sym:D_Zener",
     }
 
     return {
@@ -65,13 +65,13 @@ def _symbol(variant: Variant):
 
 def _footprint(mount: Mount, package: Package) -> str:
     kicad_footprints = {
-        (Mount("SMD"), Package("SOD-123")): "@kicad-footprints/Diode_SMD.pretty/D_SOD-123.kicad_mod",
-        (Mount("SMD"), Package("SOD-323")): "@kicad-footprints/Diode_SMD.pretty/D_SOD-323.kicad_mod",
-        (Mount("SMD"), Package("SOD-523")): "@kicad-footprints/Diode_SMD.pretty/D_SOD-523.kicad_mod",
-        (Mount("SMD"), Package("SOT-23")): "@kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23.kicad_mod",
-        (Mount("SMD"), Package("SMA")): "@kicad-footprints/Diode_SMD.pretty/D_SMA.kicad_mod",
-        (Mount("SMD"), Package("SMB")): "@kicad-footprints/Diode_SMD.pretty/D_SMB.kicad_mod",
-        (Mount("SMD"), Package("SMC")): "@kicad-footprints/Diode_SMD.pretty/D_SMC.kicad_mod",
+        (Mount("SMD"), Package("SOD-123")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SOD-123.kicad_mod",
+        (Mount("SMD"), Package("SOD-323")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SOD-323.kicad_mod",
+        (Mount("SMD"), Package("SOD-523")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SOD-523.kicad_mod",
+        (Mount("SMD"), Package("SOT-23")): "gitlab.com/kicad/libraries/kicad-footprints/Package_TO_SOT_SMD.pretty/SOT-23.kicad_mod",
+        (Mount("SMD"), Package("SMA")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMA.kicad_mod",
+        (Mount("SMD"), Package("SMB")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMB.kicad_mod",
+        (Mount("SMD"), Package("SMC")): "gitlab.com/kicad/libraries/kicad-footprints/Diode_SMD.pretty/D_SMC.kicad_mod",
     }
 
     if (mount, package) not in kicad_footprints:

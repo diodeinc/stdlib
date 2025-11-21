@@ -82,7 +82,7 @@ P1 = io("P1", Net)
 
 def _symbol(variant: Variant):
     return {
-        "library": "@kicad-symbols/Connector.kicad_sym",
+        "library": "gitlab.com/kicad/libraries/kicad-symbols/Connector.kicad_sym",
         "name": "TestPoint",
     }
 
@@ -90,7 +90,7 @@ def _symbol(variant: Variant):
 def _footprint(variant):
     """Returns the footprint for a specific variant."""
     name = variant.value
-    return f"@kicad-footprints/TestPoint.pretty/TestPoint_{name}.kicad_mod"
+    return f"gitlab.com/kicad/libraries/kicad-footprints/TestPoint.pretty/TestPoint_{name}.kicad_mod"
 
 
 def _keystone_mpn(variant: Variant, color: Color):

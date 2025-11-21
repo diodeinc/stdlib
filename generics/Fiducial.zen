@@ -40,7 +40,7 @@ properties = {
 def _symbol(variant: Variant) -> dict:
     """Returns the fiducial symbol."""
     return {
-        "library": "@kicad-symbols/Mechanical.kicad_sym",
+        "library": "gitlab.com/kicad/libraries/kicad-symbols/Mechanical.kicad_sym",
         "name": "Fiducial",
     }
 
@@ -48,7 +48,7 @@ def _symbol(variant: Variant) -> dict:
 def _footprint(variant: Variant) -> str:
     """Returns the footprint for a specific variant."""
     name = variant.value
-    return f"@kicad-footprints/Fiducial.pretty/Fiducial_{name}.kicad_mod"
+    return f"gitlab.com/kicad/libraries/kicad-footprints/Fiducial.pretty/Fiducial_{name}.kicad_mod"
 
 
 # -----------------------------------------------------------------------------
