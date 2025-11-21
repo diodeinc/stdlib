@@ -2,6 +2,7 @@ version = "2"
 
 [package]
 pcb-version = "0.2"
+path = "github.com/diodeinc/stdlib"
 
 [dependencies]
 "gitlab.com/kicad/libraries/kicad-symbols" = "9.0.3"

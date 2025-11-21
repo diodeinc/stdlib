@@ -140,7 +140,7 @@ Component(
     symbol=Symbol(**_symbol(variant)),
     footprint=File(_footprint(mount, package)),
     spice_model=SpiceModel(
-        "//simulation/Diode.lib",
+        "../simulation/Diode.lib",
         _spice_subcircuit_name(variant),
         nets=[A, K],
         args=_spice_args(variant, v_f, i_f, v_r, i_r),
