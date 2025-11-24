@@ -1,0 +1,26 @@
+"""
+Placeholder for an arbitrary block.
+
+```zen
+Block(
+    name="POWER_REGULATOR",
+    ios={
+        "power_in": Power,
+        "power_out": Power,
+        "gnd": Ground,
+    },
+    power_in=vbus,
+    power_out=v3v3,
+    gnd=gnd,
+)
+```
+
+"""
+
+ios = config("ios", dict)
+
+for name, typ in ios.items():
+    i = io(name, typ, optional=True)
+
+
+add_property("collapse", True)
