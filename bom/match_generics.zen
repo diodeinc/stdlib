@@ -264,10 +264,14 @@ HOUSE_TVS_BY_PKG = {
         tvs("20V", "32.4V", "1000W", "SMF20A", "Littelfuse Inc."),
         # Littelfuse SZSMF series - 20V standoff (AEC-Q101 automotive)
         tvs("20V", "32.4V", "1000W", "SZSMF20AT1G", "Littelfuse Inc."),
+        # Vishay eSMP series - 24V standoff
+        tvs("24V", "38.9V", "1000W", "SMF24A-E3-08", "Vishay General Semiconductor - Diodes Division"),
     ],
     ("Unidirectional", "DO-214AC"): [
         # Vishay TransZorb series - 20V standoff
         tvs("20V", "32.4V", "2000W", "SMAJ20A-E3/61", "Vishay General Semiconductor - Diodes Division"),
+        # Vishay TransZorb series - 24V standoff
+        tvs("24V", "38.9V", "2000W", "SMAJ24A-E3/61", "Vishay General Semiconductor - Diodes Division"),
     ],
     ("Unidirectional", "DO-214AA"): [
         # Vishay TransZorb series - 28V standoff

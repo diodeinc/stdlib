@@ -2,6 +2,7 @@
 
 load("../../interfaces.zen", "Power", "Ground")
 load("../../units.zen", "PowerRange", "Voltage", "VoltageRange")
+load("../../bom/match_generics.zen", "assign_house_parts")
 
 Tvs = Module("../Tvs.zen")
 
@@ -11,6 +12,7 @@ gnd = Ground("GND")
 # Test all Package values
 for package in Tvs.Package.values():
     name = "D_TVS_" + str(package)
+    # suppress: bom.match_generic
     Tvs(
         name=name,
         package=package,
@@ -21,6 +23,7 @@ for package in Tvs.Package.values():
     )
 
 # Test with different voltage ratings
+# suppress: bom.match_generic
 Tvs(
     name="D_TVS_3V3",
     package="DO-219AB",
@@ -31,6 +34,7 @@ Tvs(
     K=vcc,
 )
 
+# suppress: bom.match_generic
 Tvs(
     name="D_TVS_12V",
     package="DO-214AC",
@@ -42,6 +46,7 @@ Tvs(
 )
 
 # Test Bidirectional
+# suppress: bom.match_generic
 Tvs(
     name="D_TVS_Bi",
     package="DO-214AB",
@@ -49,3 +54,20 @@ Tvs(
     A=gnd,
     K=vcc,
 )
+
+# Test Optional Parameters (Minimal)
+# Should work without reverse_clamping_voltage or peak_pulse_power
+Tvs(name="D_TVS_Minimal", A=gnd, K=vcc)
+
+# Test Bidirectional with generic Nets
+sig_p = Net("SIG_P")
+sig_n = Net("SIG_N")
+# suppress: bom.match_generic
+Tvs(
+    name="D_TVS_Bi_Generic",
+    direction="Bidirectional",
+    A=sig_p,
+    K=sig_n,
+)
+
+builtin.add_component_modifier(assign_house_parts)

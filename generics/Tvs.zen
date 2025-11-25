@@ -11,23 +11,25 @@ Package = enum("DO-219AB", "DO-214AC", "DO-214AA", "DO-214AB")
 Direction = enum("Unidirectional", "Bidirectional")
 
 USB_5V_STANDOFF_VOLTAGE = VoltageRange("5 to 6V")
-USB_5V_CLAMPING_VOLTAGE = VoltageRange("9 to 12V")
-USB_5V_POWER_PP = PowerRange("800 to 1200W")
 
 package = config("package", Package, default=Package("DO-219AB"))
 direction = config("direction", Direction, default=Direction("Unidirectional"))
 # 8/20 μs waveform acc. IEC 61000-4-5
 reverse_standoff_voltage = config("reverse_standoff_voltage", VoltageRange, default=USB_5V_STANDOFF_VOLTAGE)
-reverse_clamping_voltage = config("reverse_clamping_voltage", VoltageRange, default=USB_5V_CLAMPING_VOLTAGE)
-peak_pulse_power = config("peak_pulse_power", PowerRange, default=USB_5V_POWER_PP)
+reverse_clamping_voltage = config("reverse_clamping_voltage", VoltageRange, optional=True)
+peak_pulse_power = config("peak_pulse_power", PowerRange, optional=True)
 
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 
-A = io("A", Ground)
-K = io("K", Power, default=Power("VCC", voltage=VoltageRange("5V")))
+if direction == Direction("Unidirectional"):
+    A = io("A", Ground)
+    K = io("K", Power, default=Power("VCC", voltage=VoltageRange("5V")))
+else:
+    A = io("A", Net)
+    K = io("K", Net)
 
-if reverse_clamping_voltage.min < reverse_standoff_voltage.max:
+if reverse_clamping_voltage and reverse_clamping_voltage.min < reverse_standoff_voltage.max:
     error(
         "reverse clamping voltage ("
         + str(reverse_clamping_voltage)
@@ -36,17 +38,16 @@ if reverse_clamping_voltage.min < reverse_standoff_voltage.max:
         + ")"
     )
 
-if hasattr(K, "voltage"):
-    if K.voltage.max > reverse_clamping_voltage.min:
+if hasattr(K, "voltage") and hasattr(A, "voltage"):
+    net_v_diff = K.voltage.diff(A.voltage)
+    if reverse_clamping_voltage and net_v_diff.max > reverse_clamping_voltage.min:
         error(
-            "Power net voltage ("
-            + str(K.voltage)
+            "Power net voltage Δ ("
+            + str(net_v_diff)
             + ") must be <= reverse clamping voltage ("
             + str(reverse_clamping_voltage)
             + ")"
         )
-else:
-    warn("No voltage specified for power net")
 
 
 def _footprint(package: Package) -> str:
