@@ -31,6 +31,7 @@ load(
     "ferrite_bead",
     "pin_header",
     "tvs",
+    "standoff",
 )
 
 
@@ -280,6 +281,48 @@ HOUSE_TVS_BY_PKG = {
         # Vishay TransZorb series - 60V standoff
         tvs("60V", "96.8V", "2000W", "SMAJ60CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
     ],
+}
+
+# House standoff catalog (Würth WA-SMSI series)
+# Key: (thread, height) -> standoff entry
+HOUSE_STANDOFFS = {
+    # M1.6 thread
+    ("M1.6", "1mm"): standoff("M1.6", "1mm", "9774010633"),
+    ("M1.6", "1.5mm"): standoff("M1.6", "1.5mm", "9774015633"),
+    ("M1.6", "2mm"): standoff("M1.6", "2mm", "9774020633"),
+    ("M1.6", "2.5mm"): standoff("M1.6", "2.5mm", "9774025633"),
+    ("M1.6", "3mm"): standoff("M1.6", "3mm", "9774030633"),
+    # M2 thread
+    ("M2", "1mm"): standoff("M2", "1mm", "9774010243"),
+    ("M2", "1.5mm"): standoff("M2", "1.5mm", "9774015243"),
+    ("M2", "2mm"): standoff("M2", "2mm", "9774020243"),
+    ("M2", "2.5mm"): standoff("M2", "2.5mm", "9774025243"),
+    ("M2", "3mm"): standoff("M2", "3mm", "9774030243"),
+    ("M2", "3.5mm"): standoff("M2", "3.5mm", "9774035243"),
+    ("M2", "4mm"): standoff("M2", "4mm", "9774040243"),
+    ("M2", "4.5mm"): standoff("M2", "4.5mm", "9774045243"),
+    ("M2", "5mm"): standoff("M2", "5mm", "9774050243"),
+    ("M2", "6mm"): standoff("M2", "6mm", "9774060243"),
+    ("M2", "7mm"): standoff("M2", "7mm", "9774070243"),
+    ("M2", "8mm"): standoff("M2", "8mm", "9774080243"),
+    # M3 thread
+    ("M3", "1mm"): standoff("M3", "1mm", "9774010360"),
+    ("M3", "1.5mm"): standoff("M3", "1.5mm", "9774015360"),
+    ("M3", "2mm"): standoff("M3", "2mm", "9774020360"),
+    ("M3", "2.5mm"): standoff("M3", "2.5mm", "9774025360"),
+    ("M3", "3mm"): standoff("M3", "3mm", "9774030360"),
+    ("M3", "4mm"): standoff("M3", "4mm", "9774040360"),
+    ("M3", "5mm"): standoff("M3", "5mm", "9774050360"),
+    ("M3", "6mm"): standoff("M3", "6mm", "9774060360"),
+    ("M3", "7mm"): standoff("M3", "7mm", "9774070360"),
+    ("M3", "8mm"): standoff("M3", "8mm", "9774080360"),
+    ("M3", "9mm"): standoff("M3", "9mm", "9774090360"),
+    ("M3", "10mm"): standoff("M3", "10mm", "9774100360"),
+    ("M3", "11mm"): standoff("M3", "11mm", "9774110360"),
+    ("M3", "12mm"): standoff("M3", "12mm", "9774120360"),
+    ("M3", "13mm"): standoff("M3", "13mm", "9774130360"),
+    ("M3", "14mm"): standoff("M3", "14mm", "9774140360"),
+    ("M3", "15mm"): standoff("M3", "15mm", "9774150360"),
 }
 
 
@@ -586,6 +629,31 @@ def assign_house_tvs(c, house_tvs_by_pkg):
     )
 
 
+def assign_house_standoff(c, house_standoffs):
+    """Assign house standoff MPNs (Würth WA-SMSI series)."""
+    thread_req = prop(c, ["thread", "Thread"])
+    height_req = prop(c, ["height", "Height"])
+
+    # O(1) lookup using tuple key
+    key = (thread_req, height_req)
+    match = house_standoffs.get(key, None)
+
+    if match:
+        c.mpn = match["mpn"]
+        c.manufacturer = match["manufacturer"]
+        c.matcher = "assign_house_standoff"
+        return
+
+    # Generate warning
+    warn(
+        "No house standoff found for "
+        + c.value
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_parts(c):
     """Single modifier that dispatches component matching by type."""
     # Skip if already has MPN
@@ -603,6 +671,8 @@ def assign_house_parts(c):
         assign_house_ferrite_bead(c, HOUSE_FB_BY_PKG)
     elif c.type == "tvs":
         assign_house_tvs(c, HOUSE_TVS_BY_PKG)
+    elif c.type == "standoff":
+        assign_house_standoff(c, HOUSE_STANDOFFS)
     elif c.type == "connector":
         connector_type = prop(c, ["connector_type", "Connector_type"])
         if connector_type == "Pin Header":

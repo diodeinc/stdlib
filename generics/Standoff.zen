@@ -145,6 +145,7 @@ def _footprint(thread: Thread, height) -> str:
 
 Component(
     name="Standoff",
+    type="standoff",
     symbol=Symbol(_symbol(thread, height)),
     footprint=File(_footprint(thread, height)),
     prefix="H",

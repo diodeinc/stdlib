@@ -376,6 +376,26 @@ def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn
     }
 
 
+def standoff(thread: str, height: str, mpn: str, manufacturer: str = "Würth Elektronik") -> dict:
+    """Helper to create standoff catalog entry.
+
+    Args:
+        thread: Thread size (e.g., "M1.6", "M2", "M3")
+        height: Standoff height (e.g., "5mm", "10mm")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Standoff dictionary
+    """
+    return {
+        "thread": thread,
+        "height": height,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
 def match_component(match: dict, parts: tuple | list, matcher: str = "match_component"):
     """Create a component modifier that matches specific properties and assigns MPN.
 
