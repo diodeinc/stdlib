@@ -123,7 +123,7 @@ def sallen_key_lowpass(
     actual_frequency = 1 / (2 * 3.1415 * R * C)
 
     if actual_frequency not in F:
-        warn(f"Frequency mismatch: {frequency} != {actual_frequency}")
+        warn(f"Frequency mismatch: {actual_frequency} not within {F}")
 
     IN_P = Net(name + "_IN_P")
     NODE = Net(name + "_NODE")
