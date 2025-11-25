@@ -121,9 +121,8 @@ def sallen_key_lowpass(
     C2 = e24(C / n)
 
     actual_frequency = 1 / (2 * 3.1415 * R * C)
-    delta = F.diff(actual_frequency)
 
-    if F.tolerance and (delta / F) > F.tolerance:
+    if actual_frequency not in F:
         warn(f"Frequency mismatch: {frequency} != {actual_frequency}")
 
     IN_P = Net(name + "_IN_P")
