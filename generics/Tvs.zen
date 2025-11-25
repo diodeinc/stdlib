@@ -8,12 +8,14 @@ load("../utils.zen", "format_value")
 # SMB          DO-214AA      5.3×3.7×2.5
 # SMC          DO-214AB      7.8×6.8×2.5
 Package = enum("DO-219AB", "DO-214AC", "DO-214AA", "DO-214AB")
+Direction = enum("Unidirectional", "Bidirectional")
 
 USB_5V_STANDOFF_VOLTAGE = VoltageRange("5 to 6V")
 USB_5V_CLAMPING_VOLTAGE = VoltageRange("9 to 12V")
 USB_5V_POWER_PP = PowerRange("800 to 1200W")
 
 package = config("package", Package, default=Package("DO-219AB"))
+direction = config("direction", Direction, default=Direction("Unidirectional"))
 # 8/20 μs waveform acc. IEC 61000-4-5
 reverse_standoff_voltage = config("reverse_standoff_voltage", VoltageRange, default=USB_5V_STANDOFF_VOLTAGE)
 reverse_clamping_voltage = config("reverse_clamping_voltage", VoltageRange, default=USB_5V_CLAMPING_VOLTAGE)
@@ -57,23 +59,33 @@ def _footprint(package: Package) -> str:
     return kicad_footprints[package]
 
 
+def _symbol_name(direction: Direction) -> str:
+    if direction == Direction("Bidirectional"):
+        return "D_TVS"
+    return "D_Zener"
+
+
+def _pins(direction: Direction):
+    if direction == Direction("Bidirectional"):
+        return {"A1": A, "A2": K}
+    return {"A": A, "K": K}
+
+
 Component(
     name="D",
     mpn=mpn,
     manufacturer=manufacturer,
     prefix="D",
-    symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name="D_Zener"),
+    symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name=_symbol_name(direction)),
     footprint=File(_footprint(package)),
     properties={
         "value": format_value(reverse_standoff_voltage, "TVS Diode", peak_pulse_power),
         "package": package,
+        "direction": direction,
         "peak_pulse_power": peak_pulse_power,
         "reverse_standoff_voltage": reverse_standoff_voltage,
         "reverse_clamping_voltage": reverse_clamping_voltage,
     },
     type="tvs",
-    pins={
-        "A": A,
-        "K": K,
-    },
+    pins=_pins(direction),
 )
