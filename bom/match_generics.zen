@@ -771,11 +771,8 @@ def assign_house_standoff(c, house_standoffs):
     match = house_standoffs.get(key, None)
 
     if match:
-        primary = match[1]
-        alts = match[1:]
-        c.mpn = primary[0]
-        c.manufacturer = primary[1]
-        c.alternatives = [{"mpn": alt[0], "manufacturer": alt[1]} for alt in alts]
+        c.mpn, c.manufacturer = match[0]
+        c.alternatives = [{"mpn": mpn, "manufacturer": mfr} for mpn, mfr in match[1:]]
         c.matcher = "assign_house_standoff"
         return
 
