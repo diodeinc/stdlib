@@ -252,7 +252,7 @@ HOUSE_PH = {
 
 # House TVS diode catalog by package (8/20µs pulse ratings per IEC 61000-4-5)
 HOUSE_TVS_BY_PKG = {
-    "DO-219AB": [
+    ("Unidirectional", "DO-219AB"): [
         # Vishay eSMP series - 5V standoff
         tvs("5V", "9.2V", "1000W", "SMF5V0A-E3-08", "Vishay General Semiconductor - Diodes Division"),
         # Littelfuse SZSMF series - 5V standoff (AEC-Q101 automotive)
@@ -264,9 +264,21 @@ HOUSE_TVS_BY_PKG = {
         # Littelfuse SZSMF series - 20V standoff (AEC-Q101 automotive)
         tvs("20V", "32.4V", "1000W", "SZSMF20AT1G", "Littelfuse Inc."),
     ],
-    "DO-214AC": [
+    ("Unidirectional", "DO-214AC"): [
         # Vishay TransZorb series - 20V standoff
         tvs("20V", "32.4V", "2000W", "SMAJ20A-E3/61", "Vishay General Semiconductor - Diodes Division"),
+    ],
+    ("Unidirectional", "DO-214AA"): [
+        # Vishay TransZorb series - 28V standoff
+        tvs("28V", "45.5V", "3000W", "SMBJ28A-E3/52", "Vishay General Semiconductor - Diodes Division"),
+    ],
+    ("Bidirectional", "DO-214AC"): [
+        # Vishay TransZorb series - 15V standoff
+        tvs("15V", "24.4V", "2000W", "SMAJ15CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
+        # Vishay TransZorb series - 33V standoff
+        tvs("33V", "53.3V", "2000W", "SMAJ33CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
+        # Vishay TransZorb series - 60V standoff
+        tvs("60V", "96.8V", "2000W", "SMAJ60CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
     ],
 }
 
@@ -531,11 +543,12 @@ def assign_house_pin_header(c, house_ph):
 def assign_house_tvs(c, house_tvs_by_pkg):
     """Assign house TVS diode MPNs."""
     pkg = prop(c, ["package", "Package"])
+    direction = prop(c, ["direction", "Direction"]) or "Unidirectional"
     req_standoff = prop(c, ["reverse_standoff_voltage", "Reverse_standoff_voltage"])
     req_clamping = prop(c, ["reverse_clamping_voltage", "Reverse_clamping_voltage"])
     req_power = prop(c, ["peak_pulse_power", "Peak_pulse_power"])
 
-    parts = house_tvs_by_pkg.get(pkg, [])
+    parts = house_tvs_by_pkg.get((direction, pkg), [])
     matches = []
 
     for p in parts:

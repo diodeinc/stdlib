@@ -40,3 +40,12 @@ Tvs(
     A=gnd,
     K=vcc,
 )
+
+# Test Bidirectional
+Tvs(
+    name="D_TVS_Bi",
+    package="DO-214AB",
+    direction="Bidirectional",
+    A=gnd,
+    K=vcc,
+)
