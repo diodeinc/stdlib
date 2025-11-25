@@ -287,42 +287,174 @@ HOUSE_TVS_BY_PKG = {
 # Key: (thread, height) -> (wurth_mpn, sinhoo_mpn)
 HOUSE_STANDOFFS = {
     # M1.6 thread
-    ("M1.6", "1mm"): [("9774010633", "Würth Elektronik"), (sinhoo_standoff("M1.6", "1mm"), "Sinhoo")],
-    ("M1.6", "1.5mm"): [("9774015633", "Würth Elektronik"), (sinhoo_standoff("M1.6", "1.5mm"), "Sinhoo")],
-    ("M1.6", "2mm"): [("9774020633", "Würth Elektronik"), (sinhoo_standoff("M1.6", "2mm"), "Sinhoo")],
-    ("M1.6", "2.5mm"): [("9774025633", "Würth Elektronik"), (sinhoo_standoff("M1.6", "2.5mm"), "Sinhoo")],
-    ("M1.6", "3mm"): [("9774030633", "Würth Elektronik"), (sinhoo_standoff("M1.6", "3mm"), "Sinhoo")],
+    ("M1.6", "1mm"): [
+        ("9774010633", "Würth Elektronik"),
+        (sinhoo_standoff("M1.6", "1mm"), "Sinhoo"),
+        (sinhoo_standoff("M1.6", "1mm", "C"), "Sinhoo"),
+    ],
+    ("M1.6", "1.5mm"): [
+        ("9774015633", "Würth Elektronik"),
+        (sinhoo_standoff("M1.6", "1.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M1.6", "1.5mm", "C"), "Sinhoo"),
+    ],
+    ("M1.6", "2mm"): [
+        ("9774020633", "Würth Elektronik"),
+        (sinhoo_standoff("M1.6", "2mm"), "Sinhoo"),
+        (sinhoo_standoff("M1.6", "2mm", "C"), "Sinhoo"),
+    ],
+    ("M1.6", "2.5mm"): [
+        ("9774025633", "Würth Elektronik"),
+        (sinhoo_standoff("M1.6", "2.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M1.6", "2.5mm", "C"), "Sinhoo"),
+    ],
+    ("M1.6", "3mm"): [
+        ("9774030633", "Würth Elektronik"),
+        (sinhoo_standoff("M1.6", "3mm"), "Sinhoo"),
+        (sinhoo_standoff("M1.6", "3mm", "C"), "Sinhoo"),
+    ],
     # M2 thread
-    ("M2", "1mm"): [("9774010243", "Würth Elektronik"), (sinhoo_standoff("M2", "1mm"), "Sinhoo")]   ,
-    ("M2", "1.5mm"): [("9774015243", "Würth Elektronik"), (sinhoo_standoff("M2", "1.5mm"), "Sinhoo")],
-    ("M2", "2mm"): [("9774020243", "Würth Elektronik"), (sinhoo_standoff("M2", "2mm"), "Sinhoo")],
-    ("M2", "2.5mm"): [("9774025243", "Würth Elektronik"), (sinhoo_standoff("M2", "2.5mm"), "Sinhoo")],
-    ("M2", "3mm"): [("9774030243", "Würth Elektronik"), (sinhoo_standoff("M2", "3mm"), "Sinhoo")],
-    ("M2", "3.5mm"): [("9774035243", "Würth Elektronik"), (sinhoo_standoff("M2", "3.5mm"), "Sinhoo")],
-    ("M2", "4mm"): [("9774040243", "Würth Elektronik"), (sinhoo_standoff("M2", "4mm"), "Sinhoo")],
-    ("M2", "4.5mm"): [("9774045243", "Würth Elektronik"), (sinhoo_standoff("M2", "4.5mm"), "Sinhoo")],
-    ("M2", "5mm"): [("9774050243", "Würth Elektronik"), (sinhoo_standoff("M2", "5mm"), "Sinhoo")],
-    ("M2", "6mm"): [("9774060243", "Würth Elektronik"), (sinhoo_standoff("M2", "6mm"), "Sinhoo")],
-    ("M2", "7mm"): [("9774070243", "Würth Elektronik"), (sinhoo_standoff("M2", "7mm"), "Sinhoo")],
-    ("M2", "8mm"): [("9774080243", "Würth Elektronik"), (sinhoo_standoff("M2", "8mm"), "Sinhoo")],
+    ("M2", "1mm"): [
+        ("9774010243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "1mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "1mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "1.5mm"): [
+        ("9774015243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "1.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "1.5mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "2mm"): [
+        ("9774020243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "2mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "2mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "2.5mm"): [
+        ("9774025243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "2.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "2.5mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "3mm"): [
+        ("9774030243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "3mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "3mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "3.5mm"): [
+        ("9774035243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "3.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "3.5mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "4mm"): [
+        ("9774040243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "4mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "4mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "4.5mm"): [
+        ("9774045243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "4.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "4.5mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "5mm"): [
+        ("9774050243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "5mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "5mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "6mm"): [
+        ("9774060243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "6mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "6mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "7mm"): [
+        ("9774070243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "7mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "7mm", "C"), "Sinhoo"),
+    ],
+    ("M2", "8mm"): [
+        ("9774080243", "Würth Elektronik"),
+        (sinhoo_standoff("M2", "8mm"), "Sinhoo"),
+        (sinhoo_standoff("M2", "8mm", "C"), "Sinhoo"),
+    ],
     # M3 thread
-    ("M3", "1mm"): [("9774010360", "Würth Elektronik"), (sinhoo_standoff("M3", "1mm"), "Sinhoo")],
-    ("M3", "1.5mm"): [("9774015360", "Würth Elektronik"), (sinhoo_standoff("M3", "1.5mm"), "Sinhoo")],
-    ("M3", "2mm"): [("9774020360", "Würth Elektronik"), (sinhoo_standoff("M3", "2mm"), "Sinhoo")],
-    ("M3", "2.5mm"): [("9774025360", "Würth Elektronik"), (sinhoo_standoff("M3", "2.5mm"), "Sinhoo")],
-    ("M3", "3mm"): [("9774030360", "Würth Elektronik"), (sinhoo_standoff("M3", "3mm"), "Sinhoo")],
-    ("M3", "4mm"): [("9774040360", "Würth Elektronik"), (sinhoo_standoff("M3", "4mm"), "Sinhoo")],
-    ("M3", "5mm"): [("9774050360", "Würth Elektronik"), (sinhoo_standoff("M3", "5mm"), "Sinhoo")],
-    ("M3", "6mm"): [("9774060360", "Würth Elektronik"), (sinhoo_standoff("M3", "6mm"), "Sinhoo")],
-    ("M3", "7mm"): [("9774070360", "Würth Elektronik"), (sinhoo_standoff("M3", "7mm"), "Sinhoo")],
-    ("M3", "8mm"): [("9774080360", "Würth Elektronik"), (sinhoo_standoff("M3", "8mm"), "Sinhoo")],
+    ("M3", "1mm"): [
+        ("9774010360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "1mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "1mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "1.5mm"): [
+        ("9774015360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "1.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "1.5mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "2mm"): [
+        ("9774020360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "2mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "2mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "2.5mm"): [
+        ("9774025360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "2.5mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "2.5mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "3mm"): [
+        ("9774030360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "3mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "3mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "4mm"): [
+        ("9774040360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "4mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "4mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "5mm"): [
+        ("9774050360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "5mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "5mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "6mm"): [
+        ("9774060360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "6mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "6mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "7mm"): [
+        ("9774070360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "7mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "7mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "8mm"): [
+        ("9774080360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "8mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "8mm", "C"), "Sinhoo"),
+    ],
     ("M3", "9mm"): [("9774090360", "Würth Elektronik"), (sinhoo_standoff("M3", "9mm"), "Sinhoo")],
-    ("M3", "10mm"): [("9774100360", "Würth Elektronik"), (sinhoo_standoff("M3", "10mm"), "Sinhoo")],
-    ("M3", "11mm"): [("9774110360", "Würth Elektronik"), (sinhoo_standoff("M3", "11mm"), "Sinhoo")],
-    ("M3", "12mm"): [("9774120360", "Würth Elektronik"), (sinhoo_standoff("M3", "12mm"), "Sinhoo")],
-    ("M3", "13mm"): [("9774130360", "Würth Elektronik"), (sinhoo_standoff("M3", "13mm"), "Sinhoo")],
-    ("M3", "14mm"): [("9774140360", "Würth Elektronik"), (sinhoo_standoff("M3", "14mm"), "Sinhoo")],
-    ("M3", "15mm"): [("9774150360", "Würth Elektronik"), (sinhoo_standoff("M3", "15mm"), "Sinhoo")],
+    ("M3", "10mm"): [
+        ("9774100360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "10mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "10mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "11mm"): [
+        ("9774110360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "11mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "11mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "12mm"): [
+        ("9774120360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "12mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "12mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "13mm"): [
+        ("9774130360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "13mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "13mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "14mm"): [
+        ("9774140360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "14mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "14mm", "C"), "Sinhoo"),
+    ],
+    ("M3", "15mm"): [
+        ("9774150360", "Würth Elektronik"),
+        (sinhoo_standoff("M3", "15mm"), "Sinhoo"),
+        (sinhoo_standoff("M3", "15mm", "C"), "Sinhoo"),
+    ],
 }
 
 
@@ -639,7 +771,7 @@ def assign_house_standoff(c, house_standoffs):
     match = house_standoffs.get(key, None)
 
     if match:
-        primary = match[0]
+        primary = match[1]
         alts = match[1:]
         c.mpn = primary[0]
         c.manufacturer = primary[1]

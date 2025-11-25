@@ -376,7 +376,7 @@ def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn
     }
 
 
-def sinhoo_standoff(thread: str, height: str) -> str:
+def sinhoo_standoff(thread: str, height: str, variant="M") -> str:
     """Generate Sinhoo SMTSO part number from thread and height.
 
     Naming convention: SMTSO-XXYY-MTJ
@@ -400,7 +400,7 @@ def sinhoo_standoff(thread: str, height: str) -> str:
     else:
         height_code = int(h) * 10
 
-    return "SMTSO" + thread_code + str(height_code) + "MTJ"
+    return "SMTSO" + thread_code + str(height_code) + variant + "TJ"
 
 
 def match_component(match: dict, parts: tuple | list, matcher: str = "match_component"):
