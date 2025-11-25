@@ -1,6 +1,6 @@
 load("interfaces.zen", "DiffPair", "Ground", "Opamp")
 load("units.zen", "Capacitance", "Frequency", "Resistance", "Voltage")
-load("utils.zen", "e96", "e24", "abs")
+load("utils.zen", "e96", "e24")
 
 Resistor = Module("generics/Resistor.zen")
 Capacitor = Module("generics/Capacitor.zen")
@@ -34,7 +34,8 @@ def inverting_sum(
     IN_N = Net(name + "_IN_N")
 
     actual_gain = RG / RI
-    delta = abs(actual_gain - gain)
+    delta = actual_gain.diff(gain)
+
     if (delta / gain) > tolerance:
         warn(f"Gain mismatch: {gain} != {actual_gain}, delta: {delta}")
 
@@ -66,7 +67,7 @@ def noninverting_sum(
     IN_N = Net(name + "_IN_N")
 
     actual_gain = (RA / RB + 1) / 2
-    delta = abs(actual_gain - gain)
+    delta = actual_gain.diff(gain)
 
     if (delta / gain) > tolerance:
         warn(f"Gain mismatch: {gain} != {actual_gain}, delta: {delta}")
@@ -120,7 +121,7 @@ def sallen_key_lowpass(
     C2 = e24(C / n)
 
     actual_frequency = 1 / (2 * 3.1415 * R * C)
-    delta = abs(F - actual_frequency)
+    delta = F.diff(actual_frequency)
 
     if F.tolerance and (delta / F) > F.tolerance:
         warn(f"Frequency mismatch: {frequency} != {actual_frequency}")
