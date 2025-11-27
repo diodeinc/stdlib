@@ -851,13 +851,13 @@ BASE_10L_STACKUP = Stackup(
         CopperLayer(thickness=0.0152, role="ground"),  # L5 (0.5oz)
         DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
         CopperLayer(thickness=0.0152, role="mixed"),  # L6 (0.5oz)
-        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
         CopperLayer(thickness=0.0152, role="ground"),  # L7 (0.5oz)
-        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
-        CopperLayer(thickness=0.0152, role="power"),  # L8 (0.5oz)
         DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
-        CopperLayer(thickness=0.0152, role="ground"),  # L9 (0.5oz)
+        CopperLayer(thickness=0.0152, role="power"),  # L8 (0.5oz)
         DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.0152, role="ground"),  # L9 (0.5oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
         CopperLayer(thickness=0.035, role="mixed"),  # L10 Bottom layer (1oz)
     ],
 )
