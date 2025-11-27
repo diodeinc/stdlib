@@ -309,10 +309,12 @@ def DefaultBoardConfig(
         (4, CopperWeight("1oz")): BASE_4L_STACKUP,
         (6, CopperWeight("1oz")): BASE_6L_STACKUP,
         (8, CopperWeight("1oz")): BASE_8L_STACKUP,
+        (10, CopperWeight("1oz")): BASE_10L_STACKUP,
         (2, CopperWeight("2oz")): BASE_2L_STACKUP,  # TODO: Add 2oz stackup
         (4, CopperWeight("2oz")): BASE_4L_2OZ_STACKUP,
         (6, CopperWeight("2oz")): BASE_6L_STACKUP,  # TODO: Add 2oz stackup
         (8, CopperWeight("2oz")): BASE_8L_STACKUP,  # TODO: Add 2oz stackup
+        (10, CopperWeight("2oz")): BASE_10L_STACKUP,  # TODO: Add 2oz stackup
     }.get((layers, outer_copper_weight))
 
     netclasses = {
@@ -320,10 +322,12 @@ def DefaultBoardConfig(
         (4, CopperWeight("1oz")): BASE_4L_NETCLASSES,
         (6, CopperWeight("1oz")): BASE_6L_NETCLASSES,
         (8, CopperWeight("1oz")): BASE_8L_NETCLASSES,
+        (10, CopperWeight("1oz")): BASE_10L_NETCLASSES,
         (2, CopperWeight("2oz")): BASE_2L_NETCLASSES,  # TODO: Add 2oz netclasses
         (4, CopperWeight("2oz")): BASE_4L_2OZ_NETCLASSES,
         (6, CopperWeight("2oz")): BASE_6L_NETCLASSES,  # TODO: Add 2oz netclasses
         (8, CopperWeight("2oz")): BASE_8L_NETCLASSES,  # TODO: Add 2oz netclasses
+        (10, CopperWeight("2oz")): BASE_10L_NETCLASSES,  # TODO: Add 2oz netclasses
     }.get((layers, outer_copper_weight))
 
     constraints = {
@@ -389,7 +393,7 @@ def Board(
         name: Board configuration name
         layout_path: Path to the board layout file (e.g., PCB file)
         config: Complete BoardConfig object. If provided, layers and outer_copper_weight are ignored.
-        layers: Number of PCB layers (2, 4, 6, or 8). Required if config is not provided.
+        layers: Number of PCB layers (2, 4, 6, 8, or 10). Required if config is not provided.
         outer_copper_weight: Outer copper weight ("1oz" or "2oz"). Default is "1oz".
                             Currently only 4-layer boards support 2oz outer copper.
         track_widths: Additional track widths (in mm) to append to the base configuration.
@@ -509,6 +513,7 @@ BASE_PREPREG = Material(
 #   - 4L: Standard, L1 impedance-controlled
 #   - 6L: More routing, L1 + L6 impedance-controlled
 #   - 8L: High density, L1 + L6 (stripline) + L8 impedance-controlled
+#   - 10L: Very high density, L1 + L6 (stripline) + L10 impedance-controlled, extra power planes
 
 # Common stackup configurations
 
@@ -798,6 +803,100 @@ BASE_8L_NETCLASSES = [
         track_width=0.127,
         diff_pair_width=0.127,
         diff_pair_gap=0.1778,
+        color="#C2C200FF",
+        differential_pair_impedance=Impedance(100),
+    ),
+]
+
+# Base 10-layer stackup (1.6mm, 1oz outer/0.5oz inner)
+# SIG/GND/PWR/SIG/GND/SIG/GND/PWR/GND/SIG
+#
+# Layers:
+#   L1:  Primary impedance-controlled (GCPW, ref L2, 0.1194mm coupling)
+#   L2:  GND plane
+#   L3:  PWR plane
+#   L4:  Mixed signal
+#   L5:  GND plane
+#   L6:  Mixed signal (symmetric stripline)
+#   L7:  GND plane
+#   L8:  PWR plane
+#   L9:  GND plane
+#   L10: Backup impedance-controlled (GCPW, ref L9, 0.1194mm coupling)
+#
+# Use: High-density routing with multiple power/ground planes. L1/L10 for high-speed,
+#      L6 symmetric stripline for sensitive signals with excellent EMI shielding.
+BASE_10L_STACKUP = Stackup(
+    materials=[
+        FR4_CORE,
+        Material(
+            name="2116",
+            relative_permittivity=4.16,
+            loss_tangent=0.025,
+        ),
+    ],
+    thickness=1.6,
+    symmetric=True,
+    copper_finish="ENIG",
+    silk_screen_color="White",
+    solder_mask_color="Black",
+    layers=[
+        CopperLayer(thickness=0.035, role="mixed"),  # L1 Top layer (1oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="ground"),  # L2 (0.5oz)
+        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.0152, role="power"),  # L3 (0.5oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="mixed"),  # L4 (0.5oz)
+        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.0152, role="ground"),  # L5 (0.5oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="mixed"),  # L6 (0.5oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="ground"),  # L7 (0.5oz)
+        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.0152, role="power"),  # L8 (0.5oz)
+        DielectricLayer(thickness=0.1194, material="2116", form="prepreg"),
+        CopperLayer(thickness=0.0152, role="ground"),  # L9 (0.5oz)
+        DielectricLayer(thickness=0.2, material="FR4-Core", form="core"),
+        CopperLayer(thickness=0.035, role="mixed"),  # L10 Bottom layer (1oz)
+    ],
+)
+
+# 10L Impedance-Controlled Netclasses (L1 GCPW, 0.1194mm dielectric, 0.2mm coplanar gap)
+# Calculated using Sierra Circuits impedance calculator
+BASE_10L_NETCLASSES = [
+    DEFAULT_NETCLASS,
+    NetClass(
+        name="50Ohm SE",
+        clearance=0.2,
+        track_width=0.175,
+        color="#0000C2FF",
+        single_ended_impedance=Impedance(50),
+    ),
+    NetClass(
+        name="85Ohm Diff",
+        clearance=0.2,
+        track_width=0.16,
+        diff_pair_width=0.16,
+        diff_pair_gap=0.127,
+        color="#C200C2FF",
+        differential_pair_impedance=Impedance(85),
+    ),
+    NetClass(
+        name="90Ohm Diff",
+        clearance=0.2,
+        track_width=0.14,
+        diff_pair_width=0.14,
+        diff_pair_gap=0.127,
+        color="#00C200FF",
+        differential_pair_impedance=Impedance(90),
+    ),
+    NetClass(
+        name="100Ohm Diff",
+        clearance=0.2,
+        track_width=0.127,
+        diff_pair_width=0.127,
+        diff_pair_gap=0.18,
         color="#C2C200FF",
         differential_pair_impedance=Impedance(100),
     ),
