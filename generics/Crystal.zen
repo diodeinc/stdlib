@@ -162,7 +162,7 @@ Component(
     symbol=Symbol(**_symbol(package)),
     footprint=File(_footprint(package)),
     spice_model=SpiceModel(
-        "//simulation/Crystal.lib",
+        "../simulation/Crystal.lib",
         _spice_subcircuit_name(package),
         nets=_spice_nets(package, XIN, XOUT, GND),
         args=_spice_args(frequency, load_capacitance, package),

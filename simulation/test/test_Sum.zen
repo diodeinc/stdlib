@@ -1,10 +1,10 @@
 """Sum amplifier."""
 
-load("//amplifiers.zen", "noninverting_sum")
-load("//interfaces.zen", "Ground", "Opamp", "Power")
+load("../../amplifiers.zen", "noninverting_sum")
+load("../../interfaces.zen", "Ground", "Opamp", "Power")
 
-OperationalAmplifier = Module("//generics/OperationalAmplifier.zen")
-Resistor = Module("//generics/Resistor.zen")
+OperationalAmplifier = Module("../../generics/OperationalAmplifier.zen")
+Resistor = Module("../../generics/Resistor.zen")
 
 VP = Power("VP")
 VN = Power("VN")
