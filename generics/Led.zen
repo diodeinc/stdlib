@@ -140,7 +140,7 @@ Component(
     footprint=File(_footprint(package)),
     prefix="D",
     spice_model=SpiceModel(
-        "//simulation/Led.lib",
+        "../simulation/Led.lib",
         _spice_subcircuit_name(color),
         nets=[A, K],
         args=_spice_args(color, forward_voltage, forward_current),
