@@ -55,6 +55,12 @@ Orientation = enum(
     "Vertical_SMD_Pin1Right",  # Vertical SMD with Pin 1 on right (single row)
 )
 
+_FOOTPRINT_DIRS = {
+    Pitch("1.27mm"): "@kicad-footprints/Connector_PinHeader_1.27mm.pretty",
+    Pitch("2.00mm"): "@kicad-footprints/Connector_PinHeader_2.00mm.pretty",
+    Pitch("2.54mm"): "@kicad-footprints/Connector_PinHeader_2.54mm.pretty",
+}
+
 # -----------------------------------------------------------------------------
 # Component parameters
 # -----------------------------------------------------------------------------
@@ -109,20 +115,19 @@ def _footprint(pins: int, rows: int, pitch: Pitch, orientation: Orientation):
             "Vertical_SMD_Pin1Left and Vertical_SMD_Pin1Right orientations are only valid for single row (rows=1) pin headers. Use Vertical_SMD for dual row."
         )
 
-    # Build footprint name
-    pitch_str = pitch.value
+    # Get footprint directory from table
+    footprint_dir = _FOOTPRINT_DIRS[pitch]
 
     # Format pin count with leading zero if needed
     pin_str = str(pins) if pins >= 10 else "0" + str(pins)
 
     # Build the footprint name
     if rows == 1:
-        footprint_name = "PinHeader_1x" + pin_str + "_P" + pitch_str + "_" + orientation_str
+        footprint_name = "PinHeader_1x" + pin_str + "_P" + pitch.value + "_" + orientation_str
     else:
-        footprint_name = "PinHeader_2x" + pin_str + "_P" + pitch_str + "_" + orientation_str
+        footprint_name = "PinHeader_2x" + pin_str + "_P" + pitch.value + "_" + orientation_str
 
-    # Construct the file path
-    return "@kicad-footprints/Connector_PinHeader_" + pitch_str + ".pretty/" + footprint_name + ".kicad_mod"
+    return footprint_dir + "/" + footprint_name + ".kicad_mod"
 
 
 def _symbol(pins: int, rows: int):
