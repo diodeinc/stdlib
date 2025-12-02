@@ -7,14 +7,14 @@ for orientation in PinSocket.Orientation:
         for rows in range(1, 3):
             for positions in range(1, 11):
                 orientation_str = orientation.value
-                pitch_str = pitch.value
-
-                pins = {"P{}".format(n): Net("Net{}".format(n)) for n in range(1, positions * rows + 1)}
-                name = "PinSocket_" + orientation_str + "_" + pitch_str + "_" + str(positions) + "_" + str(rows)
-                name = name.replace(".", "_")
+                pitch_str = pitch.value.replace(".", "_")
 
                 if orientation_str == "Vertical_SMD" and positions == 1:
                     # Vertical_SMD with 1 pin is not a valid footprint
                     continue
 
-                PinSocket(name=name, pins=positions, rows=rows, orientation=orientation_str, pitch=pitch_str, **pins)
+                pin_prefix = f"P_{orientation_str}_{pitch_str}_{rows}_{positions}"
+                pins = {"P{}".format(n): Net(f"{pin_prefix}_net{n}") for n in range(1, positions * rows + 1)}
+                name = "PinSocket_" + orientation_str + "_" + pitch_str + "_" + str(positions) + "_" + str(rows)
+
+                PinSocket(name=name, pins=positions, rows=rows, orientation=orientation_str, pitch=pitch.value, **pins)
