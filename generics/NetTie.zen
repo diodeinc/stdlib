@@ -204,7 +204,7 @@ Component(
     prefix="NT",
     pins=_pins(P),
     spice_model=SpiceModel(
-        "//simulation/NetTie.lib",
+        "../simulation/NetTie.lib",
         _spice_subcircuit_name(pin_count),
         nets=_spice_nets(P, pin_count),
         args={"RVAL": "1m"},  # 1 milliohm for near-zero resistance

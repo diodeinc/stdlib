@@ -1,9 +1,9 @@
 """Test for Spice model of Resistor."""
 
-load("//amplifiers.zen", "sallen_key_lowpass", "voltage_follower")
-load("//interfaces.zen", "Ground", "Opamp", "Power")
+load("../../amplifiers.zen", "sallen_key_lowpass", "voltage_follower")
+load("../../interfaces.zen", "Ground", "Opamp", "Power")
 
-OperationalAmplifier = Module("//generics/OperationalAmplifier.zen")
+OperationalAmplifier = Module("../../generics/OperationalAmplifier.zen")
 
 VP = Power("VP")
 VN = Power("VN")
