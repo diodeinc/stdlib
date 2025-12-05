@@ -161,3 +161,59 @@ def sallen_key_lowpass(
         IN_N=IN_N,
         OUT=OUT,
     )
+
+
+def twin_t_notch(
+    name,
+    frequency: Frequency | str,
+    GND: Ground,
+    IN: Net,
+    OUT: Net,
+    resistance: Resistance | str = "10k Ohms 1%",
+    package: str = "0603",
+    dielectric: str = "NP0",
+    voltage: Voltage | str = "25V",
+) -> Opamp:
+    """Notch filter using Twin-T topology with op-amp buffer, notch at f = 1/(2*pi*R*C)"""
+
+    F = Frequency(frequency)
+    R = Resistance(resistance)
+    V = Voltage(voltage)
+    C = 1 / (2 * 3.1415 * R * F)
+
+    # Twin-T requires R, R, R/2 and C, C, 2C
+    R1 = e96(R)
+    R2 = e96(R)
+    R3 = e96(R / 2)
+    C1 = e24(C)
+    C2 = e24(C)
+    C3 = e24(C * 2)
+
+    actual_frequency = 1 / (2 * 3.1415 * R * C)
+
+    if actual_frequency not in F:
+        warn(f"Frequency mismatch: {actual_frequency} not within {F}")
+
+    # Internal nodes
+    NODE_HP = Net(name + "_NODE_HP")  # High-pass T junction
+    NODE_LP = Net(name + "_NODE_LP")  # Low-pass T junction
+    IN_P = Net(name + "_IN_P")
+    IN_N = OUT
+
+    # High-pass T: IN --C1-- NODE_HP --C2-- IN_P, NODE_HP --R3-- GND
+    Capacitor(name=name + "_C1", value=C1, package=package, P1=IN, P2=NODE_HP, dielectric=dielectric, voltage=V)
+    Capacitor(name=name + "_C2", value=C2, package=package, P1=NODE_HP, P2=IN_P, dielectric=dielectric, voltage=V)
+    Resistor(name=name + "_R3", value=R3, package=package, P1=NODE_HP, P2=GND)
+
+    # Low-pass T: IN --R1-- NODE_LP --R2-- IN_P, NODE_LP --C3-- GND
+    Resistor(name=name + "_R1", value=R1, package=package, P1=IN, P2=NODE_LP)
+    Resistor(name=name + "_R2", value=R2, package=package, P1=NODE_LP, P2=IN_P)
+    Capacitor(name=name + "_C3", value=C3, package=package, P1=NODE_LP, P2=GND, dielectric=dielectric, voltage=V)
+
+    # Op-amp in voltage follower configuration for buffering
+    return Opamp(
+        name=name,
+        IN_P=IN_P,
+        IN_N=IN_N,
+        OUT=OUT,
+    )
