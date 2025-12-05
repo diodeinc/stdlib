@@ -1,5 +1,5 @@
 
-sim: sim_VoltageDivider sim_InvertingSum sim_LevelShifter sim_SallenKey sim_Sum sim_Inductor sim_NetTie sim_Diode sim_Led sim_Crystal
+sim: sim_VoltageDivider sim_InvertingSum sim_LevelShifter sim_SallenKey sim_TwinTNotch sim_Sum sim_Inductor sim_NetTie sim_Diode sim_Led sim_Crystal
 
 sim_VoltageDivider:
     pcb sim simulation/test/test_VoltageDivider.zen --setup simulation/test/test_VoltageDivider.sp -o - | ngspice
@@ -12,6 +12,9 @@ sim_LevelShifter:
 
 sim_SallenKey:
     pcb sim simulation/test/test_SallenKey.zen --setup simulation/test/test_SallenKey.sp -o - | ngspice
+
+sim_TwinTNotch:
+    pcb sim simulation/test/test_TwinTNotch.zen --setup simulation/test/test_TwinTNotch.sp -o - | ngspice
 
 sim_Sum:
     pcb sim simulation/test/test_Sum.zen --setup simulation/test/test_Sum.sp -o - | ngspice
