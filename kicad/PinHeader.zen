@@ -71,6 +71,10 @@ rows = config("rows", int, default=1)
 pitch = config("pitch", Pitch, default=Pitch("2.54mm"))
 orientation = config("orientation", Orientation, default=Orientation("Vertical"))
 
+# Optional
+mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
+
 # Properties – combined and normalized
 properties = {
     "value": format_value(pitch, str(pins) + "x" + str(rows), orientation),
@@ -157,6 +161,8 @@ def _symbol(pins: int, rows: int):
 
 Component(
     name="PH",
+    mpn=mpn,
+    manufacturer=manufacturer,
     symbol=Symbol(**_symbol(pins, rows)),
     footprint=File(_footprint(pins, rows, pitch, orientation)),
     prefix="J",
