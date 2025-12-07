@@ -295,7 +295,7 @@ def merge_predefined_sizes(
 
 
 def DefaultBoardConfig(
-    layers: int | None = None,
+    layers: int,
     outer_copper_weight: CopperWeight = CopperWeight("1oz"),
     copper_finish: CopperFinish = CopperFinish("ENIG"),
     track_widths: list | None = None,
@@ -423,14 +423,16 @@ def Board(
     if isinstance(copper_finish, str):
         copper_finish = CopperFinish(copper_finish)
 
-    default_config = DefaultBoardConfig(
-        layers=layers,
-        outer_copper_weight=outer_copper_weight,
-        copper_finish=copper_finish,
-        solder_mask_color=solder_mask_color,
-        track_widths=track_widths,
-        via_dimensions=via_dimensions,
-    )
+    default_config = None
+    if layers:
+        default_config = DefaultBoardConfig(
+            layers=layers,
+            outer_copper_weight=outer_copper_weight,
+            copper_finish=copper_finish,
+            solder_mask_color=solder_mask_color,
+            track_widths=track_widths,
+            via_dimensions=via_dimensions,
+        )
 
     if default_config:
         config = deep_merge(default_config, config)
