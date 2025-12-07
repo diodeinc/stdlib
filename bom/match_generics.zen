@@ -800,6 +800,10 @@ def assign_house_parts(c):
     if hasattr(c, "mpn") and c.mpn:
         return
 
+    # Skip if type is not set
+    if not hasattr(c, "type"):
+        return
+
     # Dispatch based on component type
     if c.type == "resistor":
         assign_house_resistor(c, SERIES_BY_PKG)
