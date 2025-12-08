@@ -613,7 +613,7 @@ def assign_house_led(c, house_leds_by_pkg):
         if req_voltage:
             if req_voltage.tolerance == 0.0:
                 # Assume 15% tolerance if not specified
-                req_voltage = req_voltage.with_tolerance(0.15)
+                req_voltage = req_voltage.with_tolerance(0.20)
             # LED's Vf should be within the specified range
             if p["forward_voltage"] not in req_voltage:
                 continue
