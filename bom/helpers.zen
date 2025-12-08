@@ -25,11 +25,33 @@ def prop(c, names):
 
 
 def set_primary_and_alts(c, primary, manufacturer, alts):
-    """Set primary MPN and alternatives on component."""
+    """Set primary MPN and alternatives on component.
+
+    alts can be either:
+    - A list of MPN strings (uses primary's manufacturer for all)
+    - A list of {"mpn": ..., "manufacturer": ...} dicts
+    """
     c.mpn = primary
     c.manufacturer = manufacturer
     if alts and len(alts) > 0:
-        c.alternatives = [{"mpn": m, "manufacturer": manufacturer} for m in alts]
+        if type(alts[0]) == "string":
+            c.alternatives = [{"mpn": m, "manufacturer": manufacturer} for m in alts]
+        else:
+            c.alternatives = alts
+
+
+def set_from_matches(c, matches):
+    """Set primary MPN and alternatives from a list of match dicts.
+
+    Each match must have "mpn" and "manufacturer" keys.
+    First match becomes primary, rest become alternatives.
+    """
+    if not matches:
+        return
+    c.mpn = matches[0]["mpn"]
+    c.manufacturer = matches[0]["manufacturer"]
+    if len(matches) > 1:
+        c.alternatives = [{"mpn": p["mpn"], "manufacturer": p["manufacturer"]} for p in matches[1:]]
 
 
 def find_e_series_match(r, series_tolerance, e_series_types):

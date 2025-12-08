@@ -19,6 +19,7 @@ load(
     "helpers.zen",
     "prop",
     "set_primary_and_alts",
+    "set_from_matches",
     "find_e_series_match",
     "iec60062_3digit",
     "iec60062_4digit",
@@ -612,7 +613,7 @@ def assign_house_led(c, house_leds_by_pkg):
         if req_voltage:
             if req_voltage.tolerance == 0.0:
                 # Assume 15% tolerance if not specified
-                req_voltage = req_voltage.with_tolerance(0.15)
+                req_voltage = req_voltage.with_tolerance(0.20)
             # LED's Vf should be within the specified range
             if p["forward_voltage"] not in req_voltage:
                 continue
@@ -620,10 +621,7 @@ def assign_house_led(c, house_leds_by_pkg):
         matches.append(p)
 
     if matches:
-        # Use first match as primary, rest as alternatives
-        manufacturer = matches[0]["manufacturer"]
-        all_mpns = [p["mpn"] for p in matches]
-        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        set_from_matches(c, matches)
         c.matcher = "assign_house_led"
         return
 
@@ -673,10 +671,7 @@ def assign_house_ferrite_bead(c, house_fb_by_pkg):
         matches.append(p)
 
     if matches:
-        # Use first match as primary, rest as alternatives
-        manufacturer = matches[0]["manufacturer"]
-        all_mpns = [p["mpn"] for p in matches]
-        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        set_from_matches(c, matches)
         c.matcher = "assign_house_ferrite_bead"
         return
 
@@ -750,10 +745,7 @@ def assign_house_tvs(c, house_tvs_by_pkg):
         matches.append(p)
 
     if matches:
-        # Use first match as primary, rest as alternatives
-        manufacturer = matches[0]["manufacturer"]
-        all_mpns = [p["mpn"] for p in matches]
-        set_primary_and_alts(c, all_mpns[0], manufacturer, all_mpns[1:])
+        set_from_matches(c, matches)
         c.matcher = "assign_house_tvs"
         return
 
