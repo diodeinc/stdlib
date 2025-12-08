@@ -23,7 +23,7 @@ def inverting_sum(
     gain: float = 1.0,
     package: str = "0603",
     voltage: Voltage | str = "25V",
-    resistance: Resistance | str = "10k Ohms 1%",
+    resistance: Resistance | str = "1k Ohms 1%",
     tolerance: float = 0.01,  # 1% tolerance
 ) -> Opamp:
     """Inverting summing amplifier"""
@@ -82,15 +82,36 @@ def noninverting_sum(
 
 
 def level_shifter(
-    name, IN: Net, VOFFSET: Net, OUT: Net, GND: Ground, gain: float = 1.0, package: str = "0603"
+    name,
+    IN: Net,
+    VOFFSET: Net,
+    OUT: Net,
+    GND: Ground,
+    gain: float = 1.0,
+    package: str = "0603",
+    voltage: Voltage | str = "25V",
+    resistance: Resistance | str = "1k Ohms 1%",
 ) -> (Opamp, Opamp):
     """Level shifter with an inverting sum amplifier"""
 
     BUFFER = Net(name + "_BUFFER")
 
     return (
-        voltage_follower(name=name + "_V_OFFSET_P", IN=VOFFSET, OUT=BUFFER),
-        noninverting_sum(name=name + "_SUM", INPUTS=[BUFFER, IN], OUT=OUT, GND=GND, gain=gain, package=package),
+        voltage_follower(
+            name=name + "_V_OFFSET_P",
+            IN=VOFFSET,
+            OUT=BUFFER,
+        ),
+        noninverting_sum(
+            name=name + "_SUM",
+            INPUTS=[BUFFER, IN],
+            OUT=OUT,
+            GND=GND,
+            gain=gain,
+            package=package,
+            voltage=voltage,
+            resistance=resistance,
+        ),
     )
 
 
