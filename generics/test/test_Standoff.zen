@@ -27,6 +27,16 @@ for height in Standoff.HeightM2.values():
         P1=Net(name + "_P1"),
     )
 
+# M2.5 heights
+for height in Standoff.HeightM2_5.values():
+    name = "SO_M2_5_" + str(height).replace(".", "_").replace("mm", "mm")
+    Standoff(
+        name=name,
+        thread="M2.5",
+        height=height,
+        P1=Net(name + "_P1"),
+    )
+
 # M3 heights
 for height in Standoff.HeightM3.values():
     name = "SO_M3_" + str(height).replace(".", "_").replace("mm", "mm")
