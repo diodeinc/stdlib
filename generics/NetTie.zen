@@ -210,7 +210,6 @@ Component(
         args={"RVAL": "1m"},  # 1 milliohm for near-zero resistance
     ),
     properties=properties,
-    dnp=True,
     skip_bom=True,
     skip_pos=True,
 )
