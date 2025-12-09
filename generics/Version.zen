@@ -4,7 +4,6 @@ Component(
     symbol=Symbol("./footprints/version-symbol.kicad_sym"),
     footprint=File("./footprints/version-footprint.kicad_mod"),
     pins={},
-    dnp=True,
     skip_bom=True,
     skip_pos=True,
 )

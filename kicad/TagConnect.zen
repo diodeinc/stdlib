@@ -98,7 +98,6 @@ Component(
             "tag_type": tag_type,
         },
     ),
-    dnp=True,
     skip_bom=True,
     skip_pos=True,
 )

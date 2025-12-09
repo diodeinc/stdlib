@@ -129,7 +129,8 @@ Component(
     prefix="JP",
     pins=pins,
     properties=properties,
-    dnp=True,
     skip_bom=True,
     skip_pos=True,
 )
+
+# pcb:sch SJ x=-1.0000 y=341.9000 rot=0

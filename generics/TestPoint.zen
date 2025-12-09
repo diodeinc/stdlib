@@ -133,7 +133,8 @@ else:
         pins={
             "1": P1,
         },
-        dnp=True,
         skip_bom=True,
         skip_pos=True,
     )
+
+# pcb:sch TP x=194.5800 y=301.2600 rot=0

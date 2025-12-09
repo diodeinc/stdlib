@@ -120,7 +120,6 @@ Component(
         "1": P1,
     },
     properties=properties,
-    dnp=True,
     skip_bom=True,
     skip_pos=True,
 )
