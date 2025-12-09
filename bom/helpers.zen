@@ -412,7 +412,7 @@ def sinhoo_standoff(thread: str, height: str, variant="M") -> str:
     - M2, 4.5mm → SMTSO-2045-MTJ
     - M3, 10mm → SMTSO-30100-MTJ
     """
-    thread_code = {"M1.6": "16", "M2": "20", "M3": "30"}[thread]
+    thread_code = {"M1.6": "16", "M2": "20", "M2.5": "25", "M3": "30"}[thread]
 
     # Convert height to 0.1mm units (e.g., "5mm" → 50, "10mm" → 100, "1.5mm" → 15)
     h = height.replace("mm", "")
