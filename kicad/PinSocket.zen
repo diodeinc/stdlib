@@ -1,5 +1,7 @@
 load("../utils.zen", "format_value")
 
+warn("kicad/PinHeader.zen is deprecated. Use generics/PinHeader.zen instead.", kind="deprecated")
+
 # -----------------------------------------------------------------------------
 # Component types
 # -----------------------------------------------------------------------------
