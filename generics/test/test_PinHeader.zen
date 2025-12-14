@@ -1,0 +1,311 @@
+"""Comprehensive test for PinHeader component."""
+
+load("../../properties.zen", "Layout")
+
+PinHeader = Module("../PinHeader.zen")
+
+# -----------------------------------------------------------------------------
+# Test THT (Through-Hole) configurations
+# -----------------------------------------------------------------------------
+
+# Test through-hole configurations (Vertical and Horizontal work for both single and dual row)
+# Note: Some footprint combinations don't exist in KiCad library:
+#   - 1.27mm Female Horizontal footprints don't exist
+for orientation in PinHeader.Orientation.values():
+    for pitch in PinHeader.Pitch.values():
+        for gender in PinHeader.Gender.values():
+            # Skip invalid combinations (footprints don't exist in KiCad)
+            if pitch.value == "1.27mm" and gender.value == "Female" and orientation.value == "Horizontal":
+                continue
+
+            for rows in range(1, 3):
+                # Test a representative set of pin counts (1, 5, 10)
+                for positions in [1, 5, 10]:
+                    pitch_str = pitch.value.replace(".", "_")
+                    gender_str = gender.value
+                    orientation_str = orientation.value
+                    pin_prefix = f"P_THT_{orientation_str}_{pitch_str}_{gender_str}_{rows}_{positions}"
+                    pins = {"P{}".format(n): Net(f"{pin_prefix}_net{n}") for n in range(1, positions * rows + 1)}
+                    name = f"J_THT_{orientation_str}_{pitch_str}_{gender_str}_{positions}x{rows}"
+                    PinHeader(
+                        name=name,
+                        mount="THT",
+                        pins=positions,
+                        rows=rows,
+                        orientation=orientation,
+                        pitch=pitch,
+                        gender=gender,
+                        **pins,
+                    )
+
+# -----------------------------------------------------------------------------
+# Test SMD configurations
+# -----------------------------------------------------------------------------
+
+# Test SMD configurations for all valid combinations
+# Note: SMD constraints:
+#   - Only Vertical orientation (no Horizontal)
+#   - Pin count limited to 2-10 per row
+#   - 1.27mm Female SMD footprints don't exist
+#   - Pin1Right is only available for Male headers
+for pitch in PinHeader.Pitch.values():
+    for gender in PinHeader.Gender.values():
+       
+        # Skip 1.27mm Female (no SMD footprints exist)
+        if pitch.value == "1.27mm" and gender.value == "Female":
+            continue
+
+        for rows in range(1, 3):
+            # Test representative pin counts for SMD (2, 5, 10)
+            for positions in [2, 5, 10]:
+                pitch_str = pitch.value.replace(".", "_")
+                gender_str = gender.value
+                pin_prefix = f"P_SMD_{pitch_str}_{gender_str}_{rows}_{positions}"
+                pins = {"P{}".format(n): Net(f"{pin_prefix}_net{n}") for n in range(1, positions * rows + 1)}
+                name = f"J_SMD_{pitch_str}_{gender_str}_{positions}x{rows}"
+                
+                PinHeader(
+                    name=name,
+                    mount="SMD",
+                    pins=positions,
+                    rows=rows,
+                    pitch=pitch,
+                    gender=gender,
+                    **pins,
+                )
+
+
+# -----------------------------------------------------------------------------
+# Test edge cases for pin counts
+# -----------------------------------------------------------------------------
+
+# Test minimum pin count (1 pin, single row) - THT only
+PinHeader(
+    name="J_min_1x1",
+    mount="THT",
+    pins=1,
+    rows=1,
+    orientation="Vertical",
+    pitch="2.54mm",
+    gender="Male",
+    P1=Net("min_1x1_net1"),
+)
+
+# Test minimum dual row (1 pin per row = 2 pins total) - THT only
+PinHeader(
+    name="J_min_2x1",
+    mount="THT",
+    pins=1,
+    rows=2,
+    orientation="Vertical",
+    pitch="2.54mm",
+    gender="Male",
+    P1=Net("min_2x1_net1"),
+    P2=Net("min_2x1_net2"),
+)
+
+# Test maximum pin count (40 pins per row, single row) - THT only
+pins_40x1 = {"P{}".format(n): Net(f"max_40x1_net{n}") for n in range(1, 41)}
+PinHeader(
+    name="J_max_40x1",
+    mount="THT",
+    pins=40,
+    rows=1,
+    orientation="Vertical",
+    pitch="2.54mm",
+    gender="Male",
+    **pins_40x1,
+)
+
+# Test maximum dual row (40 pins per row = 80 pins total) - THT only
+pins_40x2 = {"P{}".format(n): Net(f"max_40x2_net{n}") for n in range(1, 81)}
+PinHeader(
+    name="J_max_40x2",
+    mount="THT",
+    pins=40,
+    rows=2,
+    orientation="Horizontal",
+    pitch="2.54mm",
+    gender="Female",
+    **pins_40x2,
+)
+
+# Test SMD edge cases
+# SMD minimum (2 pins single row)
+PinHeader(
+    name="J_SMD_min_2x1",
+    mount="SMD",
+    pins=2,
+    rows=1,
+    pitch="2.54mm",
+    gender="Male",
+    P1=Net("smd_min_2x1_net1"),
+    P2=Net("smd_min_2x1_net2"),
+)
+
+# SMD maximum (10 pins per row)
+pins_10x2_smd = {"P{}".format(n): Net(f"smd_max_10x2_net{n}") for n in range(1, 21)}
+PinHeader(
+    name="J_SMD_max_10x2",
+    mount="SMD",
+    pins=10,
+    rows=2,
+    pitch="2.54mm",
+    gender="Male",
+    **pins_10x2_smd,
+)
+
+# -----------------------------------------------------------------------------
+# Test with optional MPN and manufacturer
+# -----------------------------------------------------------------------------
+
+# THT male header with MPN
+PinHeader(
+    name="J_with_mpn",
+    mount="THT",
+    pins=6,
+    rows=1,
+    orientation="Vertical",
+    pitch="2.54mm",
+    gender="Male",
+    mpn="PRPC006SAAN-RC",
+    manufacturer="Sullins Connector Solutions",
+    P1=Net("mpn_net1"),
+    P2=Net("mpn_net2"),
+    P3=Net("mpn_net3"),
+    P4=Net("mpn_net4"),
+    P5=Net("mpn_net5"),
+    P6=Net("mpn_net6"),
+)
+
+# THT Female socket with MPN
+PinHeader(
+    name="J_socket_with_mpn",
+    mount="THT",
+    pins=4,
+    rows=2,
+    orientation="Horizontal",
+    pitch="2.54mm",
+    gender="Female",
+    mpn="PPTC042LFBN-RC",
+    manufacturer="Sullins Connector Solutions",
+    P1=Net("socket_mpn_net1"),
+    P2=Net("socket_mpn_net2"),
+    P3=Net("socket_mpn_net3"),
+    P4=Net("socket_mpn_net4"),
+    P5=Net("socket_mpn_net5"),
+    P6=Net("socket_mpn_net6"),
+    P7=Net("socket_mpn_net7"),
+    P8=Net("socket_mpn_net8"),
+)
+
+# SMD with MPN
+PinHeader(
+    name="J_SMD_with_mpn",
+    mount="SMD",
+    pins=4,
+    rows=1,
+    pitch="2.54mm",
+    gender="Male",
+    mpn="TSM-104-01-T-SV",
+    manufacturer="Samtec",
+    P1=Net("smd_mpn_net1"),
+    P2=Net("smd_mpn_net2"),
+    P3=Net("smd_mpn_net3"),
+    P4=Net("smd_mpn_net4"),
+)
+
+# -----------------------------------------------------------------------------
+# Test with defaults (verify defaults work correctly)
+# -----------------------------------------------------------------------------
+
+# Using all defaults except required pins
+PinHeader(
+    name="J_defaults",
+    P1=Net("defaults_net1"),
+    P2=Net("defaults_net2"),
+)
+
+# Override only some defaults
+PinHeader(
+    name="J_partial_defaults",
+    pins=3,
+    pitch="1.27mm",
+    P1=Net("partial_net1"),
+    P2=Net("partial_net2"),
+    P3=Net("partial_net3"),
+)
+
+# -----------------------------------------------------------------------------
+# Test different pitch options with all genders (THT)
+# -----------------------------------------------------------------------------
+
+# 1.27mm pitch THT - commonly used for fine-pitch applications
+for gender in PinHeader.Gender.values():
+    gender_str = gender.value
+    PinHeader(
+        name=f"J_THT_1_27mm_{gender_str}_2x3",
+        mount="THT",
+        pins=3,
+        rows=2,
+        orientation="Vertical",
+        pitch="1.27mm",
+        gender=gender,
+        P1=Net(f"tht_p127_{gender_str}_net1"),
+        P2=Net(f"tht_p127_{gender_str}_net2"),
+        P3=Net(f"tht_p127_{gender_str}_net3"),
+        P4=Net(f"tht_p127_{gender_str}_net4"),
+        P5=Net(f"tht_p127_{gender_str}_net5"),
+        P6=Net(f"tht_p127_{gender_str}_net6"),
+    )
+
+# 2.00mm pitch THT - less common but available
+for gender in PinHeader.Gender.values():
+    gender_str = gender.value
+    PinHeader(
+        name=f"J_THT_2_00mm_{gender_str}_1x4",
+        mount="THT",
+        pins=4,
+        rows=1,
+        orientation="Horizontal",
+        pitch="2.00mm",
+        gender=gender,
+        P1=Net(f"tht_p200_{gender_str}_net1"),
+        P2=Net(f"tht_p200_{gender_str}_net2"),
+        P3=Net(f"tht_p200_{gender_str}_net3"),
+        P4=Net(f"tht_p200_{gender_str}_net4"),
+    )
+
+# -----------------------------------------------------------------------------
+# Test different pitch options with SMD
+# -----------------------------------------------------------------------------
+
+# 1.27mm pitch SMD (Male only - Female doesn't exist)
+PinHeader(
+    name="J_SMD_1_27mm_Male_1x4",
+    mount="SMD",
+    pins=4,
+    rows=1,
+    pitch="1.27mm",
+    gender="Male",
+    P1=Net("smd_p127_male_net1"),
+    P2=Net("smd_p127_male_net2"),
+    P3=Net("smd_p127_male_net3"),
+    P4=Net("smd_p127_male_net4"),
+)
+
+# 2.00mm pitch SMD - both genders available
+for gender in PinHeader.Gender.values():
+    gender_str = gender.value
+    PinHeader(
+        name=f"J_SMD_2_00mm_{gender_str}_1x4",
+        mount="SMD",
+        pins=4,
+        rows=1,
+        pitch="2.00mm",
+        gender=gender,
+        P1=Net(f"smd_p200_{gender_str}_net1"),
+        P2=Net(f"smd_p200_{gender_str}_net2"),
+        P3=Net(f"smd_p200_{gender_str}_net3"),
+        P4=Net(f"smd_p200_{gender_str}_net4"),
+    )
