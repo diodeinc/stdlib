@@ -30,6 +30,7 @@ members = []
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinHeader_1.27mm.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinHeader_2.00mm.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinHeader_2.54mm.pretty" = "9.0.3"
+"gitlab.com/kicad/libraries/kicad-footprints/Connector_PinSocket_1.27mm.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinSocket_2.00mm.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_PinSocket_2.54mm.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Connector_Wire.pretty/SolderWire-0.5sqmm_1x01_D0.9mm_OD2.3mm.kicad_mod" = "9.0.3"

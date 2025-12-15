@@ -1,41 +1,6 @@
-"""
-Pin Header Connector Component
-
-A configurable pin header component that supports:
-- Single and dual row configurations (1-40 pins per row)
-- Multiple pitch options: 1.27mm, 2.00mm, 2.54mm (standard)
-- Through-hole orientations: Vertical and Horizontal
-- SMD orientations: Vertical_SMD (dual row), Vertical_SMD_Pin1Left, Vertical_SMD_Pin1Right (single row)
-- Dynamic pin generation based on configuration
-
-Example usage:
-    PinHeader = Module("generics/PinHeader.zen")
-
-    # Through-hole dual row
-    PinHeader(
-        name = "J1",
-        pins = 5,
-        rows = 2,
-        pitch = "2.54mm",
-        orientation = "Vertical",
-        Pin_1 = Net("VCC"),
-        Pin_2 = Net("GND"),
-        # ... up to Pin_10 for 2x5 configuration
-    )
-
-    # SMD single row
-    PinHeader(
-        name = "J2",
-        pins = 4,
-        rows = 1,
-        pitch = "2.54mm",
-        orientation = "Vertical_SMD_Pin1Left",
-        Pin_1 = Net("SDA"),
-        # ... up to Pin_4
-    )
-"""
-
 load("../utils.zen", "format_value")
+
+warn("kicad/PinHeader.zen is deprecated. Use generics/PinHeader.zen instead.", kind="deprecated.kicad.PinHeader")
 
 # -----------------------------------------------------------------------------
 # Component types

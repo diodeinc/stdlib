@@ -15,7 +15,7 @@ jobs:
         with:
           version: HEAD
       - name: Build .zen files
-        run: pcb build . -Dwarnings
+        run: pcb build . -Dwarnings -S"deprecated.kicad"
       - name: Check formatting
         run: pcb fmt . --check
 
@@ -31,4 +31,4 @@ jobs:
         with:
           version: latest
       - name: Build .zen files
-        run: pcb build . -Dwarnings
+        run: pcb build . -Dwarnings -S"deprecated.kicad"
