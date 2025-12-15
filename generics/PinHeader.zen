@@ -101,9 +101,11 @@ if is_smd:
 # Symbol & Footprint
 # -----------------------------------------------------------------------------
 
+
 def _format_pin_count(n):
     """Format pin count with leading zero if needed."""
     return str(n) if n >= 10 else "0" + str(n)
+
 
 def _symbol():
     pin_str = _format_pin_count(pins)
@@ -114,20 +116,22 @@ def _symbol():
         "name": "Conn_" + row_prefix + pin_str + suffix,
     }
 
+
 def _footprint():
     prefix = "PinHeader" if gender == Gender("Male") else "PinSocket"
     pitch_dir = "Connector_" + prefix + "_" + pitch.value + ".pretty"
     row_prefix = "1x" if rows == 1 else "2x"
     pin_str = _format_pin_count(pins)
-    
+
     # Determine orientation suffix based on mount type
     if is_smd:
         orientation_suffix = "Vertical_SMD_Pin1Left" if rows == 1 else "Vertical_SMD"
     else:
         orientation_suffix = orientation.value
-    
+
     name = prefix + "_" + row_prefix + pin_str + "_P" + pitch.value + "_" + orientation_suffix
     return "@kicad-footprints/" + pitch_dir + "/" + name + ".kicad_mod"
+
 
 # -----------------------------------------------------------------------------
 # IO Ports
@@ -148,7 +152,7 @@ Component(
     prefix="J",
     pins=io_ports,
     properties={
-        "value": format_value(pitch, str(pins) + "x" + str(rows), mount, orientation, gender),
+        "value": format_value(pitch, str(pins) + " x " + str(rows), mount, orientation, gender),
         "mount": mount,
         "pins": pins,
         "rows": rows,

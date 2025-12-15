@@ -14,7 +14,6 @@ for orientation in Orientation.values():
             for mount in Mount.values():
                 for rows in [1, 2]:
                     for positions in [1, 2, 4, 5, 6, 7, 8, 9, 10, 20]:
-                
                         # Skip invalid combinations (footprints don't exist in KiCad)
                         if pitch.value == "1.27mm" and gender.value == "Female" and orientation.value == "Horizontal":
                             continue
@@ -36,10 +35,12 @@ for orientation in Orientation.values():
                         gender_str = gender.value
                         orientation_str = orientation.value
                         mount_str = mount.value
-                        pin_prefix = f"P_{mount_str}_{orientation_str}_{pitch_str}_{gender_str}_{rows}_{positions}".upper()
+                        pin_prefix = (
+                            f"P_{mount_str}_{orientation_str}_{pitch_str}_{gender_str}_{rows}_{positions}".upper()
+                        )
                         pins = {"P{}".format(n): Net(f"{pin_prefix}_{n}") for n in range(1, positions * rows + 1)}
                         name = f"J_{mount_str}_{orientation_str}_{pitch_str}_{gender_str}_{positions}x{rows}"
-                        
+
                         # Instantiate the component
                         PinHeader(
                             name=name,

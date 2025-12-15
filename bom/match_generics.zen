@@ -3,6 +3,7 @@
 Automatically assigns house MPNs to resistors and capacitors.
 """
 
+load("manufactuers/wurth_electronik.zen", "WURTH_ELEKTRONIK_WR_PHD")
 load(
     "../units.zen",
     "Voltage",
@@ -33,8 +34,8 @@ load(
     "pin_header",
     "tvs",
     "sinhoo_standoff",
+    "merge_parts",
 )
-
 
 # Dielectric quality ranking: C0G/NP0 > X7T > X7R > X7S > X5R > Y5V > Z5U
 _DIELECTRIC_RANK = {
@@ -228,29 +229,34 @@ HOUSE_FB_BY_PKG = {
 
 # House pin header catalog (Würth Elektronik WR-PHD series)
 # Key: (pitch, rows, pins, orientation) -> [(mpn, manufacturer), ...]
-HOUSE_PH = {
-    # 1.27mm pitch, 2 rows, vertical
-    ("1.27mm", 2, 2, "Vertical"): [("62200421121", "Würth Elektronik")],
-    ("1.27mm", 2, 4, "Vertical"): [("62200821121", "Würth Elektronik")],
-    ("1.27mm", 2, 5, "Vertical"): [("62201021121", "Würth Elektronik"), ("ZX-PZ1.27-2-5PZZ", "Megastar")],
-    ("1.27mm", 2, 10, "Vertical"): [("62202021121", "Würth Elektronik")],
-    # 2.54mm pitch, 1 row, vertical
-    ("2.54mm", 1, 2, "Vertical"): [("61300211121", "Würth Elektronik")],
-    ("2.54mm", 1, 3, "Vertical"): [("61300311121", "Würth Elektronik")],
-    ("2.54mm", 1, 4, "Vertical"): [("61300411121", "Würth Elektronik")],
-    ("2.54mm", 1, 5, "Vertical"): [("61300511121", "Würth Elektronik")],
-    ("2.54mm", 1, 6, "Vertical"): [("61300611121", "Würth Elektronik")],
-    ("2.54mm", 1, 8, "Vertical"): [("61300811121", "Würth Elektronik")],
-    ("2.54mm", 1, 10, "Vertical"): [("61301011121", "Würth Elektronik")],
-    ("2.54mm", 1, 15, "Vertical"): [("61301511121", "Würth Elektronik")],
-    # 2.54mm pitch, 2 rows, vertical
-    ("2.54mm", 2, 2, "Vertical"): [("61300421121", "Würth Elektronik")],
-    ("2.54mm", 2, 3, "Vertical"): [("61300621121", "Würth Elektronik")],
-    ("2.54mm", 2, 4, "Vertical"): [("61300821121", "Würth Elektronik")],
-    ("2.54mm", 2, 5, "Vertical"): [("61301021121", "Würth Elektronik")],
-    ("2.54mm", 2, 10, "Vertical"): [("61302021121", "Würth Elektronik")],
-    ("2.54mm", 2, 20, "Vertical"): [("61304021121", "Würth Elektronik")],
-}
+HOUSE_PH = merge_parts(
+    [
+        WURTH_ELEKTRONIK_WR_PHD,
+        {
+            # 1.27mm pitch, 2 rows, vertical
+            ("1.27mm", 2, 2, "Vertical"): [("62200421121", "Würth Elektronik")],
+            ("1.27mm", 2, 4, "Vertical"): [("62200821121", "Würth Elektronik")],
+            ("1.27mm", 2, 5, "Vertical"): [("62201021121", "Würth Elektronik"), ("ZX-PZ1.27-2-5PZZ", "Megastar")],
+            ("1.27mm", 2, 10, "Vertical"): [("62202021121", "Würth Elektronik")],
+            # 2.54mm pitch, 1 row, vertical
+            ("2.54mm", 1, 2, "Vertical"): [("61300211121", "Würth Elektronik")],
+            ("2.54mm", 1, 3, "Vertical"): [("61300311121", "Würth Elektronik")],
+            ("2.54mm", 1, 4, "Vertical"): [("61300411121", "Würth Elektronik")],
+            ("2.54mm", 1, 5, "Vertical"): [("61300511121", "Würth Elektronik")],
+            ("2.54mm", 1, 6, "Vertical"): [("61300611121", "Würth Elektronik")],
+            ("2.54mm", 1, 8, "Vertical"): [("61300811121", "Würth Elektronik")],
+            ("2.54mm", 1, 10, "Vertical"): [("61301011121", "Würth Elektronik")],
+            ("2.54mm", 1, 15, "Vertical"): [("61301511121", "Würth Elektronik")],
+            # 2.54mm pitch, 2 rows, vertical
+            ("2.54mm", 2, 2, "Vertical"): [("61300421121", "Würth Elektronik")],
+            ("2.54mm", 2, 3, "Vertical"): [("61300621121", "Würth Elektronik")],
+            ("2.54mm", 2, 4, "Vertical"): [("61300821121", "Würth Elektronik")],
+            ("2.54mm", 2, 5, "Vertical"): [("61301021121", "Würth Elektronik")],
+            ("2.54mm", 2, 10, "Vertical"): [("61302021121", "Würth Elektronik")],
+            ("2.54mm", 2, 20, "Vertical"): [("61304021121", "Würth Elektronik")],
+        },
+    ]
+)
 
 # House TVS diode catalog by package (8/20µs pulse ratings per IEC 61000-4-5)
 HOUSE_TVS_BY_PKG = {
@@ -799,9 +805,18 @@ def assign_house_pin_header(c, house_ph):
     rows_req = prop(c, ["rows", "Rows"])
     pitch_req = prop(c, ["pitch", "Pitch"])
     orientation_req = prop(c, ["orientation", "Orientation"])
+    gender_req = prop(c, ["gender", "Gender"])
+    mount_req = prop(c, ["mount", "Mount"])
 
     # O(1) lookup using tuple key
-    key = (pitch_req, rows_req, pins_req, orientation_req)
+    if mount_req and gender_req:
+        # Generic pin header with mount and gender
+        key = (pitch_req, rows_req, pins_req, orientation_req, gender_req, mount_req)
+    else:
+        # Legacy style pin header (deprecated)
+        key = (pitch_req, rows_req, pins_req, orientation_req)
+
+    # Check for an exact match
     matches = house_ph.get(key, [])
 
     if matches:

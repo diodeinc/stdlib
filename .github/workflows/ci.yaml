@@ -31,4 +31,4 @@ jobs:
         with:
           version: latest
       - name: Build .zen files
-        run: pcb build . -Dwarnings
+        run: pcb build . -Dwarnings -Sdeprecated.kicad
