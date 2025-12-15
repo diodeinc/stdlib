@@ -90,10 +90,8 @@ if is_tht and is_127mm and is_female and is_horizontal:
 if is_smd:
     if is_horizontal:
         error("SMD mount only supports Vertical orientation. Use mount='THT' for Horizontal.")
-    if is_127mm and is_female:
-        error("1.27mm pitch Female SMD footprints are not available. Use mount='THT' or a different pitch.")
-    if pins > 10:
-        error("SMD footprints support up to 10 pins per row. Use mount='THT' for larger pin counts.")
+    # if is_127mm and is_female:
+    #     error("1.27mm pitch Female SMD footprints are not available. Use mount='THT' or a different pitch.")
     if rows == 1 and pins < 2:
         error("SMD single row requires at least 2 pins. Use mount='THT' for 1-pin configurations.")
     if rows == 2 and pins < 2 and is_female:
@@ -122,7 +120,13 @@ def _footprint():
     row_prefix = "1x" if rows == 1 else "2x"
     pin_str = _format_pin_count(pins)
     
-    name = prefix + "_" + row_prefix + pin_str + "_P" + pitch.value + "_" + orientation.value
+    # Determine orientation suffix based on mount type
+    if is_smd:
+        orientation_suffix = "Vertical_SMD_Pin1Left" if rows == 1 else "Vertical_SMD"
+    else:
+        orientation_suffix = orientation.value
+    
+    name = prefix + "_" + row_prefix + pin_str + "_P" + pitch.value + "_" + orientation_suffix
     return "@kicad-footprints/" + pitch_dir + "/" + name + ".kicad_mod"
 
 # -----------------------------------------------------------------------------
