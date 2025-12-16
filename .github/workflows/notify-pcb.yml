@@ -1,0 +1,15 @@
+name: Notify pcb repo
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger pcb stdlib version check
+        env:
+          GH_TOKEN: ${{ secrets.DIODE_ROBOT_TOKEN }}
+        run: gh workflow run stdlib-version-check.yml --repo diodeinc/pcb
