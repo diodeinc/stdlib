@@ -1,5 +1,3 @@
-load("../properties.zen", "Properties")
-
 # -----------------------------------------------------------------------------
 # Component types
 # -----------------------------------------------------------------------------
@@ -69,7 +67,8 @@ MolexPicoBladeVariant = enum(
 # -----------------------------------------------------------------------------
 
 variant = config("variant", MolexPicoBladeVariant)
-properties = config("properties", dict, optional=True)
+mpn = config("mpn", str, optional = True)
+manufacturer = config("manufacturer", str, optional = True)
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -150,16 +149,15 @@ def _mpn(variant: MolexPicoBladeVariant) -> str:
 pin_count = _pin_count(variant)
 
 Component(
-    name="MPB",
-    type="molex_picoblade",
-    symbol=_symbol(pin_count),
-    footprint=_footprint(variant),
-    prefix="J",
-    pins=pins,
-    properties=Properties(
-        properties,
-        {
-            "value": _mpn(variant),
-        },
-    ),
+    name = "MPB",
+    mpn = mpn or _mpn(variant),
+    manufacturer = manufacturer or "Molex",
+    type = "molex_picoblade",
+    symbol = _symbol(pin_count),
+    footprint = _footprint(variant),
+    prefix = "J",
+    pins = pins,
+    properties = {
+        "value": _mpn(variant),
+    },
 )
