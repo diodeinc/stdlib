@@ -1,6 +1,9 @@
 load("../properties.zen", "Properties")
 
-warn("kicad/MolexPicoBlade.zen is deprecated. Use connectors/MolexPicoBlade.zen instead.", kind="deprecated.kicad.MolexPicoBlade")
+warn(
+    "kicad/MolexPicoBlade.zen is deprecated. Use connectors/MolexPicoBlade.zen instead.",
+    kind="deprecated.kicad.MolexPicoBlade",
+)
 
 # -----------------------------------------------------------------------------
 # Component types
