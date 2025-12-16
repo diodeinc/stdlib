@@ -12,5 +12,4 @@ for pin_count in JstGh.PinCount.values():
         pins["MountPin"] = Net(name + "_MountPin")
 
         # Create the component
-        JstGh(name = name, pin_count = pin_count, orientation = orientation, **pins)
-
+        JstGh(name=name, pin_count=pin_count, orientation=orientation, **pins)

@@ -9,14 +9,15 @@ Orientation = enum("Vertical", "Horizontal")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-pin_count = config("pin_count", PinCount, default = PinCount("2"), convert = PinCount)
-orientation = config("orientation", Orientation, default = Orientation("Vertical"), convert = Orientation)
-mpn = config("mpn", str, optional = True)
-manufacturer = config("manufacturer", str, optional = True)
+pin_count = config("pin_count", PinCount, default=PinCount("2"), convert=PinCount)
+orientation = config("orientation", Orientation, default=Orientation("Vertical"), convert=Orientation)
+mpn = config("mpn", str, optional=True)
+manufacturer = config("manufacturer", str, optional=True)
 
 
 def _get_pin_count(pin_count: PinCount) -> int:
     return int(pin_count.value)
+
 
 # -----------------------------------------------------------------------------
 # IO ports (up to 14 pins + mounting pin)
@@ -65,8 +66,8 @@ def _symbol(num_pins: int):
     pin_str = str(num_pins) if num_pins >= 10 else "0" + str(num_pins)
     # Use the MountingPin variant of the symbol
     return Symbol(
-        library = "@kicad-symbols/Connector_Generic_MountingPin.kicad_sym",
-        name = "Conn_01x" + pin_str + "_MountingPin",
+        library="@kicad-symbols/Connector_Generic_MountingPin.kicad_sym",
+        name="Conn_01x" + pin_str + "_MountingPin",
     )
 
 
@@ -86,16 +87,15 @@ def _mpn(num_pins: int, orientation: Orientation) -> str:
 _num_pins = _get_pin_count(pin_count)
 
 Component(
-    name = "JGH",
-    mpn = mpn or _mpn(_num_pins, orientation),
-    manufacturer = manufacturer or "JST",
-    type = "jst_gh",
-    symbol = _symbol(_num_pins),
-    footprint = _footprint(_num_pins, orientation),
-    prefix = "J",
-    pins = pins,
-    properties = {
+    name="JGH",
+    mpn=mpn or _mpn(_num_pins, orientation),
+    manufacturer=manufacturer or "JST",
+    type="jst_gh",
+    symbol=_symbol(_num_pins),
+    footprint=_footprint(_num_pins, orientation),
+    prefix="J",
+    pins=pins,
+    properties={
         "value": _mpn(_num_pins, orientation),
     },
 )
-
