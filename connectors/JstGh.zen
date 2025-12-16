@@ -9,8 +9,8 @@ Orientation = enum("Vertical", "Horizontal")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-pin_count = config("pin_count", PinCount, default=PinCount("2"), convert=PinCount)
-orientation = config("orientation", Orientation, default=Orientation("Vertical"), convert=Orientation)
+pin_count = config("pin_count", PinCount, default=PinCount("2"))
+orientation = config("orientation", Orientation, default=Orientation("Vertical"))
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 

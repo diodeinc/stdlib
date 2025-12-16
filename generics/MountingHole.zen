@@ -13,9 +13,9 @@ Plating = enum("TopBottom", "TopOnly", "Via", "Mechanical")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-diameter = config("diameter", Diameter, convert=Diameter)
-standard = config("standard", Standard, default=Standard("DIN965"), convert=Standard, optional=True)
-plating = config("plating", Plating, default=Plating("TopBottom"), convert=Plating, optional=True)
+diameter = config("diameter", Diameter)
+standard = config("standard", Standard, default=Standard("DIN965"), optional=True)
+plating = config("plating", Plating, default=Plating("TopBottom"), optional=True)
 
 # Properties – combined and normalized
 properties = {
