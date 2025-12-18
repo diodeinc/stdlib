@@ -410,6 +410,26 @@ def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn
     }
 
 
+def crystal(frequency: str, load_capacitance: str | None, mpn: str, manufacturer: str) -> dict:
+    """Helper to create crystal catalog entry.
+
+    Args:
+        frequency: Crystal frequency (e.g., "32.768kHz", "8MHz", "16MHz")
+        load_capacitance: Load capacitance (e.g., "7pF", "12.5pF") or None
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Crystal dictionary
+    """
+    return {
+        "frequency": Frequency(frequency),
+        "load_capacitance": Capacitance(load_capacitance) if load_capacitance else None,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
 def sinhoo_standoff(thread: str, height: str, variant="M") -> str:
     """Generate Sinhoo SMTSO part number from thread and height.
 
