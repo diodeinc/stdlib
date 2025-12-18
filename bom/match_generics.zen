@@ -35,6 +35,7 @@ load(
     "tvs",
     "sinhoo_standoff",
     "merge_parts",
+    "crystal",
 )
 
 # Dielectric quality ranking: C0G/NP0 > X7T > X7R > X7S > X5R > Y5V > Z5U
@@ -224,6 +225,29 @@ HOUSE_FB_BY_PKG = {
     "0805": [
         ferrite_bead("220Ohm 25%", "100MHz", "2A", "45mOhm", "BLM21PG221SN1D", "Murata Electronics"),
         ferrite_bead("220Ohm 25%", "100MHz", "3A", "40mOhm", "MPZ2012S221AT000", "TDK Corporation"),
+    ],
+}
+
+# House crystal catalog by package
+HOUSE_CRYSTALS_BY_PKG = {
+    "3215_2Pin": [
+        crystal("32.768kHz", "12.5pF", "ABS07-32.768KHZ-T", "Abracon LLC"),
+        crystal("32.768kHz", "12.5pF", "ECS-.327-12.5-34QCS-TR", "ECS Inc."),
+        crystal("32.768kHz", "12.5pF", "XKXGI-SUA-32.768K", "YXC Crystal Oscillators"),
+    ],
+    "3225_4Pin": [
+        crystal("8MHz", "12pF", "ECS-80-12-33Q-GN-TR", "ECS Inc."),
+        crystal("8MHz", "12pF", "ABM8AIG-8.000MHZ-12-R150-V-T3", "Abracon LLC"),
+        crystal("8MHz", "12pF", "X32258MOB4SI", "YXC Crystal Oscillators"),
+        crystal("12MHz", "12pF", "ECS-120-12-33Q-JES-TR", "ECS Inc."),
+        crystal("12MHz", "12pF", "ABM8AIG-12.000MHZ-12-2Z-T3", "Abracon LLC"),
+        crystal("12MHz", "12pF", "X322512MOB4SI", "YXC Crystal Oscillators"),
+        crystal("16MHz", "12pF", "ECS-160-12-33Q-JEN-TR", "ECS Inc."),
+        crystal("16MHz", "12pF", "ABM8AIG-16.000MHZ-12-2Z-T3", "Abracon LLC"),
+        crystal("16MHz", "12pF", "X322516MOB4SI", "YXC Crystal Oscillators"),
+        crystal("25MHz", "12pF", "ECS-250-12-33Q-JES-TR", "ECS Inc."),
+        crystal("25MHz", "12pF", "ABM8AIG-25.000MHZ-12-2Z-T3", "Abracon LLC"),
+        crystal("25MHz", "12pF", "X322525MOB4SI", "YXC Crystal Oscillators"),
     ],
 }
 
@@ -882,6 +906,55 @@ def assign_house_tvs(c, house_tvs_by_pkg):
     )
 
 
+def assign_house_crystal(c, house_crystals_by_pkg):
+    """Assign house crystal MPNs."""
+    pkg = prop(c, ["package", "Package"])
+    freq_req = prop(c, ["frequency", "Frequency"])
+    cl_req = prop(c, ["load_capacitance", "Load_capacitance"])
+
+    if not freq_req:
+        return
+
+    req_frequency = Frequency(freq_req)
+    req_load_cap = Capacitance(cl_req) if cl_req else None
+
+    parts = house_crystals_by_pkg.get(pkg, [])
+    matches = []
+
+    for p in parts:
+        # Frequency must match exactly
+        if p["frequency"] != req_frequency:
+            continue
+
+        # Load capacitance: if specified, must match (with tolerance)
+        if req_load_cap:
+            if not p["load_capacitance"]:
+                continue
+            # Allow 20% tolerance on load capacitance matching
+            if req_load_cap.tolerance == 0.0:
+                req_load_cap = req_load_cap.with_tolerance(0.20)
+            if not p["load_capacitance"].within(req_load_cap):
+                continue
+
+        matches.append(p)
+
+    if matches:
+        set_from_matches(c, matches)
+        c.matcher = "assign_house_crystal"
+        return
+
+    # Generate warning
+    warn(
+        "No house crystal found for "
+        + c.value
+        + " "
+        + pkg
+        + ".\nTry using different component values or specify mpn directly "
+        + "(https://docs.pcb.new/pages/spec#match-component-match%2C-parts)",
+        kind="bom.match_generic",
+    )
+
+
 def assign_house_standoff(c, house_standoffs):
     """Assign house standoff MPNs (Würth WA-SMSI series with Sinhoo alternatives)."""
     thread_req = prop(c, ["thread", "Thread"])
@@ -930,6 +1003,8 @@ def assign_house_parts(c):
         assign_house_tvs(c, HOUSE_TVS_BY_PKG)
     elif c.type == "standoff":
         assign_house_standoff(c, HOUSE_STANDOFFS)
+    elif c.type == "crystal":
+        assign_house_crystal(c, HOUSE_CRYSTALS_BY_PKG)
     elif c.type == "connector":
         connector_type = prop(c, ["connector_type", "Connector_type"])
         if connector_type == "Pin Header":
