@@ -234,6 +234,7 @@ HOUSE_CRYSTALS_BY_PKG = {
         crystal("32.768kHz", "12.5pF", "ABS07-32.768KHZ-T", "Abracon LLC"),
         crystal("32.768kHz", "12.5pF", "ECS-.327-12.5-34QCS-TR", "ECS Inc."),
         crystal("32.768kHz", "12.5pF", "XKXGI-SUA-32.768K", "YXC Crystal Oscillators"),
+        crystal("32.768kHz", "12pF", "Q13FC13500004", "Seiko Epson"),
     ],
     "3225_4Pin": [
         crystal("8MHz", "12pF", "ECS-80-12-33Q-GN-TR", "ECS Inc."),
