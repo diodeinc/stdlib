@@ -965,8 +965,11 @@ BASE_PREDEFINED_SIZES = PredefinedSizes(
         0.8,
     ],
     via_dimensions=[
+        ViaDimension(diameter=0.25, drill=0.15),
         ViaDimension(diameter=0.4, drill=0.2),
+        ViaDimension(diameter=0.45, drill=0.2),
         ViaDimension(diameter=0.5, drill=0.3),
+        ViaDimension(diameter=0.6, drill=0.3),
     ],
 )
 
@@ -979,7 +982,10 @@ BASE_PREDEFINED_SIZES_2OZ = PredefinedSizes(
         2.1,  # 5A on 2oz
     ],
     via_dimensions=[
+        ViaDimension(diameter=0.25, drill=0.15),
         ViaDimension(diameter=0.4, drill=0.2),
+        ViaDimension(diameter=0.45, drill=0.2),
+        ViaDimension(diameter=0.5, drill=0.3),
         ViaDimension(diameter=0.6, drill=0.3),
     ],
 )
