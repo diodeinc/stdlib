@@ -54,9 +54,13 @@ crystal_package = config("crystal_package", Crystal.Package, optional=True)
 cap_value = config_unit("cap_value", Capacitance, optional=True)
 
 # Optional capacitor overrides (not recommended)
-cap_package_override = config("cap_package_override", Capacitor.Package, default=Capacitor.Package("0402"), optional=True)
+cap_package_override = config(
+    "cap_package_override", Capacitor.Package, default=Capacitor.Package("0402"), optional=True
+)
 cap_voltage_override = config("cap_voltage_override", str, default="10V", optional=True)
-cap_dielectric_override = config("cap_dielectric_override", Capacitor.Dielectric, default=Capacitor.Dielectric("C0G"), optional=True)
+cap_dielectric_override = config(
+    "cap_dielectric_override", Capacitor.Dielectric, default=Capacitor.Dielectric("C0G"), optional=True
+)
 
 # -----------------------------------------------------------------------------
 # Resolve configuration
