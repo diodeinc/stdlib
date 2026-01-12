@@ -1,0 +1,149 @@
+"""Crystal Oscillator Module with Load Capacitors
+
+A crystal oscillator module that instantiates a crystal and two load capacitors.
+Automatically selects the correct package and load capacitance for common frequencies.
+
+Usage:
+    CrystalOscillator(
+        name="Y1",
+        frequency="8MHz",
+        XIN=xin_net,
+        XOUT=xout_net,
+        GND=gnd_net,
+    )
+
+For custom frequencies not in the preset list:
+    CrystalOscillator(
+        name="Y1",
+        frequency="24MHz",
+        crystal_package="3225_4Pin",
+        cap_value="15pF",
+        XIN=xin_net,
+        XOUT=xout_net,
+        GND=gnd_net,
+    )
+"""
+
+load("../config.zen", "config_unit")
+load("../units.zen", "Capacitance", "Frequency")
+load("../interfaces.zen", "Ground")
+
+# Import component modules
+Crystal = Module("../generics/Crystal.zen")
+Capacitor = Module("../generics/Capacitor.zen")
+
+# -----------------------------------------------------------------------------
+# Preset configurations (frequency -> package, load_cap)
+# These match the house crystal catalog for automatic BOM matching
+# -----------------------------------------------------------------------------
+
+_PRESETS = {
+    "32.768kHz": {"package": "3215_2Pin", "cap": "12pF"},
+    "8MHz": {"package": "3225_4Pin", "cap": "12pF"},
+    "12MHz": {"package": "3225_4Pin", "cap": "12pF"},
+    "16MHz": {"package": "3225_4Pin", "cap": "12pF"},
+    "25MHz": {"package": "3225_4Pin", "cap": "12pF"},
+}
+
+# -----------------------------------------------------------------------------
+# Component parameters
+# -----------------------------------------------------------------------------
+
+frequency = config("frequency", str, default="8MHz")
+crystal_package = config("crystal_package", Crystal.Package, optional=True)
+cap_value = config_unit("cap_value", Capacitance, optional=True)
+
+# Optional capacitor overrides (not recommended)
+cap_package_override = config("cap_package_override", Capacitor.Package, default=Capacitor.Package("0402"), optional=True)
+cap_voltage_override = config("cap_voltage_override", str, default="10V", optional=True)
+cap_dielectric_override = config("cap_dielectric_override", Capacitor.Dielectric, default=Capacitor.Dielectric("C0G"), optional=True)
+
+# -----------------------------------------------------------------------------
+# Resolve configuration
+# -----------------------------------------------------------------------------
+
+if frequency in _PRESETS:
+    # Use preset values, allow overrides
+    preset = _PRESETS[frequency]
+    _crystal_package = crystal_package if crystal_package else Crystal.Package(preset["package"])
+    _cap_value = cap_value if cap_value else Capacitance(preset["cap"])
+else:
+    # Custom frequency - require package and cap_value
+    if not crystal_package:
+        error("crystal_package is required for custom frequency: " + frequency)
+    if not cap_value:
+        error("cap_value is required for custom frequency: " + frequency)
+    _crystal_package = crystal_package
+    _cap_value = cap_value
+
+_frequency = Frequency(frequency)
+
+# -----------------------------------------------------------------------------
+# IO ports
+# -----------------------------------------------------------------------------
+
+XIN = io("XIN", Net)
+XOUT = io("XOUT", Net)
+GND = io("GND", Ground)
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+
+def _is_4pin(package) -> bool:
+    return "4Pin" in str(package)
+
+
+# -----------------------------------------------------------------------------
+# Component instantiation
+# -----------------------------------------------------------------------------
+
+# Crystal
+if _is_4pin(_crystal_package):
+    # suppress: bom.match_generic
+    Crystal(
+        name="Y",
+        frequency=_frequency,
+        load_capacitance=_cap_value,
+        package=_crystal_package,
+        XIN=XIN,
+        XOUT=XOUT,
+        GND=GND,
+    )
+else:
+    # suppress: bom.match_generic
+    Crystal(
+        name="Y",
+        frequency=_frequency,
+        load_capacitance=_cap_value,
+        package=_crystal_package,
+        XIN=XIN,
+        XOUT=XOUT,
+    )
+
+# Load capacitors (defaults: C0G, 10V, 0402)
+Capacitor(
+    name="C_XIN",
+    value=_cap_value,
+    package=cap_package_override,
+    voltage=cap_voltage_override,
+    dielectric=cap_dielectric_override,
+    P1=XIN,
+    P2=GND,
+)
+
+Capacitor(
+    name="C_XOUT",
+    value=_cap_value,
+    package=cap_package_override,
+    voltage=cap_voltage_override,
+    dielectric=cap_dielectric_override,
+    P1=XOUT,
+    P2=GND,
+)
+
+# pcb:sch C_XIN.C x=-72.1200 y=62.5000 rot=0
+# pcb:sch C_XOUT.C x=219.9800 y=49.8000 rot=0
+# pcb:sch GND.1 x=87.9000 y=176.8000 rot=0
+# pcb:sch Y.Y x=62.5000 y=-13.7000 rot=0

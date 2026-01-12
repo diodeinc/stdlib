@@ -1,0 +1,42 @@
+"""Test for CrystalOscillator module."""
+
+load("../../interfaces.zen", "Ground")
+
+CrystalOscillator = Module("../CrystalOscillator.zen")
+
+gnd = Ground("GND")
+
+# Test preset frequencies
+for freq in ["32.768kHz", "8MHz", "12MHz", "16MHz", "25MHz"]:
+    name = "CRYSTAL_" + freq.replace(".", "_").replace("kHz", "KHZ").replace("MHz", "MHZ")
+    CrystalOscillator(
+        name=name,
+        frequency=freq,
+        XIN=Net(name + "_XIN"),
+        XOUT=Net(name + "_XOUT"),
+        GND=gnd,
+        properties={
+            "embed": True,
+        },
+    )
+
+# Test custom frequency
+CrystalOscillator(
+    name="CRYSTAL_24MHZ",
+    frequency="24MHz",
+    crystal_package="3225_4Pin",
+    cap_value="15pF",
+    XIN=Net("CRYSTAL_24MHZ_XIN"),
+    XOUT=Net("CRYSTAL_24MHZ_XOUT"),
+    GND=gnd,
+    properties={
+        "embed": True,
+    },
+)
+
+# pcb:sch CRYSTAL_8MHZ x=-279.4000 y=381.0000 rot=0
+# pcb:sch CRYSTAL_12MHZ x=-279.4000 y=-63.5000 rot=0
+# pcb:sch CRYSTAL_16MHZ x=-838.2000 y=-63.5000 rot=0
+# pcb:sch CRYSTAL_24MHZ x=-1397.0000 y=-63.5000 rot=0
+# pcb:sch CRYSTAL_25MHZ x=-1397.0000 y=381.0000 rot=0
+# pcb:sch CRYSTAL_32_768KHZ x=-838.2000 y=381.0000 rot=0
