@@ -289,6 +289,8 @@ HOUSE_PH = merge_parts(
 # House TVS diode catalog by package (8/20µs pulse ratings per IEC 61000-4-5)
 HOUSE_TVS_BY_PKG = {
     ("Unidirectional", "DO-219AB"): [
+        # Vishay TransZorb series - 3.3V standoff (AEC-Q101 automotive)
+        tvs("3.3V", "8.9V", "1000W", "VTVS3V3GSMF-HM3-08", "Vishay General Semiconductor - Diodes Division"),
         # Vishay eSMP series - 5V standoff
         tvs("5V", "9.2V", "1000W", "SMF5V0A-E3-08", "Vishay General Semiconductor - Diodes Division"),
         # Littelfuse SZSMF series - 5V standoff (AEC-Q101 automotive)
@@ -311,6 +313,8 @@ HOUSE_TVS_BY_PKG = {
     ("Unidirectional", "DO-214AA"): [
         # Vishay TransZorb series - 28V standoff
         tvs("28V", "45.5V", "3000W", "SMBJ28A-E3/52", "Vishay General Semiconductor - Diodes Division"),
+        # Vishay TransZorb series - 33V standoff
+        tvs("33V", "53.3V", "3000W", "SMBJ33A-E3/52", "Vishay General Semiconductor - Diodes Division"),
     ],
     ("Bidirectional", "DO-214AC"): [
         # Vishay TransZorb series - 15V standoff
@@ -319,6 +323,16 @@ HOUSE_TVS_BY_PKG = {
         tvs("33V", "53.3V", "2000W", "SMAJ33CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
         # Vishay TransZorb series - 60V standoff
         tvs("60V", "96.8V", "2000W", "SMAJ60CA-E3/61", "Vishay General Semiconductor - Diodes Division"),
+    ],
+    ("Bidirectional", "DO-214AA"): [
+        # Vishay TransZorb series - 40V standoff
+        tvs("40V", "64.5V", "3000W", "SMBJ40CA-E3/52", "Vishay General Semiconductor - Diodes Division"),
+    ],
+    ("Bidirectional", "DO-214AB"): [
+        # Vishay TransZorb series - 24V standoff
+        tvs("24V", "38.9V", "6000W", "SMCJ24CA-E3/57T", "Vishay General Semiconductor - Diodes Division"),
+        # Vishay TransZorb series - 33V standoff
+        tvs("33V", "53.3V", "6000W", "SMCJ33CA-E3/57T", "Vishay General Semiconductor - Diodes Division"),
     ],
 }
 
