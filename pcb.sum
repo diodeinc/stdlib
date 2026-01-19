@@ -101,6 +101,7 @@ gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_1206_3216Metri
 gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod 9.0.3 h1:1v2d5bzPIj9SOzFsnNHPmp2H6kJHPWjgEdrRPwm/iRc=
 gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod 9.0.3 h1:1v2d5bzPIj9SOzFsnNHPmp2H6kJHPWjgEdrRPwm/iRc=
 gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod 9.0.3 h1:1v2d5bzPIj9SOzFsnNHPmp2H6kJHPWjgEdrRPwm/iRc=
+gitlab.com/kicad/libraries/kicad-footprints/TerminalBlock.pretty 9.0.3 h1:cmhanP9j6WuGsA7BgfJJjuftY8IR7AO5XRuL+9QDtoY=
 gitlab.com/kicad/libraries/kicad-footprints/TestPoint.pretty 9.0.3 h1:YnUr1VplDrlq+r2HEjBknkf9W+asw3QBenjPJaRAAIY=
 gitlab.com/kicad/libraries/kicad-symbols/Connector.kicad_sym 9.0.3 h1:1v2d5bzPIj9SOzFsnNHPmp2H6kJHPWjgEdrRPwm/iRc=
 gitlab.com/kicad/libraries/kicad-symbols/Connector_Generic.kicad_sym 9.0.3 h1:1v2d5bzPIj9SOzFsnNHPmp2H6kJHPWjgEdrRPwm/iRc=

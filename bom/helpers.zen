@@ -457,6 +457,26 @@ def sinhoo_standoff(thread: str, height: str, variant="M") -> str:
     return "SMTSO" + thread_code + str(height_code) + variant + "TJ"
 
 
+def terminal_block(pins: int, pitch: str, mpn: str, manufacturer: str) -> dict:
+    """Helper to create terminal block catalog entry.
+
+    Args:
+        pins: Number of pins/positions
+        pitch: Pitch (e.g., "2.54mm", "5.0mm")
+        mpn: Manufacturer part number
+        manufacturer: Manufacturer name
+
+    Returns:
+        Terminal block dictionary
+    """
+    return {
+        "pins": pins,
+        "pitch": pitch,
+        "mpn": mpn,
+        "manufacturer": manufacturer,
+    }
+
+
 def match_component(match: dict, parts: tuple | list, matcher: str = "match_component"):
     """Create a component modifier that matches specific properties and assigns MPN.
 

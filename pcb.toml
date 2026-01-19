@@ -107,6 +107,7 @@ members = []
 "gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_1210_3225Metric.kicad_mod" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_2010_5025Metric.kicad_mod" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/Resistor_SMD.pretty/R_2512_6332Metric.kicad_mod" = "9.0.3"
+"gitlab.com/kicad/libraries/kicad-footprints/TerminalBlock.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-footprints/TestPoint.pretty" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-symbols/Connector.kicad_sym" = "9.0.3"
 "gitlab.com/kicad/libraries/kicad-symbols/Connector_Generic.kicad_sym" = "9.0.3"
