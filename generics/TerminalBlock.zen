@@ -84,7 +84,8 @@ def _footprint():
     if pitch == Pitch("5.0mm"):
         # MaiXu MX126-5.0 series (Vertical)
         return (
-            "@kicad-footprints/TerminalBlock.pretty/TerminalBlock_MaiXu_MX126-5.0-"
+            "@kicad-footprints/TerminalBlock.pretty"
+            + "/TerminalBlock_MaiXu_MX126-5.0-"
             + pin_str_padded
             + "P_1x"
             + pin_str_padded
@@ -94,7 +95,8 @@ def _footprint():
         # Xinya XY308-2.54 series (Horizontal)
         # Note: Pin count uses no leading zero (e.g., 2P), but 1xNN uses leading zero (e.g., 1x02)
         return (
-            "@kicad-footprints/TerminalBlock.pretty/TerminalBlock_Xinya_XY308-2.54-"
+            "@kicad-footprints/TerminalBlock.pretty"
+            + "/TerminalBlock_Xinya_XY308-2.54-"
             + pin_str_short
             + "P_1x"
             + pin_str_padded
