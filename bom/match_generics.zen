@@ -203,6 +203,11 @@ HOUSE_LEDS_BY_PKG = {
         led("green", "1.9V – 2.4V (2V nom.)", "VLMG1500-GS08", "Vishay Semiconductor Opto Division"),
         led("orange", "1.8V – 2.4V (2V nom.)", "VLMO1500-GS08", "Vishay Semiconductor Opto Division"),
         led("red", "1.8V – 2.4V (2V nom.)", "VLMS1500-GS08", "Vishay Semiconductor Opto Division"),
+        # Lite-On LTST-C281 series (0.35mm height, AlInGaP K-series @ 20mA)
+        led("orange", "1.8V – 2.4V (2V nom.)", "LTST-C281KFKT", "Lite-On Inc."),
+        led("green", "1.8V – 2.4V (2V nom.)", "LTST-C281KGKT", "Lite-On Inc."),
+        led("red", "1.8V – 2.4V (2V nom.)", "LTST-C281KRKT", "Lite-On Inc."),
+        led("yellow", "1.8V – 2.4V (2V nom.)", "LTST-C281KSKT", "Lite-On Inc."),
         # Lite-On LTST-C281 series (0.35mm height, AlInGaP K-series @ 5mA)
         led("orange", "1.7V – 2.3V (2V nom.)", "LTST-C281KFKT-5A", "Lite-On Inc."),
         led("green", "1.7V – 2.3V (2V nom.)", "LTST-C281KGKT-5A", "Lite-On Inc."),
