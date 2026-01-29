@@ -221,11 +221,6 @@ Mipi = interface(
     DATA3=DiffPair(impedance=Impedance(100)),
 )
 
-
-def NotConnected(name: str = "NC") -> Net:
-    return Net(name)
-
-
 OneWire = interface(
     DQ=Net(),
 )
