@@ -12,6 +12,8 @@ Ground = builtin.net_type(
     voltage=field(VoltageRange, default=VoltageRange("0V")),
 )
 
+NotConnected = builtin.net_type("NotConnected")
+
 Analog = builtin.net_type("Analog")
 Pwm = builtin.net_type("Pwm")
 Gpio = builtin.net_type("Gpio")
@@ -218,11 +220,6 @@ Mipi = interface(
     DATA2=DiffPair(impedance=Impedance(100)),
     DATA3=DiffPair(impedance=Impedance(100)),
 )
-
-
-def NotConnected(name: str = "NC") -> Net:
-    return Net(name)
-
 
 OneWire = interface(
     DQ=Net(),
