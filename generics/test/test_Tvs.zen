@@ -1,12 +1,13 @@
 """Comprehensive test for TVS Diode component."""
 
+load("../../units.zen", "Power", "Voltage")
+Watts = Power
 load("../../interfaces.zen", "Power", "Ground")
-load("../../units.zen", "PowerRange", "Voltage", "VoltageRange")
 load("../../bom/match_generics.zen", "assign_house_parts")
 
 Tvs = Module("../Tvs.zen")
 
-vcc = Power("VCC", voltage=VoltageRange("3.3V"))
+vcc = Power("VCC", voltage=Voltage("3.3V"))
 gnd = Ground("GND")
 
 # Test all Package values
@@ -16,8 +17,8 @@ for package in Tvs.Package.values():
     Tvs(
         name=name,
         package=package,
-        peak_pulse_power=PowerRange("800 to 1200W"),
-        reverse_clamping_voltage=VoltageRange("9 to 12V"),
+        peak_pulse_power=Watts("800 to 1200W"),
+        reverse_clamping_voltage=Voltage("9 to 12V"),
         A=gnd,
         K=vcc,
     )
@@ -27,9 +28,9 @@ for package in Tvs.Package.values():
 Tvs(
     name="D_TVS_3V3",
     package="DO-219AB",
-    peak_pulse_power=PowerRange("400 to 600W"),
-    reverse_standoff_voltage=VoltageRange("3.3V"),
-    reverse_clamping_voltage=VoltageRange("6 to 8V"),
+    peak_pulse_power=Watts("400 to 600W"),
+    reverse_standoff_voltage=Voltage("3.3V"),
+    reverse_clamping_voltage=Voltage("6 to 8V"),
     A=gnd,
     K=vcc,
 )
@@ -38,9 +39,9 @@ Tvs(
 Tvs(
     name="D_TVS_12V",
     package="DO-214AC",
-    peak_pulse_power=PowerRange("1200 to 1500W"),
-    reverse_standoff_voltage=VoltageRange("12V"),
-    reverse_clamping_voltage=VoltageRange("19 to 21V"),
+    peak_pulse_power=Watts("1200 to 1500W"),
+    reverse_standoff_voltage=Voltage("12V"),
+    reverse_clamping_voltage=Voltage("19 to 21V"),
     A=gnd,
     K=vcc,
 )

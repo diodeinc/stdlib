@@ -1,4 +1,5 @@
-load("../units.zen", "PowerRange", "Voltage", "VoltageRange", "CurrentRange")
+load("../units.zen", "Power", "Voltage")
+Watts = Power
 load("../interfaces.zen", "Power", "Ground")
 load("../utils.zen", "format_value")
 
@@ -10,21 +11,21 @@ load("../utils.zen", "format_value")
 Package = enum("DO-219AB", "DO-214AC", "DO-214AA", "DO-214AB")
 Direction = enum("Unidirectional", "Bidirectional")
 
-USB_5V_STANDOFF_VOLTAGE = VoltageRange("5 to 6V")
+USB_5V_STANDOFF_VOLTAGE = Voltage("5 to 6V")
 
 package = config("package", Package, default=Package("DO-219AB"))
 direction = config("direction", Direction, default=Direction("Unidirectional"))
 # 8/20 μs waveform acc. IEC 61000-4-5
-reverse_standoff_voltage = config("reverse_standoff_voltage", VoltageRange, default=USB_5V_STANDOFF_VOLTAGE)
-reverse_clamping_voltage = config("reverse_clamping_voltage", VoltageRange, optional=True)
-peak_pulse_power = config("peak_pulse_power", PowerRange, optional=True)
+reverse_standoff_voltage = config("reverse_standoff_voltage", Voltage, default=USB_5V_STANDOFF_VOLTAGE)
+reverse_clamping_voltage = config("reverse_clamping_voltage", Voltage, optional=True)
+peak_pulse_power = config("peak_pulse_power", Watts, optional=True)
 
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 
 if direction == Direction("Unidirectional"):
     A = io("A", Ground)
-    K = io("K", Power, default=Power("VCC", voltage=VoltageRange("5V")))
+    K = io("K", Power, default=Power("VCC", voltage=Voltage("5V")))
 else:
     A = io("A", Net)
     K = io("K", Net)

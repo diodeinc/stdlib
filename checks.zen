@@ -1,16 +1,16 @@
-load("units.zen", "VoltageRange")
+load("units.zen", "Voltage")
 load("interfaces.zen", "Power")
 
 Severity = enum("error", "warning", "advice")
 
 
 def voltage_within(
-    within: str | VoltageRange, name: str = "voltage_check", severity: Severity = Severity("error")
+    within: str | Voltage, name: str = "voltage_check", severity: Severity = Severity("error")
 ) -> typing.Callable:
-    def ensure_voltage_within(_module, net_name: str, voltage: VoltageRange, within: str | VoltageRange):
-        within = VoltageRange(within)
+    def ensure_voltage_within(_module, net_name: str, voltage: Voltage, within: str | Voltage):
+        within = Voltage(within)
         # drop nominal in within:
-        within = VoltageRange(min=within.min, max=within.max)
+        within = Voltage(min=within.min, max=within.max)
         # ensure voltage is within within
         err_msg = "Voltage range " + str(voltage) + " of " + net_name + " is not within " + str(within)
         check(voltage in within, err_msg)

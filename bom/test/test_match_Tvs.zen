@@ -2,13 +2,13 @@
 
 load("../../generics/Tvs.zen", "Package", "Direction")
 load("../../interfaces.zen", "Power", "Ground")
-load("../../units.zen", "VoltageRange")
+load("../../units.zen", "Voltage")
 load("../match_generics.zen", "assign_house_parts")
 
 Tvs = Module("../../generics/Tvs.zen")
 
 gnd = Ground("GND")
-vcc = Power("VCC", voltage=VoltageRange("3.3V"))
+vcc = Power("VCC", voltage=Voltage("3.3V"))
 
 # Test cases: (direction, package, reverse_standoff_voltage)
 TVS_TEST_CASES = [
@@ -39,7 +39,7 @@ for id, (direction, package, standoff_voltage) in enumerate(TVS_TEST_CASES):
             name=f"D{id}",
             direction=direction,
             package=package,
-            reverse_standoff_voltage=VoltageRange(standoff_voltage),
+            reverse_standoff_voltage=Voltage(standoff_voltage),
             A=gnd,
             K=vcc,
         )
@@ -48,7 +48,7 @@ for id, (direction, package, standoff_voltage) in enumerate(TVS_TEST_CASES):
             name=f"D{id}",
             direction=direction,
             package=package,
-            reverse_standoff_voltage=VoltageRange(standoff_voltage),
+            reverse_standoff_voltage=Voltage(standoff_voltage),
             A=Net(f"LINE_A_{id}"),
             K=Net(f"LINE_B_{id}"),
         )
