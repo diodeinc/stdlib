@@ -34,13 +34,20 @@ properties = {
     "value": format_value(bjt_type, hfe, ic_max, ft),
     "package": package,
     "bjt_type": bjt_type,
-    "hfe": hfe,
-    "vceo": vceo,
-    "vebo": vebo,
-    "vcbo": vcbo,
-    "ic_max": ic_max,
-    "ft": ft,
 }
+
+if hfe:
+    properties["hfe"] = hfe
+if vceo:
+    properties["vceo"] = vceo
+if vebo:
+    properties["vebo"] = vebo
+if vcbo:
+    properties["vcbo"] = vcbo
+if ic_max:
+    properties["ic_max"] = ic_max
+if ft:
+    properties["ft"] = ft
 
 # -----------------------------------------------------------------------------
 # IO ports

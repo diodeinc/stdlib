@@ -30,9 +30,12 @@ properties = {
     "value": format_value("LED", color.value.upper(), forward_voltage),
     "package": package,
     "color": color,
-    "forward_voltage": forward_voltage,
-    "forward_current": forward_current,
 }
+
+if forward_voltage:
+    properties["forward_voltage"] = forward_voltage
+if forward_current:
+    properties["forward_current"] = forward_current
 
 # -----------------------------------------------------------------------------
 # IO ports

@@ -39,9 +39,10 @@ properties = {
     "value": format_value(value, voltage, power),
     "package": package,
     "resistance": value,
-    "voltage": voltage,
 }
 
+if voltage:
+    properties["voltage"] = voltage
 if power:
     properties["power"] = power
 

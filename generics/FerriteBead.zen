@@ -42,10 +42,14 @@ properties = {
     "value": format_value(impedance, current, frequency),
     "package": package,
     "impedance": impedance,
-    "dcr": dcr,
-    "frequency": frequency,
-    "current": current,
 }
+
+if dcr:
+    properties["dcr"] = dcr
+if frequency:
+    properties["frequency"] = frequency
+if current:
+    properties["current"] = current
 
 # -----------------------------------------------------------------------------
 # IO ports

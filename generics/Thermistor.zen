@@ -32,8 +32,11 @@ properties = {
     "value": format_value(value, temperature_coefficient, voltage),
     "package": package,
     "resistance": value,
-    "voltage": voltage,
 }
+
+if voltage:
+    properties["voltage"] = voltage
+
 # -----------------------------------------------------------------------------
 # IO ports
 # -----------------------------------------------------------------------------

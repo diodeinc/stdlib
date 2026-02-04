@@ -31,10 +31,14 @@ properties = {
     "value": format_value(channel, "TYPE"),
     "package": package,
     "channel": channel,
-    "vgs_max": vgs_max,
-    "vds_max": vds_max,
-    "id_max": id_max,
 }
+
+if vgs_max:
+    properties["vgs_max"] = vgs_max
+if vds_max:
+    properties["vds_max"] = vds_max
+if id_max:
+    properties["id_max"] = id_max
 
 # -----------------------------------------------------------------------------
 # IO ports
