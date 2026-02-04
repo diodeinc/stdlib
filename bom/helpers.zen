@@ -3,12 +3,10 @@
 load("../utils.zen", "e96", "e24")
 load(
     "../units.zen",
-    "ResistanceRange",
+    "Resistance",
     "Voltage",
-    "VoltageRange",
     "Power",
     "Capacitance",
-    "Resistance",
     "Impedance",
     "Current",
     "Frequency",
@@ -188,7 +186,7 @@ def resistor_series(manufacturer, series, resistance_range, max_v, power, tolera
     return {
         "manufacturer": manufacturer,
         "series": series,
-        "resistance_range": ResistanceRange(resistance_range),
+        "resistance_range": Resistance(resistance_range),
         "max_v": Voltage(max_v),
         "power": Power(power),
         "tolerance": tolerance,
@@ -321,7 +319,7 @@ def led(color: str, voltage_range: str, mpn: str, manufacturer: str) -> dict:
     """
     return {
         "color": color,
-        "forward_voltage": VoltageRange(voltage_range),
+        "forward_voltage": Voltage(voltage_range),
         "mpn": mpn,
         "manufacturer": manufacturer,
     }
@@ -390,14 +388,10 @@ def tvs(standoff_voltage: str, clamping_voltage: str, peak_pulse_power: str, mpn
     """
     # Use ranges for all values to support flexible matching
     standoff_val = (
-        VoltageRange(standoff_voltage)
-        if "to" in standoff_voltage
-        else VoltageRange(standoff_voltage + " to " + standoff_voltage)
+        Voltage(standoff_voltage) if "to" in standoff_voltage else Voltage(standoff_voltage + " to " + standoff_voltage)
     )
     clamping_val = (
-        VoltageRange(clamping_voltage)
-        if "to" in clamping_voltage
-        else VoltageRange(clamping_voltage + " to " + clamping_voltage)
+        Voltage(clamping_voltage) if "to" in clamping_voltage else Voltage(clamping_voltage + " to " + clamping_voltage)
     )
     power_val = Power(peak_pulse_power)
 

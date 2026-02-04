@@ -7,9 +7,7 @@ load("manufactuers/wurth_electronik.zen", "WURTH_ELEKTRONIK_WR_PHD")
 load(
     "../units.zen",
     "Voltage",
-    "VoltageRange",
     "Resistance",
-    "ResistanceRange",
     "Capacitance",
     "Power",
     "Current",
