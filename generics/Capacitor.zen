@@ -52,10 +52,14 @@ properties = {
     "value": format_value(value, voltage, dielectric, esr),
     "package": package,
     "capacitance": value,
-    "voltage": voltage,
-    "dielectric": dielectric,
-    "esr": esr,
 }
+
+if voltage:
+    properties["voltage"] = voltage
+if dielectric:
+    properties["dielectric"] = dielectric
+if esr:
+    properties["esr"] = esr
 
 # -----------------------------------------------------------------------------
 # Helper functions

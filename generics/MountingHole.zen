@@ -21,9 +21,12 @@ plating = config("plating", Plating, default=Plating("TopBottom"), optional=True
 properties = {
     "value": format_value(diameter, standard, plating),
     "diameter": diameter,
-    "standard": standard,
-    "plating": plating,
 }
+
+if standard:
+    properties["standard"] = standard
+if plating:
+    properties["plating"] = plating
 
 # -----------------------------------------------------------------------------
 # IO ports

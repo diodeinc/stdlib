@@ -41,8 +41,10 @@ properties = {
     "value": format_value(frequency, load_capacitance),
     "package": package,
     "frequency": frequency,
-    "load_capacitance": load_capacitance,
 }
+
+if load_capacitance:
+    properties["load_capacitance"] = load_capacitance
 
 # -----------------------------------------------------------------------------
 # IO ports

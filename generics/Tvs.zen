@@ -73,6 +73,19 @@ def _pins(direction: Direction):
     return {"A": A, "K": K}
 
 
+properties = {
+    "value": format_value(reverse_standoff_voltage, "TVS Diode", peak_pulse_power),
+    "package": package,
+    "direction": direction,
+    "reverse_standoff_voltage": reverse_standoff_voltage,
+}
+
+if peak_pulse_power:
+    properties["peak_pulse_power"] = peak_pulse_power
+if reverse_clamping_voltage:
+    properties["reverse_clamping_voltage"] = reverse_clamping_voltage
+
+
 Component(
     name="D",
     mpn=mpn,
@@ -80,14 +93,7 @@ Component(
     prefix="D",
     symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name=_symbol_name(direction)),
     footprint=File(_footprint(package)),
-    properties={
-        "value": format_value(reverse_standoff_voltage, "TVS Diode", peak_pulse_power),
-        "package": package,
-        "direction": direction,
-        "peak_pulse_power": peak_pulse_power,
-        "reverse_standoff_voltage": reverse_standoff_voltage,
-        "reverse_clamping_voltage": reverse_clamping_voltage,
-    },
+    properties=properties,
     type="tvs",
     pins=_pins(direction),
 )

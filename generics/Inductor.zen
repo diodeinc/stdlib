@@ -31,8 +31,10 @@ properties = {
     "value": format_value(value, current),
     "package": package,
     "inductance": value,
-    "current": current,
 }
+
+if current:
+    properties["current"] = current
 
 # -----------------------------------------------------------------------------
 # IO ports

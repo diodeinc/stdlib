@@ -50,11 +50,16 @@ pin_count = int(variant.value.split("_")[0]) if variant else pin_count_legacy
 # Properties – combined and normalized
 properties = {
     "value": " ",
-    "variant": variant if variant else None,
-    "mount_type": mount_type if not variant else None,
-    "pad_size": pad_size if not variant else None,
     "pin_count": pin_count,
 }
+
+if variant:
+    properties["variant"] = variant
+else:
+    if mount_type:
+        properties["mount_type"] = mount_type
+    if pad_size:
+        properties["pad_size"] = pad_size
 
 # -----------------------------------------------------------------------------
 # IO ports
