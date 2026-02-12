@@ -7,68 +7,90 @@ load("../../bom/match_generics.zen", "assign_house_parts")
 
 Tvs = Module("../Tvs.zen")
 
-vcc = Power("VCC", voltage=Voltage("3.3V"))
 gnd = Ground("GND")
 
-# Test all Package values
-for package in Tvs.Package.values():
-    name = "D_TVS_" + str(package)
-    # suppress: bom.match_generic
+# Unidirectional house parts: (package, standoff, clamping)
+_UNI_PARTS = [
+    # DO-219AB
+    ("DO-219AB", "3.3V", "8.9V"),
+    ("DO-219AB", "5V", "9.2V"),
+    ("DO-219AB", "20V", "32.4V"),
+    ("DO-219AB", "24V", "38.9V"),
+    # DO-214AC
+    ("DO-214AC", "5V", "9.2V"),
+    ("DO-214AC", "12V", "19.9V"),
+    ("DO-214AC", "20V", "32.4V"),
+    ("DO-214AC", "24V", "38.9V"),
+    ("DO-214AC", "33V", "53.3V"),
+    # DO-214AA
+    ("DO-214AA", "5V", "9.2V"),
+    ("DO-214AA", "12V", "19.9V"),
+    ("DO-214AA", "20V", "32.4V"),
+    ("DO-214AA", "24V", "38.9V"),
+    ("DO-214AA", "28V", "45.5V"),
+    ("DO-214AA", "33V", "53.3V"),
+    # DO-214AB
+    ("DO-214AB", "5V", "9.2V"),
+    ("DO-214AB", "12V", "19.9V"),
+    ("DO-214AB", "20V", "32.4V"),
+    ("DO-214AB", "24V", "38.9V"),
+    ("DO-214AB", "33V", "53.3V"),
+    ("DO-214AB", "48V", "77.4V"),
+    ("DO-214AB", "60V", "96.8V"),
+]
+
+
+def _sanitize(s):
+    return s.replace("-", "_").replace(".", "p")
+
+
+for pkg, standoff, clamp in _UNI_PARTS:
+    name = "D_TVS_UNI_" + _sanitize(pkg) + "_" + _sanitize(standoff)
+    vcc = Power(name + "_VCC", voltage=Voltage(standoff))
     Tvs(
         name=name,
-        package=package,
-        peak_pulse_power=Watts("800 to 1200W"),
-        reverse_clamping_voltage=Voltage("9 to 12V"),
+        package=pkg,
+        direction="Unidirectional",
+        reverse_standoff_voltage=Voltage(standoff),
+        reverse_clamping_voltage=Voltage(clamp),
         A=gnd,
         K=vcc,
     )
 
-# Test with different voltage ratings
-# suppress: bom.match_generic
-Tvs(
-    name="D_TVS_3V3",
-    package="DO-219AB",
-    peak_pulse_power=Watts("400 to 600W"),
-    reverse_standoff_voltage=Voltage("3.3V"),
-    reverse_clamping_voltage=Voltage("6 to 8V"),
-    A=gnd,
-    K=vcc,
-)
+# Bidirectional house parts: (package, standoff, clamping)
+_BI_PARTS = [
+    # DO-214AC
+    ("DO-214AC", "5V", "9.2V"),
+    ("DO-214AC", "12V", "19.9V"),
+    ("DO-214AC", "15V", "24.4V"),
+    ("DO-214AC", "24V", "38.9V"),
+    ("DO-214AC", "33V", "53.3V"),
+    ("DO-214AC", "60V", "96.8V"),
+    # DO-214AA
+    ("DO-214AA", "5V", "9.2V"),
+    ("DO-214AA", "12V", "19.9V"),
+    ("DO-214AA", "24V", "38.9V"),
+    ("DO-214AA", "33V", "53.3V"),
+    ("DO-214AA", "40V", "64.5V"),
+    # DO-214AB
+    ("DO-214AB", "5V", "9.2V"),
+    ("DO-214AB", "12V", "19.9V"),
+    ("DO-214AB", "24V", "38.9V"),
+    ("DO-214AB", "33V", "53.3V"),
+    ("DO-214AB", "48V", "77.4V"),
+    ("DO-214AB", "60V", "96.8V"),
+]
 
-# suppress: bom.match_generic
-Tvs(
-    name="D_TVS_12V",
-    package="DO-214AC",
-    peak_pulse_power=Watts("1200 to 1500W"),
-    reverse_standoff_voltage=Voltage("12V"),
-    reverse_clamping_voltage=Voltage("19 to 21V"),
-    A=gnd,
-    K=vcc,
-)
-
-# Test Bidirectional
-# suppress: bom.match_generic
-Tvs(
-    name="D_TVS_Bi",
-    package="DO-214AB",
-    direction="Bidirectional",
-    A=gnd,
-    K=vcc,
-)
-
-# Test Optional Parameters (Minimal)
-# Should work without reverse_clamping_voltage or peak_pulse_power
-Tvs(name="D_TVS_Minimal", A=gnd, K=vcc)
-
-# Test Bidirectional with generic Nets
-sig_p = Net("SIG_P")
-sig_n = Net("SIG_N")
-# suppress: bom.match_generic
-Tvs(
-    name="D_TVS_Bi_Generic",
-    direction="Bidirectional",
-    A=sig_p,
-    K=sig_n,
-)
+for pkg, standoff, clamp in _BI_PARTS:
+    name = "D_TVS_BI_" + _sanitize(pkg) + "_" + _sanitize(standoff)
+    Tvs(
+        name=name,
+        package=pkg,
+        direction="Bidirectional",
+        reverse_standoff_voltage=Voltage(standoff),
+        reverse_clamping_voltage=Voltage(clamp),
+        A=Net(name + "_A"),
+        K=Net(name + "_K"),
+    )
 
 builtin.add_component_modifier(assign_house_parts)
