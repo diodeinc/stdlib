@@ -1,4 +1,3 @@
-load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -22,8 +21,8 @@ color = config("color", Color)
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-forward_voltage = config_unit("forward_voltage", Voltage, optional=True)
-forward_current = config_unit("forward_current", Current, optional=True)
+forward_voltage = config("forward_voltage", Voltage, optional=True)
+forward_current = config("forward_current", Current, optional=True)
 
 # Properties – combined and normalized
 properties = {
