@@ -1,4 +1,3 @@
-load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Frequency", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -23,11 +22,11 @@ bjt_type = config("bjt_type", BjtType)
 # Optional
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 hfe = config("hfe", float, optional=True)
-vceo = config_unit("vceo", Voltage, optional=True)
-vebo = config_unit("vebo", Voltage, optional=True)
-vcbo = config_unit("vcbo", Voltage, optional=True)
-ic_max = config_unit("ic_max", Current, optional=True)
-ft = config_unit("ft", Frequency, optional=True)
+vceo = config("vceo", Voltage, optional=True)
+vebo = config("vebo", Voltage, optional=True)
+vcbo = config("vcbo", Voltage, optional=True)
+ic_max = config("ic_max", Current, optional=True)
+ft = config("ft", Frequency, optional=True)
 
 # Properties – combined and normalized
 properties = {

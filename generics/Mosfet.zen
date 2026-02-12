@@ -1,4 +1,3 @@
-load("../config.zen", "config_unit")
 load("../units.zen", "Current", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -22,9 +21,9 @@ channel = config("channel", MosfetChannel)
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-vgs_max = config_unit("vgs_max", Voltage, optional=True)
-vds_max = config_unit("vds_max", Voltage, optional=True)
-id_max = config_unit("id_max", Current, optional=True)
+vgs_max = config("vgs_max", Voltage, optional=True)
+vds_max = config("vds_max", Voltage, optional=True)
+id_max = config("id_max", Current, optional=True)
 
 # Properties – combined and normalized
 properties = {

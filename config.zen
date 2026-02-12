@@ -17,13 +17,8 @@ def config_unit(name, UnitType, optional=False, default=None, **kwargs):
     """
     unit_type = UnitType | None if optional else UnitType
     default = default or (None if optional else UnitType(value=0.0))
-
-    def convert_unit(x):
-        if x == None:
-            return None
-        return UnitType(x)
-
-    return config(name, unit_type, default=default, convert=convert_unit, optional=optional, **kwargs)
+    warn("config_unit() is deprecated; use config() instead")
+    return config(name, unit_type, default=default, optional=optional, **kwargs)
 
 
 def config_properties(
