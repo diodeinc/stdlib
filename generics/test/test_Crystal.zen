@@ -8,7 +8,14 @@ Crystal = Module("../Crystal.zen")
 for package in [package for package in Crystal.Package.values() if "2Pin" in str(package)]:
     for mount in Crystal.Mount.values():
         name = "Y_" + str(package) + "_" + str(mount)
-        Crystal(name=name, package=package, mount=mount, XIN=Net(name + "XIN"), XOUT=Net(name + "XOUT"))
+        Crystal(
+            name=name,
+            frequency="16MHz",
+            package=package,
+            mount=mount,
+            XIN=Net(name + "XIN"),
+            XOUT=Net(name + "XOUT"),
+        )
 
 # Crystals 4Pin
 for package in [package for package in Crystal.Package.values() if "4Pin" in str(package)]:
@@ -16,6 +23,7 @@ for package in [package for package in Crystal.Package.values() if "4Pin" in str
         name = "Y_" + str(package) + "_" + str(mount)
         Crystal(
             name=name,
+            frequency="16MHz",
             package=package,
             mount=mount,
             XIN=Net(name + "XIN"),
