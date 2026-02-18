@@ -36,12 +36,26 @@ Silkscreen = record(
     # Note: minimum_text_thickness is complex in KiCad API, not supported yet
 )
 
+# Solder mask constraints
+SolderMask = record(
+    clearance=field(float | None, None),  # Mask expansion / clearance from pads to mask opening
+    minimum_width=field(float | None, None),  # Minimum mask web width
+    to_copper_clearance=field(float | None, None),  # Minimum solder-mask to copper-feature clearance
+)
+
+# Zone defaults constraints
+Zones = record(
+    minimum_clearance=field(float | None, None),  # Default zone-to-copper clearance
+)
+
 # All design rule constraints grouped together
 Constraints = record(
     copper=field(Copper | None, None),
     holes=field(Holes | None, None),
     uvias=field(Uvias | None, None),
     silkscreen=field(Silkscreen | None, None),
+    solder_mask=field(SolderMask | None, None),
+    zones=field(Zones | None, None),
 )
 
 # Via dimensions for pre-defined sizes
@@ -210,6 +224,10 @@ def deep_merge(base, override):
                 return Uvias(**merged)
             elif type_name == "Silkscreen":
                 return Silkscreen(**merged)
+            elif type_name == "SolderMask":
+                return SolderMask(**merged)
+            elif type_name == "Zones":
+                return Zones(**merged)
             elif type_name == "ViaDimension":
                 return ViaDimension(**merged)
             elif type_name == "NetClass":
@@ -931,6 +949,14 @@ BASE_CONSTRAINTS = Constraints(
         minimum_item_clearance=0.1,  # Reasonable silkscreen clearance
         minimum_text_height=0.8,  # Reasonable minimum text height
     ),
+    solder_mask=SolderMask(
+        clearance=0.0,
+        minimum_width=0.0,
+        to_copper_clearance=0.0,
+    ),
+    zones=Zones(
+        minimum_clearance=0.15,
+    ),
 )
 
 # Heavy Copper Constraints (2oz copper)
@@ -953,6 +979,14 @@ BASE_CONSTRAINTS_2OZ = Constraints(
     silkscreen=Silkscreen(
         minimum_item_clearance=0.1,
         minimum_text_height=0.8,
+    ),
+    solder_mask=SolderMask(
+        clearance=0.0,
+        minimum_width=0.0,
+        to_copper_clearance=0.0,
+    ),
+    zones=Zones(
+        minimum_clearance=0.2,
     ),
 )
 
