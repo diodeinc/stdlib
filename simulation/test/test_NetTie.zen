@@ -63,7 +63,7 @@ V1 VCC GND DC 5V
   
   # Save the output to SVG
   set hcopydevtype = svg
-  hardcopy simulation/test/output/nettie.svg v(NET1) v(NET2) v(PROBE) title "NetTie Test - Voltage Division" xlabel "Input Voltage (V)" ylabel "Node Voltages (V)"
+  hardcopy output/nettie.svg v(NET1) v(NET2) v(PROBE) title "NetTie Test - Voltage Division" xlabel "Input Voltage (V)" ylabel "Node Voltages (V)"
 .endc
 """,
 )

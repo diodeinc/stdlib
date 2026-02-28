@@ -47,7 +47,7 @@ V4 INPUT_OFFSET GND DC 2
   set hcopydevtype = svg
   
   * Time domain plot of input and output
-  hardcopy simulation/test/output/sum.svg v(INPUT_SIGNAL) v(INPUT_OFFSET) v(PROBE) title "Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy output/sum.svg v(INPUT_SIGNAL) v(INPUT_OFFSET) v(PROBE) title "Sum - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc
 """,
 )

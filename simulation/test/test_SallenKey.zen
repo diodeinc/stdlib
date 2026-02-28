@@ -48,10 +48,10 @@ V3 INPUT GND DC 0.9 AC 0.9
   set hcopydevtype = svg
   
   * AC magnitude response plot
-  hardcopy simulation/test/output/sallenkey_magnitude.svg vdb(PROBE) title "Sallen Key AC Response" xlabel Frequency ylabel "Magnitude (dB)"
+  hardcopy output/sallenkey_magnitude.svg vdb(PROBE) title "Sallen Key AC Response" xlabel Frequency ylabel "Magnitude (dB)"
   
   * AC phase response plot
-  hardcopy simulation/test/output/sallenkey_phase.svg vp(PROBE) title "Sallen Key Phase Response" xlabel Frequency ylabel "Phase (degrees)"
+  hardcopy output/sallenkey_phase.svg vp(PROBE) title "Sallen Key Phase Response" xlabel Frequency ylabel "Phase (degrees)"
 .endc
 """,
 )
