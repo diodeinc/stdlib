@@ -43,11 +43,11 @@ OperationalAmplifier(
 
 Simulation(
     name="test_LevelShifter",
-    setup="""
-V1 VP GND DC 12V 
-V2 VN GND DC -12V
+    setup=f"""
+V1 {VP} {GND} DC 12V 
+V2 {VN} {GND} DC -12V
 
-V3 INPUT GND DC 1 SIN(0 1V 1000)
+V3 {INPUT_SIGNAL} {GND} DC 1 SIN(0 1V 1000)
 
 .control
   * Time domain analysis - show 5 cycles of 1kHz signal
@@ -57,7 +57,7 @@ V3 INPUT GND DC 1 SIN(0 1V 1000)
   set hcopydevtype = svg
   
   * Time domain plot of input and output
-  hardcopy output/levelshifter.svg v(INPUT) v(VOFFSET) v(PROBE) title "Level Shifter - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy output/levelshifter.svg v({INPUT_SIGNAL}) v({VOFFSET}) v({PROBE}) title "Level Shifter - Time Domain Response" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc
 """,
 )

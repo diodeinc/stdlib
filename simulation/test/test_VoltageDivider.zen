@@ -27,15 +27,15 @@ Resistor(
 
 Simulation(
     name="test_VoltageDivider",
-    setup="""
-V1 VCC GND SIN(0 5V 1kHz)
+    setup=f"""
+V1 {VCC} {GND} SIN(0 5V 1kHz)
 
 .control
   tran 0.001m 5m
   
   * Save the output to SVG
   set hcopydevtype = svg
-  hardcopy output/R_DIV.svg v(VCC) v(PROBE) title "Resistor divider" ylabel Volts
+  hardcopy output/R_DIV.svg v({VCC}) v({PROBE}) title "Resistor divider" ylabel Volts
 .endc
 """,
 )

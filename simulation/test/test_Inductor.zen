@@ -31,10 +31,10 @@ Inductor(
 
 Simulation(
     name="test_Inductor",
-    setup="""
+    setup=f"""
 # Switching voltage source to demonstrate inductor behavior
 # Square wave that switches between 0V and 5V to show exponential current response
-V VCC GND PULSE(0 5V 0 10n 10n 1u 2u)
+V {VCC} {GND} PULSE(0 5V 0 10n 10n 1u 2u)
 
 
 .control
@@ -45,7 +45,7 @@ V VCC GND PULSE(0 5V 0 10n 10n 1u 2u)
   
   # Save the output to SVG
   set hcopydevtype = svg
-  hardcopy output/inductor.svg v(VCC) v(PROBE) title "Inductor Response to Switching Voltage" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy output/inductor.svg v({VCC}) v({PROBE}) title "Inductor Response to Switching Voltage" xlabel "Time (s)" ylabel "Voltage (V)"
 .endc
 """,
 )
