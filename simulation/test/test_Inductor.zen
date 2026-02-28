@@ -1,6 +1,7 @@
 """Test for Spice model of Inductor with switching voltage to demonstrate inductor effects."""
 
 load("../../interfaces.zen", "Ground", "Power")
+load("../../properties.zen", "Simulation")
 
 Inductor = Module("../../generics/Inductor.zen")
 Resistor = Module("../../generics/Resistor.zen")
@@ -26,6 +27,27 @@ Inductor(
     package="0603",
     P1=PROBE,
     P2=GND,
+)
+
+Simulation(
+    name="test_Inductor",
+    setup="""
+# Switching voltage source to demonstrate inductor behavior
+# Square wave that switches between 0V and 5V to show exponential current response
+V VCC GND PULSE(0 5V 0 10n 10n 1u 2u)
+
+
+.control
+  # Transient analysis - show several switching cycles
+  # Time constant τ = L/R = 1mH/1kΩ = 1µs
+  # Show ~10 time constants to see full exponential behavior
+  tran 1u 10u
+  
+  # Save the output to SVG
+  set hcopydevtype = svg
+  hardcopy simulation/test/output/inductor.svg v(VCC) v(PROBE) title "Inductor Response to Switching Voltage" xlabel "Time (s)" ylabel "Voltage (V)"
+.endc
+""",
 )
 
 # pcb:sch L1.L x=202.1991 y=-1.0000 rot=0

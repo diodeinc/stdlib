@@ -19,6 +19,7 @@ def Properties(user_properties: dict | None, base_properties: dict) -> dict:
     Returns:
         dict: The merged properties.
     """
+    warn("Properties is deprecated. Use properties dictionary directly.")
     properties = {}
 
     def to_string(value):
@@ -75,3 +76,10 @@ def Schematics(name: str, collapse: bool | None = None) -> None:
 
     if collapse:
         add_property("collapse", collapse)
+
+
+def Simulation(name: str, setup: str | None = None) -> None:
+    """Helper function to create a simulations object"""
+
+    builtin.set_sim_setup(content=setup)
+        
