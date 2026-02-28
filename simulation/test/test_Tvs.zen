@@ -1,0 +1,48 @@
+"""Test for SPICE model of TVS diode - demonstrates clamping behavior."""
+
+load("../../interfaces.zen", "Ground", "Power")
+load("../../units.zen", "Voltage")
+load("../../properties.zen", "Simulation")
+
+Tvs = Module("../../generics/Tvs.zen")
+Resistor = Module("../../generics/Resistor.zen")
+
+VIN = Power("VIN")
+PROBE = Power("PROBE", voltage=Voltage("5V"))
+GND = Ground("GND")
+
+# Unidirectional TVS diode for 5V rail protection
+Tvs(
+    name="D1",
+    package="DO-219AB",
+    direction="Unidirectional",
+    reverse_standoff_voltage="5 to 6V",
+    A=GND,
+    K=PROBE,
+)
+
+# Series resistor to limit current
+Resistor(
+    name="R1",
+    value="100Ohm",
+    package="0603",
+    P1=VIN,
+    P2=PROBE,
+)
+
+Simulation(
+    name="test_Tvs",
+    setup=f"""
+# Test TVS diode SPICE model - voltage clamping behavior
+# Ramp up voltage to show clamping at breakdown
+V1 {VIN} {GND} DC 0
+
+.control
+  # DC sweep to show clamping characteristic
+  dc V1 0 15 0.05
+
+  set hcopydevtype = svg
+  hardcopy output/tvs_clamping.svg v({VIN}) v({PROBE}) title "TVS Diode Clamping" xlabel "Input Voltage (V)" ylabel "Voltage (V)"
+.endc
+""",
+)

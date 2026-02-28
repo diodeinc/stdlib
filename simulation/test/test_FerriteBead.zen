@@ -1,0 +1,45 @@
+"""Test for SPICE model of Ferrite Bead - demonstrates impedance in a filter circuit."""
+
+load("../../interfaces.zen", "Ground", "Power")
+load("../../properties.zen", "Simulation")
+
+FerriteBead = Module("../../generics/FerriteBead.zen")
+Capacitor = Module("../../generics/Capacitor.zen")
+
+VIN = Power("VIN")
+PROBE = Net("PROBE")
+GND = Ground("GND")
+
+# Ferrite bead in a simple LC pi-filter configuration
+FerriteBead(
+    name="FB1",
+    package="0603",
+    value="220Ohm",
+    P1=VIN,
+    P2=PROBE,
+)
+
+# Decoupling capacitor on output
+Capacitor(
+    name="C1",
+    value="100nF",
+    package="0402",
+    P1=PROBE,
+    P2=GND,
+)
+
+Simulation(
+    name="test_FerriteBead",
+    setup=f"""
+# Test Ferrite Bead SPICE model - LC filter frequency response
+V1 {VIN} {GND} AC 1
+
+.control
+  # AC sweep to show filter response
+  ac dec 100 1k 1g
+
+  set hcopydevtype = svg
+  hardcopy output/ferritebead.svg vdb({PROBE}) title "Ferrite Bead Filter Response" xlabel "Frequency (Hz)" ylabel "Magnitude (dB)"
+.endc
+""",
+)

@@ -1,0 +1,50 @@
+"""Test for SPICE model of Thermistor - demonstrates voltage divider with thermistor."""
+
+load("../../interfaces.zen", "Ground", "Power")
+load("../../properties.zen", "Simulation")
+
+Thermistor = Module("../../generics/Thermistor.zen")
+Resistor = Module("../../generics/Resistor.zen")
+
+VCC = Power("VCC")
+PROBE = Net("PROBE")
+GND = Ground("GND")
+
+# 10k NTC thermistor in voltage divider (typical temperature sensing circuit)
+Thermistor(
+    name="TH1",
+    package="0603",
+    value="10kOhm",
+    temperature_coefficient="NTC",
+    P1=VCC,
+    P2=PROBE,
+)
+
+# Fixed reference resistor
+Resistor(
+    name="R1",
+    value="10kOhm",
+    package="0603",
+    P1=PROBE,
+    P2=GND,
+)
+
+Simulation(
+    name="test_Thermistor",
+    setup=f"""
+# Test Thermistor SPICE model - voltage divider DC operating point
+V1 {VCC} {GND} DC 3.3V
+
+.control
+  # DC operating point - at nominal 25C the divider should read ~1.65V
+  op
+  print v({PROBE})
+
+  # DC sweep to verify linearity of divider
+  dc V1 0 5 0.1
+
+  set hcopydevtype = svg
+  hardcopy output/thermistor.svg v({PROBE}) title "Thermistor Voltage Divider" xlabel "Supply Voltage (V)" ylabel "Output Voltage (V)"
+.endc
+""",
+)

@@ -1,0 +1,48 @@
+"""Test for SPICE model of MOSFET - demonstrates N-channel common-source amplifier."""
+
+load("../../interfaces.zen", "Ground", "Power")
+load("../../properties.zen", "Simulation")
+
+Mosfet = Module("../../generics/Mosfet.zen")
+Resistor = Module("../../generics/Resistor.zen")
+
+VCC = Power("VCC")
+INPUT = Net("INPUT")
+PROBE = Net("PROBE")
+GND = Ground("GND")
+
+# N-channel MOSFET in common-source configuration
+Mosfet(
+    name="M1",
+    package="SOT-23-3",
+    channel="N",
+    G=INPUT,
+    D=PROBE,
+    S=GND,
+)
+
+# Drain load resistor
+Resistor(
+    name="RD",
+    value="4.7kOhm",
+    package="0603",
+    P1=VCC,
+    P2=PROBE,
+)
+
+Simulation(
+    name="test_Mosfet",
+    setup=f"""
+# Test MOSFET SPICE model - NMOS common-source with gate voltage sweep
+V1 {VCC} {GND} DC 5V
+V2 {INPUT} {GND} DC 0
+
+.control
+  # DC sweep of gate voltage to show transfer characteristic
+  dc V2 0 5 0.05
+
+  set hcopydevtype = svg
+  hardcopy output/mosfet_transfer.svg v({PROBE}) title "NMOS Common-Source Transfer Curve" xlabel "V_GS (V)" ylabel "V_DS (V)"
+.endc
+""",
+)
