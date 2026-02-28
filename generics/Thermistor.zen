@@ -102,6 +102,12 @@ Component(
         "P1": P1,
         "P2": P2,
     },
+    spice_model=SpiceModel(
+        "../simulation/Thermistor.lib",
+        "TH",
+        nets=[P1, P2],
+        args={"RVAL": str(value.value)},
+    ),
     properties=properties,
     type="thermistor",
 )

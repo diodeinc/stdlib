@@ -86,6 +86,26 @@ if reverse_clamping_voltage:
     properties["reverse_clamping_voltage"] = reverse_clamping_voltage
 
 
+def _spice_subcircuit_name(direction: Direction):
+    if direction == Direction("Bidirectional"):
+        return "TVS_Bi"
+    return "TVS_Uni"
+
+
+def _spice_args(reverse_standoff_voltage, reverse_clamping_voltage):
+    bv = "6.4"
+    if reverse_clamping_voltage:
+        bv = str(reverse_clamping_voltage.value)
+    elif reverse_standoff_voltage:
+        bv = str(reverse_standoff_voltage.value * 1.1)
+    return {
+        "BV": bv,
+        "IBV": "10m",
+        "IS": "1e-14",
+        "RS": "5m",
+    }
+
+
 Component(
     name="D",
     mpn=mpn,
@@ -93,6 +113,12 @@ Component(
     prefix="D",
     symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name=_symbol_name(direction)),
     footprint=File(_footprint(package)),
+    spice_model=SpiceModel(
+        "../simulation/Tvs.lib",
+        _spice_subcircuit_name(direction),
+        nets=[A, K],
+        args=_spice_args(reverse_standoff_voltage, reverse_clamping_voltage),
+    ),
     properties=properties,
     type="tvs",
     pins=_pins(direction),

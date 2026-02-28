@@ -81,6 +81,36 @@ def _symbol(channel: MosfetChannel):
     return symbols[channel]
 
 
+def _spice_subcircuit_name(channel: MosfetChannel):
+    subcircuits = {
+        MosfetChannel("N"): "NMOS",
+        MosfetChannel("P"): "PMOS",
+    }
+    return subcircuits[channel]
+
+
+def _spice_args(channel: MosfetChannel):
+    if channel == MosfetChannel("P"):
+        return {
+            "VTH": "-1.5",
+            "KP": "60u",
+            "RD": "0.5",
+            "RS": "0.5",
+            "CBD": "5p",
+            "CBS": "5p",
+            "LAMBDA": "0.01",
+        }
+    return {
+        "VTH": "1.5",
+        "KP": "120u",
+        "RD": "0.5",
+        "RS": "0.5",
+        "CBD": "5p",
+        "CBS": "5p",
+        "LAMBDA": "0.01",
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -99,6 +129,12 @@ Component(
         "D": D,
         "S": S,
     },
+    spice_model=SpiceModel(
+        "../simulation/Mosfet.lib",
+        _spice_subcircuit_name(channel),
+        nets=[G, D, S],
+        args=_spice_args(channel),
+    ),
     properties=properties,
     type="mosfet",
 )

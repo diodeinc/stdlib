@@ -89,6 +89,29 @@ def _symbol(bjt_type: BjtType):
     return symbols[bjt_type]
 
 
+def _spice_subcircuit_name(bjt_type: BjtType):
+    subcircuits = {
+        BjtType("NPN"): "NPN",
+        BjtType("PNP"): "PNP",
+    }
+    return subcircuits[bjt_type]
+
+
+def _spice_args(bjt_type: BjtType, hfe):
+    args = {
+        "BF": str(hfe) if hfe else "100",
+        "IS": "1e-14",
+        "NF": "1.0",
+        "VAF": "100",
+        "RB": "10",
+        "RC": "1",
+        "RE": "0.5",
+        "CJE": "2p",
+        "CJC": "1p",
+    }
+    return args
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -105,6 +128,12 @@ Component(
         "C": C,
         "E": E,
     },
+    spice_model=SpiceModel(
+        "../simulation/Bjt.lib",
+        _spice_subcircuit_name(bjt_type),
+        nets=[B, C, E],
+        args=_spice_args(bjt_type, hfe),
+    ),
     properties=properties,
     type="bjt",
 )

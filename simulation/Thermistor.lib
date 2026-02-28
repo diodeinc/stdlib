@@ -1,0 +1,13 @@
+* Thermistor SPICE subcircuit
+* Simplified model as a fixed resistor at nominal resistance
+*
+* Parameters:
+*   RVAL - Resistance value in ohms (at 25°C)
+*
+* Nodes:
+*   1 - Terminal 1
+*   2 - Terminal 2
+
+.SUBCKT TH 1 2 PARAMS: RVAL=10000
+R1 1 2 {RVAL}
+.ENDS TH

@@ -107,6 +107,12 @@ Component(
         "P1": P1,
         "P2": P2,
     },
+    spice_model=SpiceModel(
+        "../simulation/FerriteBead.lib",
+        "FB",
+        nets=[P1, P2],
+        args={"ZVAL": str(impedance.value)},
+    ),
     properties=properties,
     type="ferrite_bead",
 )

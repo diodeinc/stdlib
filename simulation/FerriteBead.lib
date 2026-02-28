@@ -1,0 +1,13 @@
+* Ferrite Bead SPICE subcircuit
+* Simplified model as a resistor at the rated impedance frequency
+*
+* Parameters:
+*   ZVAL - Impedance value in ohms (at rated frequency)
+*
+* Nodes:
+*   1 - Terminal 1
+*   2 - Terminal 2
+
+.SUBCKT FB 1 2 PARAMS: ZVAL=220
+R1 1 2 {ZVAL}
+.ENDS FB
