@@ -1,5 +1,4 @@
 load("./SolderJumper.zen", "pin_defs")
-load("../config.zen", "config_unit")
 load("../units.zen", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
 
@@ -17,13 +16,13 @@ Mount = enum("SMD")
 
 # Required
 package = config("package", Package, default=Package("0603"))
-value = config_unit("value", Resistance)
+value = config("value", Resistance)
 
 # Optional
 mpn = config("mpn", str, optional=True)
 manufacturer = config("manufacturer", str, optional=True)
 mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-voltage = config_unit("voltage", Voltage, optional=True)
+voltage = config("voltage", Voltage, optional=True)
 temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, optional=True)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
 

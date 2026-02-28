@@ -36,12 +36,26 @@ Silkscreen = record(
     # Note: minimum_text_thickness is complex in KiCad API, not supported yet
 )
 
+# Solder mask constraints
+SolderMask = record(
+    clearance=field(float | None, None),  # Mask expansion / clearance from pads to mask opening
+    minimum_width=field(float | None, None),  # Minimum mask web width
+    to_copper_clearance=field(float | None, None),  # Minimum solder-mask to copper-feature clearance
+)
+
+# Zone defaults constraints
+Zones = record(
+    minimum_clearance=field(float | None, None),  # Default zone-to-copper clearance
+)
+
 # All design rule constraints grouped together
 Constraints = record(
     copper=field(Copper | None, None),
     holes=field(Holes | None, None),
     uvias=field(Uvias | None, None),
     silkscreen=field(Silkscreen | None, None),
+    solder_mask=field(SolderMask | None, None),
+    zones=field(Zones | None, None),
 )
 
 # Via dimensions for pre-defined sizes
@@ -135,7 +149,6 @@ BoardConfig = record(
     design_rules=field(DesignRules | None, None),
     stackup=field(Stackup | None, None),  # Board stackup configuration
     num_user_layers=field(int, 4),  # Number of User.N layers (User.1, User.2, etc.)
-    spec=field(str | None, None),  # Path to a specification file
 )
 
 
@@ -211,6 +224,10 @@ def deep_merge(base, override):
                 return Uvias(**merged)
             elif type_name == "Silkscreen":
                 return Silkscreen(**merged)
+            elif type_name == "SolderMask":
+                return SolderMask(**merged)
+            elif type_name == "Zones":
+                return Zones(**merged)
             elif type_name == "ViaDimension":
                 return ViaDimension(**merged)
             elif type_name == "NetClass":
@@ -387,13 +404,14 @@ def Board(
     modifiers: list | None = None,
     bom_profile=assign_house_parts,
 ):
-    """Define a PCB board configuration.
+    """Define a PCB board with an optional board configuration.
 
     Args:
         name: Board configuration name
         layout_path: Path to the board layout file (e.g., PCB file)
-        config: Complete BoardConfig object. If provided, layers and outer_copper_weight are ignored.
-        layers: Number of PCB layers (2, 4, 6, 8, or 10). Required if config is not provided.
+        config: Optional BoardConfig overrides to merge with a layers-derived default.
+                If layers is not provided, this is used directly.
+        layers: Number of PCB layers (2, 4, 6, 8, or 10). Optional helper for deriving a default BoardConfig.
         outer_copper_weight: Outer copper weight ("1oz" or "2oz"). Default is "1oz".
                             Currently only 4-layer boards support 2oz outer copper.
         track_widths: Additional track widths (in mm) to append to the base configuration.
@@ -404,14 +422,18 @@ def Board(
         default: Whether this is the default board configuration
 
     Raises:
-        error: If neither config nor layers is provided
+        error: If layers is provided but no default board configuration exists for
+               the given layers and outer_copper_weight, and no explicit config is provided
         error: If outer_copper_weight is not "1oz" or "2oz"
         error: If 2oz copper is requested for unsupported layer counts (2L, 6L, 8L)
 
     Behavior:
-        - If config is provided, it is used directly
         - If layers is provided, selects appropriate stackup, netclasses, constraints,
           and predefined sizes based on layers and outer_copper_weight
+        - If both layers and config are provided, config overrides are merged onto
+          the layers-derived defaults
+        - If neither config nor layers is provided, the board is still created without
+          registering a board configuration
         - Custom track_widths and via_dimensions are appended to base configuration
         - All lists are deduplicated and sorted before use
     """
@@ -424,7 +446,7 @@ def Board(
         copper_finish = CopperFinish(copper_finish)
 
     default_config = None
-    if layers:
+    if layers != None:
         default_config = DefaultBoardConfig(
             layers=layers,
             outer_copper_weight=outer_copper_weight,
@@ -433,19 +455,19 @@ def Board(
             track_widths=track_widths,
             via_dimensions=via_dimensions,
         )
+        if default_config == None and config == None:
+            error("Unsupported board config for layers: " + str(layers))
 
     if default_config:
         config = deep_merge(default_config, config)
 
-    if config == None:
-        error("Please provide a board config")
-
-    # Add board config to the module
-    builtin.add_board_config(
-        name=name,
-        default=default,
-        config=config,
-    )
+    if config != None:
+        # Add board config to the module
+        builtin.add_board_config(
+            name=name,
+            default=default,
+            config=config,
+        )
 
     # Add layout to the module
     Layout(
@@ -927,6 +949,14 @@ BASE_CONSTRAINTS = Constraints(
         minimum_item_clearance=0.1,  # Reasonable silkscreen clearance
         minimum_text_height=0.8,  # Reasonable minimum text height
     ),
+    solder_mask=SolderMask(
+        clearance=0.0,
+        minimum_width=0.0,
+        to_copper_clearance=0.0,
+    ),
+    zones=Zones(
+        minimum_clearance=0.15,
+    ),
 )
 
 # Heavy Copper Constraints (2oz copper)
@@ -949,6 +979,14 @@ BASE_CONSTRAINTS_2OZ = Constraints(
     silkscreen=Silkscreen(
         minimum_item_clearance=0.1,
         minimum_text_height=0.8,
+    ),
+    solder_mask=SolderMask(
+        clearance=0.0,
+        minimum_width=0.0,
+        to_copper_clearance=0.0,
+    ),
+    zones=Zones(
+        minimum_clearance=0.2,
     ),
 )
 
