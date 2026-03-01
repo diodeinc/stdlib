@@ -81,5 +81,7 @@ def Schematics(name: str, collapse: bool | None = None) -> None:
 def Simulation(name: str, setup: str | None = None) -> None:
     """Helper function to create a simulations object"""
 
+    # `name` is explicitly not used, but kept for consistency and future compatibility
+
     builtin.set_sim_setup(content=setup)
         
