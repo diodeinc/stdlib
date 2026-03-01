@@ -85,7 +85,7 @@ V1 {VCC} {GND} DC 5V
   
   # Save the output to SVG
   set hcopydevtype = svg
-  hardcopy output/led.svg v({PROBE_RED}) v({PROBE_GREEN}) v({PROBE_BLUE}) title "LED Forward Voltage Comparison" xlabel "Supply Voltage (V)" ylabel "Cathode Voltage (V)"
+  hardcopy output/led.svg v({PROBE_RED}) v({PROBE_GREEN}) v({PROBE_BLUE}) title "LED Forward Voltage Comparison" xlabel "Supply Voltage" ylabel "Cathode Voltage"
 .endc
 """,
 )

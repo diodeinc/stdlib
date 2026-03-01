@@ -45,7 +45,7 @@ V {VCC} {GND} PULSE(0 5V 0 10n 10n 1u 2u)
   
   # Save the output to SVG
   set hcopydevtype = svg
-  hardcopy output/inductor.svg v({VCC}) v({PROBE}) title "Inductor Response to Switching Voltage" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy output/inductor.svg v({VCC}) v({PROBE}) title "Inductor Response to Switching Voltage" xlabel Time ylabel Voltage
 .endc
 """,
 )

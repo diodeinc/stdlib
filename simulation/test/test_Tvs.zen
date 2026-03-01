@@ -34,15 +34,31 @@ Simulation(
     name="test_Tvs",
     setup=f"""
 # Test TVS diode SPICE model - voltage clamping behavior
-# Ramp up voltage to show clamping at breakdown
 V1 {VIN} {GND} DC 0
 
 .control
-  # DC sweep to show clamping characteristic
   dc V1 0 15 0.05
 
+  * Measure probe voltage at key points
+  meas dc vprobe_low find v({PROBE}) at=3
+  meas dc vprobe_clamp find v({PROBE}) at=12
+
+  * Below breakdown: probe should track input closely (3V in, ~3V out)
+  if vprobe_low < 2.5 or vprobe_low > 3.5
+    echo "FAIL: below breakdown expected ~3V passthrough, got $&vprobe_low"
+    quit 1
+  end
+
+  * Above breakdown: probe should be clamped well below input (12V in, <8V out)
+  if vprobe_clamp > 8
+    echo "FAIL: above breakdown expected clamping, got $&vprobe_clamp at 12V input"
+    quit 1
+  end
+
+  echo "PASS: V_probe(3V)=$&vprobe_low V_probe(12V)=$&vprobe_clamp"
+
   set hcopydevtype = svg
-  hardcopy output/tvs_clamping.svg v({VIN}) v({PROBE}) title "TVS Diode Clamping" xlabel "Input Voltage (V)" ylabel "Voltage (V)"
+  hardcopy output/tvs_clamping.svg v({VIN}) v({PROBE}) title "TVS Diode Clamping" xlabel "Input Voltage" ylabel Voltage
 .endc
 """,
 )

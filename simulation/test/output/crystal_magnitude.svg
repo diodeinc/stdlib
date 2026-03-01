@@ -11,10 +11,10 @@
 
 <rect x="0" y="0" width="1024" height="768" fill="black" stroke="none"/>
 <text stroke="none" fill="white" font-size="16" x="358" y="752">
-"Frequency (Hz)"
+Frequency
 </text>
-<text transform="rotate(-90, 20, 464)"  stroke="none" fill="white" font-size="16" x="20" y="464">
-"Magnitude (dB)"
+<text transform="rotate(-90, 20, 429)"  stroke="none" fill="white" font-size="16" x="20" y="429">
+Magnitude
 </text>
 <text stroke="none" fill="white" font-size="16" x="10" y="16">
 ac1: "Crystal Frequency Response - Magnitude"

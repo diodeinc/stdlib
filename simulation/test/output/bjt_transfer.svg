@@ -11,10 +11,10 @@
 
 <rect x="0" y="0" width="1024" height="768" fill="black" stroke="none"/>
 <text stroke="none" fill="white" font-size="16" x="358" y="752">
-"V_BE (V)"
+"V_BE"
 </text>
-<text transform="rotate(-90, 20, 434)"  stroke="none" fill="white" font-size="16" x="20" y="434">
-"V_CE (V)"
+<text transform="rotate(-90, 20, 414)"  stroke="none" fill="white" font-size="16" x="20" y="414">
+"V_CE"
 </text>
 <text stroke="none" fill="white" font-size="16" x="10" y="16">
 dc1: "BJT Common-Emitter Transfer Curve"

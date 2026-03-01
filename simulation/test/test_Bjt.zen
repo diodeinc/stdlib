@@ -43,18 +43,32 @@ Simulation(
     name="test_Bjt",
     setup=f"""
 # Test BJT SPICE model - NPN common-emitter with DC sweep
-# Supply voltage
 V1 {VCC} {GND} DC 5V
-
-# Small AC signal on base
 V2 {INPUT} {GND} DC 0.7 AC 0.01
 
 .control
-  # DC sweep of base voltage to show transfer characteristic
   dc V2 0 1.2 0.01
 
+  * Measure collector voltage at key operating points
+  meas dc vce_off find v({PROBE}) at=0
+  meas dc vce_on find v({PROBE}) at=0.8
+
+  * BJT off: collector should be pulled to VCC through RC (~5V)
+  if vce_off < 4.5
+    echo "FAIL: BJT off-state V_CE expected ~5V, got $&vce_off"
+    quit 1
+  end
+
+  * BJT saturated: collector should be pulled low (<0.5V)
+  if vce_on > 0.5
+    echo "FAIL: BJT saturated V_CE expected <0.5V, got $&vce_on"
+    quit 1
+  end
+
+  echo "PASS: V_CE(off)=$&vce_off V_CE(sat)=$&vce_on"
+
   set hcopydevtype = svg
-  hardcopy output/bjt_transfer.svg v({PROBE}) title "BJT Common-Emitter Transfer Curve" xlabel "V_BE (V)" ylabel "V_CE (V)"
+  hardcopy output/bjt_transfer.svg v({PROBE}) title "BJT Common-Emitter Transfer Curve" xlabel "V_BE" ylabel "V_CE"
 .endc
 """,
 )

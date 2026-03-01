@@ -41,7 +41,7 @@ V1 {VIN} {GND} SIN(0 2V 1kHz)
   
   # Save the output to SVG
   set hcopydevtype = svg
-  hardcopy output/diode.svg v({VIN}) v({PROBE}) title "Diode Rectification" xlabel "Time (s)" ylabel "Voltage (V)"
+  hardcopy output/diode.svg v({VIN}) v({PROBE}) title "Diode Rectification" xlabel Time ylabel Voltage
 .endc
 """,
 )

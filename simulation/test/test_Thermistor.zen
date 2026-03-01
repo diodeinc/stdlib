@@ -32,19 +32,32 @@ Resistor(
 Simulation(
     name="test_Thermistor",
     setup=f"""
-# Test Thermistor SPICE model - voltage divider DC operating point
-V1 {VCC} {GND} DC 3.3V
+# Test Thermistor SPICE model - voltage divider
+V1 {VCC} {GND} DC 0
 
 .control
-  # DC operating point - at nominal 25C the divider should read ~1.65V
-  op
-  print v({PROBE})
-
-  # DC sweep to verify linearity of divider
+  * DC sweep to verify divider behavior
   dc V1 0 5 0.1
 
+  meas dc vout_3v3 find v({PROBE}) at=3.3
+  meas dc vout_at_4v find v({PROBE}) at=4
+
+  * 10k/10k divider at 3.3V should output ~1.65V
+  if vout_3v3 < 1.6 or vout_3v3 > 1.7
+    echo "FAIL: divider at 3.3V expected ~1.65V, got $&vout_3v3"
+    quit 1
+  end
+
+  * 10k/10k divider at 4V should output exactly 2V
+  if vout_at_4v < 1.9 or vout_at_4v > 2.1
+    echo "FAIL: divider at 4V expected ~2V, got $&vout_at_4v"
+    quit 1
+  end
+
+  echo "PASS: V_out(3.3V)=$&vout_3v3 V_out(4V)=$&vout_at_4v"
+
   set hcopydevtype = svg
-  hardcopy output/thermistor.svg v({PROBE}) title "Thermistor Voltage Divider" xlabel "Supply Voltage (V)" ylabel "Output Voltage (V)"
+  hardcopy output/thermistor.svg v({PROBE}) title "Thermistor Voltage Divider" xlabel "Supply Voltage" ylabel "Output Voltage"
 .endc
 """,
 )

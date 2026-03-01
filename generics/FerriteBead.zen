@@ -88,6 +88,27 @@ def _footprint(package: Package) -> str:
     return resistor_footprints[package]
 
 
+def _spice_args(impedance, frequency, dcr):
+    """Derive RLC model parameters from rated impedance and frequency.
+
+    At resonance of L and Cp, only Rac remains, giving the rated impedance.
+    L is sized so its reactance equals Rac at the rated frequency (Q ≈ 1).
+    Cp is set to resonate with L at the rated frequency.
+    """
+    rac = float(impedance.value)
+    freq = float(frequency.value)
+    rdc = float(dcr.value) if dcr else 0.3
+    pi = 3.14159265358979
+    l_val = rac / (2 * pi * freq)
+    cp_val = 1.0 / (2 * pi * freq * rac)
+    return {
+        "RDC": str(rdc),
+        "L": str(l_val),
+        "RAC": str(rac),
+        "CP": str(cp_val),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -111,7 +132,7 @@ Component(
         "../simulation/FerriteBead.lib",
         "FB",
         nets=[P1, P2],
-        args={"ZVAL": str(impedance.value)},
+        args=_spice_args(impedance, frequency, dcr),
     ),
     properties=properties,
     type="ferrite_bead",
