@@ -10,7 +10,10 @@ Usage::
 
     Simulation(
         name="my_test",
-        modifiers=[use_ideal_passives],
+        modifiers=[
+            use_ideal_passives(),
+            assign_spice_model("LOAD_CAPACITOR.C", "spice/Ideal.lib", "IDEAL_C", {"CVAL": "100n"}),
+        ],
         setup=f\"\"\"
         ...
         \"\"\",
