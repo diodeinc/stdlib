@@ -148,7 +148,7 @@ Component(
         "spice/Resistor.lib",
         "R",
         nets=[P1, P2],
-        args=_spice_args(value, package),
+        args=_spice_args(value, package, esl, cp),
     ),
     properties=properties,
     type="resistor",
