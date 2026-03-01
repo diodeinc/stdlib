@@ -1,4 +1,4 @@
-load("../units.zen", "Resistance", "Voltage", "Power")
+load("../units.zen", "Capacitance", "Inductance", "Resistance", "Voltage", "Power")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -87,6 +87,45 @@ def _footprint(mount: Mount, package: Package):
     return kicad_footprints[package]
 
 
+def _spice_args(value, package):
+    """Derive resistor model parameters including HF parasitics.
+
+    ESL and Cp are estimated from package size.  For most DC/low-frequency
+    work these are negligible, but they matter for filter and high-speed sims.
+    """
+    rval = value
+
+    esl_table = {
+        Package("0201"): Inductance("0.15nH"),
+        Package("0402"): Inductance("0.3nH"),
+        Package("0603"): Inductance("0.5nH"),
+        Package("0805"): Inductance("0.7nH"),
+        Package("1206"): Inductance("1.0nH"),
+        Package("1210"): Inductance("1.0nH"),
+        Package("2010"): Inductance("1.5nH"),
+        Package("2512"): Inductance("2.0nH"),
+    }
+    esl_val = esl_table.get(package, Inductance("0.5nH"))
+
+    cp_table = {
+        Package("0201"): Capacitance("0.02pF"),
+        Package("0402"): Capacitance("0.04pF"),
+        Package("0603"): Capacitance("0.05pF"),
+        Package("0805"): Capacitance("0.08pF"),
+        Package("1206"): Capacitance("0.1pF"),
+        Package("1210"): Capacitance("0.12pF"),
+        Package("2010"): Capacitance("0.15pF"),
+        Package("2512"): Capacitance("0.2pF"),
+    }
+    cp_val = cp_table.get(package, Capacitance("0.05pF"))
+
+    return {
+        "RVAL": str(rval),
+        "ESL": str(esl_val),
+        "CP": str(cp_val),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -110,7 +149,7 @@ Component(
         "../simulation/Resistor.lib",
         "R",
         nets=[P1, P2],
-        args={"RVAL": str(value.value)},
+        args=_spice_args(value, package),
     ),
     properties=properties,
     type="resistor",

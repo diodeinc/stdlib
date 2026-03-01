@@ -1,13 +1,19 @@
 * Thermistor SPICE subcircuit
-* Simplified model as a fixed resistor at nominal resistance
+* Fixed-resistance model at nominal temperature with HF parasitics
+*
+* Equivalent circuit:
+*
+*              ┌── Cp ──┐
+*   1 ── ESL ──┤        ├── 2
+*              └── R ───┘
 *
 * Parameters:
-*   RVAL - Resistance value in ohms (at 25°C)
-*
-* Nodes:
-*   1 - Terminal 1
-*   2 - Terminal 2
+*   RVAL - Resistance value in ohms (at 25C)
+*   ESL  - Parasitic series inductance (henries)
+*   CP   - Parasitic parallel capacitance (farads)
 
-.SUBCKT TH 1 2 PARAMS: RVAL=10000
-R1 1 2 {RVAL}
+.SUBCKT TH 1 2 PARAMS: RVAL=10000 ESL=0.5n CP=0.05p
+L_esl 1 mid {ESL}
+R1 mid 2 {RVAL}
+C_p mid 2 {CP}
 .ENDS TH

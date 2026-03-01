@@ -1,4 +1,4 @@
-load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
+load("../units.zen", "Capacitance", "Inductance", "Resistance", "Temperature", "Voltage")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -24,6 +24,7 @@ mount = config("mount", Mount, default=Mount("SMD"), optional=True)
 voltage = config("voltage", Voltage, optional=True)
 dielectric = config("dielectric", Dielectric, optional=True)
 esr = config("esr", Resistance, optional=True)
+esl = config("esl", Inductance, optional=True)
 t_max = config("t_max", Temperature, optional=True)
 t_min = config("t_min", Temperature, optional=True)
 
@@ -94,6 +95,56 @@ def _footprint(mount: Mount, package: Package):
     return kicad_footprints[(mount, package)]
 
 
+def _spice_args(value, package, esr=None, esl=None):
+    """Derive series RLC model parameters for a realistic capacitor.
+
+    ESL is estimated from package size (pad geometry determines loop inductance).
+    ESR uses the user-supplied value if available, otherwise a reasonable
+    default that scales with package size.
+    """
+    cval = value
+
+    # Typical ESL by package -- based on published MLCC measurements (nH)
+    esl_table = {
+        Package("01005"): Inductance("0.08nH"),
+        Package("0201"): Inductance("0.15nH"),
+        Package("0402"): Inductance("0.35nH"),
+        Package("0603"): Inductance("0.5nH"),
+        Package("0805"): Inductance("0.7nH"),
+        Package("1206"): Inductance("1.0nH"),
+        Package("1210"): Inductance("1.0nH"),
+        Package("1812"): Inductance("1.5nH"),
+        Package("1825"): Inductance("1.5nH"),
+        Package("2220"): Inductance("2.0nH"),
+        Package("2225"): Inductance("2.0nH"),
+        Package("3640"): Inductance("2.5nH"),
+    }
+    esl_val = esl or esl_table.get(package, Inductance("0.5nH"))
+
+    # Typical ESR by package -- larger bodies dissipate better
+    esr_table = {
+        Package("01005"): Resistance("50mOhm"),
+        Package("0201"): Resistance("30mOhm"),
+        Package("0402"): Resistance("10mOhm"),
+        Package("0603"): Resistance("5mOhm"),
+        Package("0805"): Resistance("3mOhm"),
+        Package("1206"): Resistance("2mOhm"),
+        Package("1210"): Resistance("2mOhm"),
+        Package("1812"): Resistance("1.5mOhm"),
+        Package("1825"): Resistance("1.5mOhm"),
+        Package("2220"): Resistance("1mOhm"),
+        Package("2225"): Resistance("1mOhm"),
+        Package("3640"): Resistance("1mOhm"),
+    }
+    esr_val = esr or esr_table.get(package, Resistance("50mOhm"))
+
+    return {
+        "CVAL": str(cval),
+        "ESR": str(esr_val),
+        "ESL": str(esl_val),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -119,7 +170,7 @@ Component(
         "../simulation/Capacitor.lib",
         "C",
         nets=[P1, P2],
-        args={"CVAL": str(value.value)},
+        args=_spice_args(value, package, esr),
     ),
     dnp=do_not_populate,
     skip_bom=skip_bom or exclude_from_bom,

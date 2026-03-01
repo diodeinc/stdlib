@@ -1,5 +1,5 @@
 load("./SolderJumper.zen", "pin_defs")
-load("../units.zen", "Resistance", "Voltage")
+load("../units.zen", "Capacitance", "Inductance", "Resistance", "Voltage")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ Component(
         "../simulation/Thermistor.lib",
         "TH",
         nets=[P1, P2],
-        args={"RVAL": str(value.value)},
+        args={"RVAL": str(value), "ESL": str(Inductance("0.5nH")), "CP": str(Capacitance("0.05pF"))},
     ),
     properties=properties,
     type="thermistor",
