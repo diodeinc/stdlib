@@ -102,7 +102,7 @@ def _spice_args(value, package, esr=None, esl=None):
     ESR uses the user-supplied value if available, otherwise a reasonable
     default that scales with package size.
     """
-    
+
     # Typical ESL by package -- based on published MLCC measurements (nH)
     esl_table = {
         Package("01005"): Inductance("0.08nH"),

@@ -23,7 +23,9 @@ mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
 manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
 voltage = config("voltage", Voltage, optional=True, help="Maximum operating voltage")
-temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, optional=True, help="Temperature coefficient type (NTC or PTC)")
+temperature_coefficient = config(
+    "temperature_coefficient", TemperatureCoefficient, optional=True, help="Temperature coefficient type (NTC or PTC)"
+)
 use_us_symbol = config("use_us_symbol", bool, default=False, optional=True, help="Use US symbol")
 
 # Properties – combined and normalized
@@ -83,6 +85,32 @@ def _footprint(mount: Mount, package: Package):
     return kicad_footprints[package]
 
 
+def _spice_args(value, package):
+    """Derive thermistor model parameters including HF parasitics.
+
+    ESL and Cp are estimated from package size, matching the Resistor model.
+    """
+    esl_table = {
+        Package("0201"): Inductance("0.15nH"),
+        Package("0402"): Inductance("0.3nH"),
+        Package("0603"): Inductance("0.5nH"),
+        Package("0805"): Inductance("0.7nH"),
+    }
+
+    cp_table = {
+        Package("0201"): Capacitance("0.02pF"),
+        Package("0402"): Capacitance("0.04pF"),
+        Package("0603"): Capacitance("0.05pF"),
+        Package("0805"): Capacitance("0.08pF"),
+    }
+
+    return {
+        "RVAL": str(value),
+        "ESL": str(esl_table.get(package, Inductance("0.5nH"))),
+        "CP": str(cp_table.get(package, Capacitance("0.05pF"))),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -106,7 +134,7 @@ Component(
         "spice/Thermistor.lib",
         "TH",
         nets=[P1, P2],
-        args={"RVAL": str(value), "ESL": str(Inductance("0.5nH")), "CP": str(Capacitance("0.05pF"))},
+        args=_spice_args(value, package),
     ),
     properties=properties,
     type="thermistor",

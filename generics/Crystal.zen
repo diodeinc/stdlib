@@ -33,7 +33,9 @@ frequency = config("frequency", Frequency)
 mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
 manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
-load_capacitance = config("load_capacitance", Capacitance, optional=True, help="Load capacitance for oscillator circuit")
+load_capacitance = config(
+    "load_capacitance", Capacitance, optional=True, help="Load capacitance for oscillator circuit"
+)
 
 # Properties – combined and normalized
 properties = {

@@ -98,17 +98,30 @@ def _spice_subcircuit_name(bjt_type: BjtType):
 
 
 def _spice_args(bjt_type: BjtType, hfe):
-    args = {
-        "BF": str(hfe) if hfe else "100",
-        "IS": "1e-14",
-        "NF": "1.0",
-        "VAF": "100",
-        "RB": "10",
-        "RC": "1",
-        "RE": "0.5",
-        "CJE": "2p",
-        "CJC": "1p",
-    }
+    if bjt_type == BjtType("PNP"):
+        args = {
+            "BF": str(hfe) if hfe else "100",
+            "IS": "1e-14",
+            "NF": "1.0",
+            "VAF": "50",
+            "RB": "10",
+            "RC": "1",
+            "RE": "0.5",
+            "CJE": "2p",
+            "CJC": "1p",
+        }
+    else:
+        args = {
+            "BF": str(hfe) if hfe else "100",
+            "IS": "1e-14",
+            "NF": "1.0",
+            "VAF": "100",
+            "RB": "10",
+            "RC": "1",
+            "RE": "0.5",
+            "CJE": "2p",
+            "CJC": "1p",
+        }
     return args
 
 

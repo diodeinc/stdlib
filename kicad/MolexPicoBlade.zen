@@ -161,8 +161,8 @@ Component(
     footprint=_footprint(variant),
     prefix="J",
     pins=pins,
-    properties=(properties or {})
-    | {
+    properties={
         "value": _mpn(variant),
-    },
+    }
+    | (properties or {}),
 )
