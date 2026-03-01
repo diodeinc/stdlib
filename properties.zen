@@ -84,4 +84,3 @@ def Simulation(name: str, setup: str | None = None) -> None:
     # `name` is explicitly not used, but kept for consistency and future compatibility
 
     builtin.set_sim_setup(content=setup)
-        

@@ -92,7 +92,8 @@ Component(
     footprint=File(_footprint(tag_type)),
     prefix="J",
     pins=pins,
-    properties=(properties or {}) | {
+    properties=(properties or {})
+    | {
         "tag_type": tag_type,
     },
     skip_bom=True,
