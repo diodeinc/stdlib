@@ -6,7 +6,7 @@ inductors with ideal single-element models.
 
 Usage::
 
-    load("../helpers.zen", "use_ideal_passives")
+    load("@stdlib/simulation/helpers.zen", "use_ideal_passives")
 
     Simulation(
         name="my_test",
