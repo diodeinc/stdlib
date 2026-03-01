@@ -170,7 +170,7 @@ Component(
         "spice/Capacitor.lib",
         "C",
         nets=[P1, P2],
-        args=_spice_args(value, package, esr),
+        args=_spice_args(value, package, esr, esl),
     ),
     dnp=do_not_populate,
     skip_bom=skip_bom or exclude_from_bom,
