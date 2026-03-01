@@ -97,7 +97,7 @@ def _spice_subcircuit_name(bjt_type: BjtType):
     return subcircuits[bjt_type]
 
 
-def _spice_args(bjt_type: BjtType, hfe):
+def _spice_args(hfe):
     args = {
         "BF": str(hfe) if hfe else "100",
         "IS": "1e-14",
@@ -132,7 +132,7 @@ Component(
         "../simulation/Bjt.lib",
         _spice_subcircuit_name(bjt_type),
         nets=[B, C, E],
-        args=_spice_args(bjt_type, hfe),
+        args=_spice_args(hfe),
     ),
     properties=properties,
     type="bjt",

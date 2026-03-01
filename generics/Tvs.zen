@@ -97,7 +97,7 @@ def _spice_args(reverse_standoff_voltage, reverse_clamping_voltage):
     if reverse_clamping_voltage:
         bv = str(reverse_clamping_voltage.value)
     elif reverse_standoff_voltage:
-        bv = str(reverse_standoff_voltage.value * 1.1)
+        bv = str(reverse_standoff_voltage.max * 1.1)
     return {
         "BV": bv,
         "IBV": "10m",
