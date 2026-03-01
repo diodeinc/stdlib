@@ -78,9 +78,13 @@ def Schematics(name: str, collapse: bool | None = None) -> None:
         add_property("collapse", collapse)
 
 
-def Simulation(name: str, setup: str | None = None) -> None:
+def Simulation(name: str, setup: str | None = None, modifiers: list | None = None) -> None:
     """Helper function to create a simulations object"""
 
     # `name` is explicitly not used, but kept for consistency and future compatibility
 
     builtin.set_sim_setup(content=setup)
+
+    if modifiers:
+        for modifier in modifiers:
+            builtin.add_component_modifier(modifier)

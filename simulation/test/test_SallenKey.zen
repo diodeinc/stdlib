@@ -3,6 +3,7 @@
 load("../../amplifiers.zen", "sallen_key_lowpass", "voltage_follower")
 load("../../interfaces.zen", "Ground", "Opamp", "Power")
 load("../../properties.zen", "Simulation")
+load("../../simulation/helpers.zen", "use_ideal_passives")
 
 OperationalAmplifier = Module("../../generics/OperationalAmplifier.zen")
 
@@ -30,6 +31,7 @@ OperationalAmplifier(
 
 Simulation(
     name="test_SallenKey",
+    modifiers=[use_ideal_passives()],
     setup=f"""
 * Ground node
 
