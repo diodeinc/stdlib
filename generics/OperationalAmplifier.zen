@@ -14,11 +14,11 @@ Package = enum("SOIC8")
 # -----------------------------------------------------------------------------
 
 # Required
-variant = config("variant", Variant, default=Variant("Single"), optional=True)
-package = config("package", Package, default=Package("SOIC8"), optional=True)
+variant = config("variant", Variant, default=Variant("Single"), optional=True, help="Op-amp configuration")
+package = config("package", Package, default=Package("SOIC8"), optional=True, help="Package size")
 
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 
 # Properties – combined and normalized
 properties = {

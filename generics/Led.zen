@@ -18,11 +18,11 @@ package = config("package", Package)
 color = config("color", Color)
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-forward_voltage = config("forward_voltage", Voltage, optional=True)
-forward_current = config("forward_current", Current, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+forward_voltage = config("forward_voltage", Voltage, optional=True, help="Forward voltage drop")
+forward_current = config("forward_current", Current, optional=True, help="Typical forward current")
 
 # Properties – combined and normalized
 properties = {

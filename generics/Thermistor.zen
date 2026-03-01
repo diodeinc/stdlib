@@ -19,12 +19,12 @@ package = config("package", Package, default=Package("0603"))
 value = config("value", Resistance)
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-voltage = config("voltage", Voltage, optional=True)
-temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, optional=True)
-use_us_symbol = config("use_us_symbol", bool, default=False, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+voltage = config("voltage", Voltage, optional=True, help="Maximum operating voltage")
+temperature_coefficient = config("temperature_coefficient", TemperatureCoefficient, optional=True, help="Temperature coefficient type (NTC or PTC)")
+use_us_symbol = config("use_us_symbol", bool, default=False, optional=True, help="Use US symbol")
 
 # Properties – combined and normalized
 properties = {

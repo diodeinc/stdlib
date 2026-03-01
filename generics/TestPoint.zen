@@ -67,7 +67,7 @@ Variant = enum(
 # -----------------------------------------------------------------------------
 
 # Config
-variant = config("variant", Variant)
+variant = config("variant", Variant, help="Test point style and size")
 
 # -----------------------------------------------------------------------------
 # IO ports
@@ -107,7 +107,7 @@ def _keystone_mpn(variant: Variant, color: Color):
 
 
 if "Keystone" in variant.value:
-    color = config("color", Color, default=Color("Black"), optional=True)
+    color = config("color", Color, default=Color("Black"), optional=True, help="Test point color")
     Component(
         name="TP",
         prefix="TP",

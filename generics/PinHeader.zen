@@ -60,14 +60,14 @@ Gender = enum("Male", "Female")
 # Configuration
 # -----------------------------------------------------------------------------
 
-mount = config("mount", Mount, default=Mount("SMD"))
-pins = config("pins", int, default=2, optional=False)
-rows = config("rows", int, default=1)
-pitch = config("pitch", Pitch, default=Pitch("2.54mm"))
-orientation = config("orientation", Orientation, default=Orientation("Vertical"))
-gender = config("gender", Gender, default=Gender("Male"))
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
+mount = config("mount", Mount, default=Mount("SMD"), help="Mounting type (SMD or THT)")
+pins = config("pins", int, default=2, optional=False, help="Number of pins per row")
+rows = config("rows", int, default=1, help="Number of rows (1 or 2)")
+pitch = config("pitch", Pitch, default=Pitch("2.54mm"), help="Pin pitch")
+orientation = config("orientation", Orientation, default=Orientation("Vertical"), help="Header orientation (THT only)")
+gender = config("gender", Gender, default=Gender("Male"), help="Connector gender (Male pin header, Female socket)")
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 
 # -----------------------------------------------------------------------------
 # Validation

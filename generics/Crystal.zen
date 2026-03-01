@@ -30,10 +30,10 @@ package = config("package", Package)
 frequency = config("frequency", Frequency)
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-load_capacitance = config("load_capacitance", Capacitance, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+load_capacitance = config("load_capacitance", Capacitance, optional=True, help="Load capacitance for oscillator circuit")
 
 # Properties – combined and normalized
 properties = {

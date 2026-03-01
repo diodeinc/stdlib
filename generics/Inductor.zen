@@ -16,15 +16,15 @@ Mount = enum("SMD")
 package = config("package", Package)
 value = config("value", Inductance)
 if package == Package("KICAD"):
-    kicad_library = config("kicad_library", str, default="Inductor_SMD")
-    kicad_package = config("kicad_package", str, default="L_0603_1608Metric")
+    kicad_library = config("kicad_library", str, default="Inductor_SMD", help="KiCad footprint library name")
+    kicad_package = config("kicad_package", str, default="L_0603_1608Metric", help="KiCad footprint package name")
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-current = config("current", Current, optional=True)
-dcr = config("dcr", Resistance, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+current = config("current", Current, optional=True, help="Maximum rated current")
+dcr = config("dcr", Resistance, optional=True, help="DC resistance")
 
 # Properties – combined and normalized
 properties = {

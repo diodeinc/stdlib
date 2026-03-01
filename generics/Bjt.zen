@@ -14,19 +14,19 @@ Mount = enum("SMD")
 # -----------------------------------------------------------------------------
 
 # Required
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 package = config("package", Package)
 bjt_type = config("bjt_type", BjtType)
 
 # Optional
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-hfe = config("hfe", float, optional=True)
-vceo = config("vceo", Voltage, optional=True)
-vebo = config("vebo", Voltage, optional=True)
-vcbo = config("vcbo", Voltage, optional=True)
-ic_max = config("ic_max", Current, optional=True)
-ft = config("ft", Frequency, optional=True)
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+hfe = config("hfe", float, optional=True, help="DC current gain")
+vceo = config("vceo", Voltage, optional=True, help="Maximum collector-emitter voltage (base open)")
+vebo = config("vebo", Voltage, optional=True, help="Maximum emitter-base voltage (collector open)")
+vcbo = config("vcbo", Voltage, optional=True, help="Maximum collector-base voltage (emitter open)")
+ic_max = config("ic_max", Current, optional=True, help="Maximum collector current")
+ft = config("ft", Frequency, optional=True, help="Transition frequency")
 
 # Properties – combined and normalized
 properties = {

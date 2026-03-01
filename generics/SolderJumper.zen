@@ -42,10 +42,10 @@ def _get_symbol(pin_count, style):
 # Component parameters
 # -----------------------------------------------------------------------------
 
-pin_count = config("pin_count", int, default=2, optional=True)
-style = config("style", SolderJumperStyle)
-variant = config("variant", SolderJumperVariant)
-pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), optional=True)
+pin_count = config("pin_count", int, default=2, optional=True, help="Number of pins (2 or 3)")
+style = config("style", SolderJumperStyle, help="Solder bridge style (Open, Bridged, etc.)")
+variant = config("variant", SolderJumperVariant, help="Pad shape variant")
+pitch = config("pitch", SolderJumperPitch, default=SolderJumperPitch("P1.3mm"), optional=True, help="Pad pitch")
 
 # Properties – combined and normalized
 properties = {
