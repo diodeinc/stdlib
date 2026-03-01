@@ -17,14 +17,14 @@ Mount = enum("SMD")
 package = config("package", Package)
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-variant = config("variant", Variant, default=Variant("Standard"))
-v_f = config("v_f", Voltage, optional=True)  # Forward voltage
-i_f = config("i_f", Current, optional=True)  # Forward current
-v_r = config("v_r", Voltage, optional=True)  # Reverse voltage
-i_r = config("i_r", Current, optional=True)  # Reverse current
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+variant = config("variant", Variant, default=Variant("Standard"), help="Diode type (Standard, Schottky, Zener)")
+v_f = config("v_f", Voltage, optional=True, help="Forward voltage drop")
+i_f = config("i_f", Current, optional=True, help="Forward current rating")
+v_r = config("v_r", Voltage, optional=True, help="Maximum reverse voltage")
+i_r = config("i_r", Current, optional=True, help="Reverse leakage current")
 
 # Properties
 properties = {
@@ -144,7 +144,7 @@ Component(
     symbol=Symbol(**_symbol(variant)),
     footprint=File(_footprint(mount, package)),
     spice_model=SpiceModel(
-        "../simulation/Diode.lib",
+        "spice/Diode.lib",
         _spice_subcircuit_name(variant),
         nets=[A, K],
         args=_spice_args(variant, v_f, i_f, v_r, i_r),

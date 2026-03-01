@@ -11,10 +11,10 @@
 
 <rect x="0" y="0" width="1024" height="768" fill="black" stroke="none"/>
 <text stroke="none" fill="white" font-size="16" x="358" y="752">
-"Input Voltage (V)"
+"Input Voltage"
 </text>
-<text transform="rotate(-90, 20, 479)"  stroke="none" fill="white" font-size="16" x="20" y="479">
-"Node Voltages (V)"
+<text transform="rotate(-90, 20, 459)"  stroke="none" fill="white" font-size="16" x="20" y="459">
+"Node Voltages"
 </text>
 <text stroke="none" fill="white" font-size="16" x="10" y="16">
 dc1: "NetTie Test - Voltage Division"

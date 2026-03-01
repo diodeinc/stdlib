@@ -16,16 +16,20 @@ Mount = enum("SMD")
 package = config("package", Package)
 
 # Deprecated
-resistance = config("resistance", Resistance, optional=True)
+resistance = config(
+    "resistance", Resistance, optional=True, help="Impedance at rated frequency (deprecated, use value)"
+)
 
 # Optional
-dcr = config("dcr", Resistance, optional=True)
-impedance = config("value", Impedance, default=Impedance("220Ohm"), optional=True)
-frequency = config("frequency", Frequency, default=Frequency("100MHz"), optional=True)
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-current = config("current", Current, optional=True)
+dcr = config("dcr", Resistance, optional=True, help="DC resistance")
+impedance = config("value", Impedance, default=Impedance("220Ohm"), optional=True, help="Impedance at rated frequency")
+frequency = config(
+    "frequency", Frequency, default=Frequency("100MHz"), optional=True, help="Rated frequency for impedance spec"
+)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+current = config("current", Current, optional=True, help="Maximum rated current")
 
 # Backwards compatibility: if resistance is specified, use it as impedance
 if resistance:
@@ -88,6 +92,36 @@ def _footprint(package: Package) -> str:
     return resistor_footprints[package]
 
 
+def _spice_args(impedance, frequency, dcr):
+    """Derive RLC model parameters from rated impedance and frequency.
+
+    At resonance of L and Cp, only Rac remains, giving the rated impedance.
+    L is sized so its reactance equals Rac at the rated frequency (Q ≈ 1).
+    Cp is set to resonate with L at the rated frequency.
+    """
+    rac = impedance
+    freq = frequency
+    rdc = dcr or Resistance("0.3Ohm")
+    pi = 3.14159265358979
+
+    if rac <= 0 or freq <= 0:
+        return {
+            "RDC": str(rdc),
+            "L": "0",
+            "RAC": str(rac),
+            "CP": "0",
+        }
+
+    l_val = rac / (2 * pi * freq)
+    cp_val = 1.0 / (2 * pi * freq * rac)
+    return {
+        "RDC": str(rdc),
+        "L": str(l_val),
+        "RAC": str(rac),
+        "CP": str(cp_val),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -107,6 +141,12 @@ Component(
         "P1": P1,
         "P2": P2,
     },
+    spice_model=SpiceModel(
+        "spice/FerriteBead.lib",
+        "FB",
+        nets=[P1, P2],
+        args=_spice_args(impedance, frequency, dcr),
+    ),
     properties=properties,
     type="ferrite_bead",
 )

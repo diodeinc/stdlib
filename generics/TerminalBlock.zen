@@ -43,10 +43,10 @@ Pitch = enum("2.54mm", "5.0mm")
 # Component parameters
 # -----------------------------------------------------------------------------
 
-pins = config("pins", int, default=2)
-pitch = config("pitch", Pitch, default=Pitch("5.0mm"))
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
+pins = config("pins", int, default=2, help="Number of terminals")
+pitch = config("pitch", Pitch, default=Pitch("5.0mm"), help="Terminal pitch")
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
 
 # -----------------------------------------------------------------------------
 # Validation

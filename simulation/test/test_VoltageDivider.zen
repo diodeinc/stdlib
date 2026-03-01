@@ -1,6 +1,7 @@
 """Test for Spice model of Resistor."""
 
 load("../../interfaces.zen", "Ground", "Power")
+load("../../properties.zen", "Simulation")
 
 Resistor = Module("../../generics/Resistor.zen")
 
@@ -22,4 +23,19 @@ Resistor(
     package="0402",
     P1=PROBE,
     P2=GND,
+)
+
+Simulation(
+    name="test_VoltageDivider",
+    setup=f"""
+V1 {VCC} {GND} SIN(0 5V 1kHz)
+
+.control
+  tran 0.001m 5m
+  
+  * Save the output to SVG
+  set hcopydevtype = svg
+  hardcopy output/R_DIV.svg v({VCC}) v({PROBE}) title "Resistor divider" ylabel Volts
+.endc
+""",
 )

@@ -18,7 +18,7 @@ Variant = enum(
 # Component parameters
 # -----------------------------------------------------------------------------
 
-variant = config("variant", Variant, default=Variant("1mm_Mask2mm"), optional=True)
+variant = config("variant", Variant, default=Variant("1mm_Mask2mm"), optional=True, help="Fiducial pad and mask size")
 
 # Properties – combined and normalized
 properties = {
