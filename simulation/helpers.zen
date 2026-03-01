@@ -17,6 +17,7 @@ Usage::
     )
 """
 
+
 def assign_spice_model(component_path: str, spice_lib, name: str | None = None, args: dict | None = None):
     """Component modifier: assign a spice model to a component."""
 
@@ -24,7 +25,7 @@ def assign_spice_model(component_path: str, spice_lib, name: str | None = None, 
         # TODO: implement once the toolchain exposes spice models
         return
 
-    return modifier 
+    return modifier
 
 
 def use_ideal_passives():
