@@ -129,7 +129,7 @@ Component(
         "E": E,
     },
     spice_model=SpiceModel(
-        "../simulation/Bjt.lib",
+        "spice/Bjt.lib",
         _spice_subcircuit_name(bjt_type),
         nets=[B, C, E],
         args=_spice_args(bjt_type, hfe),

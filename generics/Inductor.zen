@@ -141,7 +141,7 @@ Component(
         "2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/Inductor.lib",
+        "spice/Inductor.lib",
         "L",
         nets=[P1, P2],
         args=_spice_args(value, package, dcr),

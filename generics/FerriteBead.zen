@@ -129,7 +129,7 @@ Component(
         "P2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/FerriteBead.lib",
+        "spice/FerriteBead.lib",
         "FB",
         nets=[P1, P2],
         args=_spice_args(impedance, frequency, dcr),

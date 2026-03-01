@@ -114,7 +114,7 @@ Component(
     symbol=Symbol(library="@kicad-symbols/Device.kicad_sym", name=_symbol_name(direction)),
     footprint=File(_footprint(package)),
     spice_model=SpiceModel(
-        "../simulation/Tvs.lib",
+        "spice/Tvs.lib",
         _spice_subcircuit_name(direction),
         nets=[A, K],
         args=_spice_args(reverse_standoff_voltage, reverse_clamping_voltage),

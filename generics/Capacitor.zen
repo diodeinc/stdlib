@@ -167,7 +167,7 @@ Component(
         "P2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/Capacitor.lib",
+        "spice/Capacitor.lib",
         "C",
         nets=[P1, P2],
         args=_spice_args(value, package, esr),

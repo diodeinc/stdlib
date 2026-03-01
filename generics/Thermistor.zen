@@ -103,7 +103,7 @@ Component(
         "P2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/Thermistor.lib",
+        "spice/Thermistor.lib",
         "TH",
         nets=[P1, P2],
         args={"RVAL": str(value), "ESL": str(Inductance("0.5nH")), "CP": str(Capacitance("0.05pF"))},

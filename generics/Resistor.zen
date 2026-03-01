@@ -146,7 +146,7 @@ Component(
         "P2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/Resistor.lib",
+        "spice/Resistor.lib",
         "R",
         nets=[P1, P2],
         args=_spice_args(value, package),

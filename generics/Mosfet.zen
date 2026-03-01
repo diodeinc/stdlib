@@ -130,7 +130,7 @@ Component(
         "S": S,
     },
     spice_model=SpiceModel(
-        "../simulation/Mosfet.lib",
+        "spice/Mosfet.lib",
         _spice_subcircuit_name(channel),
         nets=[G, D, S],
         args=_spice_args(channel),
