@@ -1,4 +1,4 @@
-load("../units.zen", "Capacitance", "Resistance", "Temperature", "Voltage")
+load("../units.zen", "Capacitance", "Inductance", "Resistance", "Temperature", "Voltage")
 load("../utils.zen", "format_value")
 
 # -----------------------------------------------------------------------------
@@ -18,18 +18,19 @@ package = config("package", Package, default=Package("0603"))
 value = config("value", Capacitance)
 
 # Optional
-mpn = config("mpn", str, optional=True)
-manufacturer = config("manufacturer", str, optional=True)
-mount = config("mount", Mount, default=Mount("SMD"), optional=True)
-voltage = config("voltage", Voltage, optional=True)
-dielectric = config("dielectric", Dielectric, optional=True)
-esr = config("esr", Resistance, optional=True)
-t_max = config("t_max", Temperature, optional=True)
-t_min = config("t_min", Temperature, optional=True)
+mpn = config("mpn", str, optional=True, help="Manufacturer Part Number")
+manufacturer = config("manufacturer", str, optional=True, help="Manufacturer")
+mount = config("mount", Mount, default=Mount("SMD"), optional=True, help="Mounting type")
+voltage = config("voltage", Voltage, optional=True, help="Maximum operating voltage")
+dielectric = config("dielectric", Dielectric, optional=True, help="Dielectric material type")
+esr = config("esr", Resistance, optional=True, help="Equivalent series resistance")
+esl = config("esl", Inductance, optional=True, help="Equivalent series inductance")
+t_max = config("t_max", Temperature, optional=True, help="Maximum operating temperature")
+t_min = config("t_min", Temperature, optional=True, help="Minimum operating temperature")
 
-do_not_populate = config("do_not_populate", bool, default=False)
-exclude_from_bom = config("exclude_from_bom", bool, default=False)
-skip_bom = config("skip_bom", bool, default=False)
+do_not_populate = config("do_not_populate", bool, default=False, help="Do not populate the component in the BOM")
+exclude_from_bom = config("exclude_from_bom", bool, default=False, help="Exclude the component from the BOM")
+skip_bom = config("skip_bom", bool, default=False, help="Skip the BOM generation")
 
 if do_not_populate:
     warn("do_not_populate is deprecated. Use dnp instead.", kind="deprecated.do_not_populate")
@@ -94,6 +95,53 @@ def _footprint(mount: Mount, package: Package):
     return kicad_footprints[(mount, package)]
 
 
+def _spice_args(value, package, esr=None, esl=None):
+    """Derive series RLC model parameters for a realistic capacitor.
+
+    ESL is estimated from package size (pad geometry determines loop inductance).
+    ESR uses the user-supplied value if available, otherwise a reasonable
+    default that scales with package size.
+    """
+
+    # Typical ESL by package -- based on published MLCC measurements (nH)
+    esl_table = {
+        Package("01005"): Inductance("0.08nH"),
+        Package("0201"): Inductance("0.15nH"),
+        Package("0402"): Inductance("0.35nH"),
+        Package("0603"): Inductance("0.5nH"),
+        Package("0805"): Inductance("0.7nH"),
+        Package("1206"): Inductance("1.0nH"),
+        Package("1210"): Inductance("1.0nH"),
+        Package("1812"): Inductance("1.5nH"),
+        Package("1825"): Inductance("1.5nH"),
+        Package("2220"): Inductance("2.0nH"),
+        Package("2225"): Inductance("2.0nH"),
+        Package("3640"): Inductance("2.5nH"),
+    }
+
+    # Typical ESR by package -- larger bodies dissipate better
+    esr_table = {
+        Package("01005"): Resistance("50mOhm"),
+        Package("0201"): Resistance("30mOhm"),
+        Package("0402"): Resistance("10mOhm"),
+        Package("0603"): Resistance("5mOhm"),
+        Package("0805"): Resistance("3mOhm"),
+        Package("1206"): Resistance("2mOhm"),
+        Package("1210"): Resistance("2mOhm"),
+        Package("1812"): Resistance("1.5mOhm"),
+        Package("1825"): Resistance("1.5mOhm"),
+        Package("2220"): Resistance("1mOhm"),
+        Package("2225"): Resistance("1mOhm"),
+        Package("3640"): Resistance("1mOhm"),
+    }
+
+    return {
+        "CVAL": str(value),
+        "ESR": str(esr or esr_table.get(package, Resistance("50mOhm"))),
+        "ESL": str(esl or esl_table.get(package, Inductance("0.5nH"))),
+    }
+
+
 # -----------------------------------------------------------------------------
 # Component definition
 # -----------------------------------------------------------------------------
@@ -116,10 +164,10 @@ Component(
         "P2": P2,
     },
     spice_model=SpiceModel(
-        "../simulation/Capacitor.lib",
+        "spice/Capacitor.lib",
         "C",
         nets=[P1, P2],
-        args={"CVAL": str(value.value)},
+        args=_spice_args(value, package, esr, esl),
     ),
     dnp=do_not_populate,
     skip_bom=skip_bom or exclude_from_bom,

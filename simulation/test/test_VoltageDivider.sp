@@ -1,9 +1,0 @@
-V1 VCC GND SIN(0 5V 1kHz)
-
-.control
-  tran 0.001m 5m
-  
-  * Save the output to SVG
-  set hcopydevtype = svg
-  hardcopy simulation/test/output/R_DIV.svg v(VCC) v(PROBE) title "Resistor divider" ylabel Volts
-.endc

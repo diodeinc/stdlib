@@ -7,7 +7,7 @@ TestPoint = Module("../TestPoint.zen")
 # Test all Variant values
 for variant in TestPoint.Variant.values():
     # Replace dots and special characters in variant name for valid component names
-    name = "TP_" + str(variant).replace(".", "_").replace("x", "x")
+    name = "TP_" + str(variant.value).replace(".", "_").replace("x", "x").upper()
     TestPoint(
         name=name,
         variant=variant,
