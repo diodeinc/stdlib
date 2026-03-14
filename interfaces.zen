@@ -87,12 +87,11 @@ Ethernet = interface(
     RX=DiffPair(impedance=Impedance(100)),
 )
 
-Ethernet_Phy = interface(
-    TR0=DiffPair(impedance=Impedance(100)),
-    TR1=DiffPair(impedance=Impedance(100)),
-    TR2=DiffPair(impedance=Impedance(100)),
-    TR3=DiffPair(impedance=Impedance(100)),
-)
+Ethernet_10BaseT = Ethernet
+
+Ethernet_100BaseT = Ethernet
+
+Ethernet_100BaseTX = Ethernet
 
 Ethernet_1000BaseT = interface(
     BI_DA=DiffPair(impedance=Impedance(100)),
@@ -100,6 +99,14 @@ Ethernet_1000BaseT = interface(
     BI_DC=DiffPair(impedance=Impedance(100)),
     BI_DD=DiffPair(impedance=Impedance(100)),
 )
+
+Ethernet_Phy = interface(
+    TR0=DiffPair(impedance=Impedance(100)),
+    TR1=DiffPair(impedance=Impedance(100)),
+    TR2=DiffPair(impedance=Impedance(100)),
+    TR3=DiffPair(impedance=Impedance(100)),
+)
+
 
 Hdmi = interface(
     CLK=DiffPair(impedance=Impedance(100)),
